@@ -439,28 +439,27 @@ const projects = {
     { title: 'بودكاست — حلقة ١١', desc: 'حلقة بمونتاج كامل وموسيقى وعناوين.', cat: 'podcast', tag: 'بودكاست', badge: 'YouTube', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=kNhWHp13mMU' },
 
     // ===== Reels (طبي) =====
-    { title: 'ريل طبي · د. ناهد', desc: 'مونتاج ريل طبي — د. ناهد.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-1.mp4', poster: 'reels/reel-med-1.jpg', orient: 'vertical' },
-    { title: 'ريل طبي · د. م ٢', desc: 'ريل طبي بمونتاج كامل وعناوين.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-2.mp4', poster: 'reels/reel-med-2.jpg', orient: 'vertical' },
-    { title: 'ريل طبي · د. م ٣', desc: 'ريل طبي بإيقاع سريع و Hook قوي.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-3.mp4', poster: 'reels/reel-med-3.jpg', orient: 'vertical' },
-    { title: 'ريل طبي · مونتاج ٤', desc: 'ريل طبي كرييتف للسوشيال ميديا.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-4.mp4', poster: 'reels/reel-med-4.jpg', orient: 'vertical' },
-    { title: 'ريل طبي · مونتاج ٥', desc: 'ريل طبي بمونتاج إنستجرام.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-5.mp4', poster: 'reels/reel-med-5.jpg', orient: 'vertical' },
-    { title: 'ريل طبي · مونتاج ٦', desc: 'ريل طبي بمعالجة ألوان وعناوين.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-6.mp4', poster: 'reels/reel-med-6.jpg', orient: 'vertical' },
-    { title: 'ريل طبي · مونتاج ٧', desc: 'ريل طبي بمونتاج متقن.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-7.mp4', poster: 'reels/reel-med-7.jpg', orient: 'vertical' },
-    { title: 'ريل طبي · مونتاج ٨', desc: 'ريل طبي بمونتاج كامل للسوشيال.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-8.mp4', poster: 'reels/reel-med-8.jpg', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ١', desc: 'ريل طبي بمونتاج كامل وإيقاع ثابت.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319055-97d18c5893915040b1757c1e15f577e8d6287bc783efefac0c6083a93b3b4fd5-d_600x1067?region=us', url: 'https://vimeo.com/1186587677', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٢', desc: 'ريل طبي بمعالجة لون وعناوين متحركة.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319025-a6b6ccc801e0022b2e4a8d2e4d2d0d3acc8223e4d98ca05d35058bf76ad6df05-d_600x1067?region=us', url: 'https://vimeo.com/1186587635', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٣', desc: 'ريل طبي بإيقاع سريع و Hook قوي.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318979-52b7ece064148e5dd7bbbcc86b17f14133235930fa576c13b4ed9acb37b5bf68-d_600x1067?region=us', url: 'https://vimeo.com/1186587636', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٤', desc: 'ريل طبي كرييتف للسوشيال ميديا.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318924-0afcca3f25ae3cfa6f6603e0e4a216347756367d22eeef8aa424a5444c66e870-d_600x1067?region=us', url: 'https://vimeo.com/1186587599', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٥', desc: 'ريل طبي بمونتاج إنستجرام.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318923-950ef4f647e9ee4b4796063bb392271f6c2307dcb71e82fd31628827d341f272-d_600x1067?region=us', url: 'https://vimeo.com/1186587597', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٦', desc: 'ريل طبي بمعالجة ألوان وعناوين.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318894-1fd90e3d996892e6298b20be790e122c1d355befa42b1c0328e589cf92874179-d_600x1067?region=us', url: 'https://vimeo.com/1186587537', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٧', desc: 'ريل طبي بمونتاج متقن.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318878-595c008e071fcf012deb30acebf14297cd87f0ba2a3a1e54c1d06038df9dccf7-d_600x1067?region=us', url: 'https://vimeo.com/1186587536', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٨', desc: 'ريل طبي بمونتاج كامل للسوشيال.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318808-cdd274b7228a634bc8533db3d797e57f395109a25d011347cfd1a308cdb4a510-d_600x1067?region=us', url: 'https://vimeo.com/1186587429', orient: 'vertical' },
 
     // ===== Reels (ماركتينج) =====
-    { title: 'ريل ماركتينج · مونتاج ١', desc: 'ريل ماركتينج بإيقاع سريع و Hook قوي.', cat: 'reels', subCat: 'marketing', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-1.mp4', poster: 'reels/reel-mkt-1.jpg', orient: 'vertical' },
-    { title: 'ريل ماركتينج · مونتاج ٢', desc: 'ريل ماركتينج بهوية بصرية وعناوين متحركة.', cat: 'reels', subCat: 'marketing', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-2.mp4', poster: 'reels/reel-mkt-2.jpg', orient: 'vertical' },
-    { title: 'ريل ماركتينج · مونتاج ٣', desc: 'ريل إعلاني بمعالجة ألوان وموشن جرافيك.', cat: 'reels', subCat: 'marketing', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-3.mp4', poster: 'reels/reel-mkt-3.jpg', orient: 'vertical' },
+    { title: 'ريل ماركتينج · مونتاج ١', desc: 'ريل ماركتينج بإيقاع سريع و Hook قوي.', cat: 'reels', subCat: 'marketing', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319305-3d611ac21ff8342de2ceee20fc1ab8eaf819bdd63b9b5af26ccf9d4d29a43198-d_600x1067?region=us', url: 'https://vimeo.com/1186587766', orient: 'vertical' },
+    { title: 'ريل ماركتينج · مونتاج ٢', desc: 'ريل ماركتينج بهوية بصرية وعناوين متحركة.', cat: 'reels', subCat: 'marketing', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319058-612ad2fba10839dd2b14fe8e3343894dfba4666dd43ddc388151260314c8d9c2-d_600x1067?region=us', url: 'https://vimeo.com/1186587678', orient: 'vertical' },
+    { title: 'ريل ماركتينج · مونتاج ٣', desc: 'ريل إعلاني بمعالجة ألوان وموشن جرافيك.', cat: 'reels', subCat: 'marketing', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319253-dc4c6f842af951827b648f8ea4b419c7d7cbc27d10f2d2f6879f8196fd307b10-d_600x1067?region=us', url: 'https://vimeo.com/1186587930', orient: 'vertical' },
 
     // ===== Reels (عام) =====
-    { title: 'ريل عام · مونتاج ١', desc: 'ريل بمونتاج كرييتف وإيقاع متّزن.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-1.mp4', poster: 'reels/reel-gen-1.jpg', orient: 'vertical' },
-    { title: 'ريل عام · مونتاج ٢', desc: 'ريل بمعالجة ألوان وعناوين بصرية.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-2.mp4', poster: 'reels/reel-gen-2.jpg', orient: 'vertical' },
-    { title: 'ريل عام · مونتاج ٣', desc: 'ريل بمونتاج سريع وHook قوي.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-3.mp4', poster: 'reels/reel-gen-3.jpg', orient: 'vertical' },
-    { title: 'ريل عام · مونتاج ٤', desc: 'ريل بمونتاج إنستجرام ومعالجة لون.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-4.mp4', poster: 'reels/reel-gen-4.jpg', orient: 'vertical' },
-    { title: 'ريل عام · مونتاج ٥', desc: 'ريل بتعليق صوتي وعناوين متحركة.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-5.mp4', poster: 'reels/reel-gen-5.jpg', orient: 'vertical' },
-    { title: 'ريل عام · مونتاج ٦', desc: 'ريل بمونتاج كامل للسوشيال ميديا.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-6.mp4', poster: 'reels/reel-gen-6.jpg', orient: 'vertical' },
-    { title: 'ريل عام · مونتاج ٧', desc: 'ريل بمونتاج متقن وإيقاع سريع.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-7.mp4', poster: 'reels/reel-gen-7.jpg', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ١', desc: 'ريل بمونتاج كرييتف وإيقاع متّزن.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318607-202b042e0f2ac7e49daa7323052fb6e6490def8f749f84b4d3b8de2b3d21922b-d_600x1067?region=us', url: 'https://vimeo.com/1186587338', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٢', desc: 'ريل بمعالجة ألوان وعناوين بصرية.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318674-531ed62631c102c72eb548ca5deeb129c801ed8b55e2ad7d55ed6940487427f8-d_600x1067?region=us', url: 'https://vimeo.com/1186587378', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٣', desc: 'ريل بمونتاج سريع وHook قوي.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318669-538ef7e38a4c195e982518e85ea17233f96d958ee792f456c7eff51bb49ccf12-d_600x1067?region=us', url: 'https://vimeo.com/1186587382', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٤', desc: 'ريل بمونتاج إنستجرام ومعالجة لون.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318602-0225af6310ac723e59a6473167ee1f14c43b3d4467ba7c8842effecb89c48d80-d_600x1067?region=us', url: 'https://vimeo.com/1186587315', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٥', desc: 'ريل بتعليق صوتي وعناوين متحركة.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319137-202573e75ef32e23824d134ca1386a4919b58533008bd399cf5e14af685fe920-d_600x1067?region=us', url: 'https://vimeo.com/1186587769', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٦', desc: 'ريل بمونتاج كامل للسوشيال ميديا.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318796-19ab4417e54450a8256ef1f43c0e2df28d32cc26a94a1582f4b809bfffc1590b-d_600x1067?region=us', url: 'https://vimeo.com/1186587432', orient: 'vertical' },
 
     // ===== فيديوهات يوتيوب الطويلة =====
     { cat: 'longyt', title: 'كلام الناس لا يؤثر عليك — نظرية الأعمدة', desc: 'د. إيلاف أصفري — كيف تجعل كلام الناس لا يؤثر عليك.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=XumndLdz0Cc&t=12s' },
@@ -515,28 +514,27 @@ const projects = {
 
 
     // ===== Reels (Medical) =====
-    { title: 'Medical reel · Dr. Nahed', desc: 'Medical reel edit — Dr. Nahed.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-1.mp4', poster: 'reels/reel-med-1.jpg', orient: 'vertical' },
-    { title: 'Medical reel · Dr. M 2', desc: 'Medical reel with full edit and titles.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-2.mp4', poster: 'reels/reel-med-2.jpg', orient: 'vertical' },
-    { title: 'Medical reel · Dr. M 3', desc: 'Medical reel with snappy pacing and strong hook.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-3.mp4', poster: 'reels/reel-med-3.jpg', orient: 'vertical' },
-    { title: 'Medical reel · edit 4', desc: 'Creative medical reel for social media.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-4.mp4', poster: 'reels/reel-med-4.jpg', orient: 'vertical' },
-    { title: 'Medical reel · edit 5', desc: 'Instagram-ready medical reel edit.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-5.mp4', poster: 'reels/reel-med-5.jpg', orient: 'vertical' },
-    { title: 'Medical reel · edit 6', desc: 'Medical reel with color grading and motion titles.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-6.mp4', poster: 'reels/reel-med-6.jpg', orient: 'vertical' },
-    { title: 'Medical reel · edit 7', desc: 'Polished medical reel edit.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-7.mp4', poster: 'reels/reel-med-7.jpg', orient: 'vertical' },
-    { title: 'Medical reel · edit 8', desc: 'Full social-ready medical reel edit.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-8.mp4', poster: 'reels/reel-med-8.jpg', orient: 'vertical' },
+    { title: 'Medical reel · edit 1', desc: 'Medical reel with full edit and steady pacing.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319055-97d18c5893915040b1757c1e15f577e8d6287bc783efefac0c6083a93b3b4fd5-d_600x1067?region=us', url: 'https://vimeo.com/1186587677', orient: 'vertical' },
+    { title: 'Medical reel · edit 2', desc: 'Medical reel with color grading and motion titles.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319025-a6b6ccc801e0022b2e4a8d2e4d2d0d3acc8223e4d98ca05d35058bf76ad6df05-d_600x1067?region=us', url: 'https://vimeo.com/1186587635', orient: 'vertical' },
+    { title: 'Medical reel · edit 3', desc: 'Medical reel with snappy pacing and strong hook.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318979-52b7ece064148e5dd7bbbcc86b17f14133235930fa576c13b4ed9acb37b5bf68-d_600x1067?region=us', url: 'https://vimeo.com/1186587636', orient: 'vertical' },
+    { title: 'Medical reel · edit 4', desc: 'Creative medical reel for social media.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318924-0afcca3f25ae3cfa6f6603e0e4a216347756367d22eeef8aa424a5444c66e870-d_600x1067?region=us', url: 'https://vimeo.com/1186587599', orient: 'vertical' },
+    { title: 'Medical reel · edit 5', desc: 'Instagram-ready medical reel edit.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318923-950ef4f647e9ee4b4796063bb392271f6c2307dcb71e82fd31628827d341f272-d_600x1067?region=us', url: 'https://vimeo.com/1186587597', orient: 'vertical' },
+    { title: 'Medical reel · edit 6', desc: 'Medical reel with color work and titles.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318894-1fd90e3d996892e6298b20be790e122c1d355befa42b1c0328e589cf92874179-d_600x1067?region=us', url: 'https://vimeo.com/1186587537', orient: 'vertical' },
+    { title: 'Medical reel · edit 7', desc: 'Polished medical reel edit.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318878-595c008e071fcf012deb30acebf14297cd87f0ba2a3a1e54c1d06038df9dccf7-d_600x1067?region=us', url: 'https://vimeo.com/1186587536', orient: 'vertical' },
+    { title: 'Medical reel · edit 8', desc: 'Full social-ready medical reel.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318808-cdd274b7228a634bc8533db3d797e57f395109a25d011347cfd1a308cdb4a510-d_600x1067?region=us', url: 'https://vimeo.com/1186587429', orient: 'vertical' },
 
     // ===== Reels (Marketing) =====
-    { title: 'Marketing reel · edit 1', desc: 'Marketing reel with snappy pacing and strong hook.', cat: 'reels', subCat: 'marketing', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-1.mp4', poster: 'reels/reel-mkt-1.jpg', orient: 'vertical' },
-    { title: 'Marketing reel · edit 2', desc: 'Brand reel with strong identity and motion titles.', cat: 'reels', subCat: 'marketing', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-2.mp4', poster: 'reels/reel-mkt-2.jpg', orient: 'vertical' },
-    { title: 'Marketing reel · edit 3', desc: 'Commercial reel with color grading and motion graphics.', cat: 'reels', subCat: 'marketing', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-3.mp4', poster: 'reels/reel-mkt-3.jpg', orient: 'vertical' },
+    { title: 'Marketing reel · edit 1', desc: 'Marketing reel with snappy pacing and strong hook.', cat: 'reels', subCat: 'marketing', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319305-3d611ac21ff8342de2ceee20fc1ab8eaf819bdd63b9b5af26ccf9d4d29a43198-d_600x1067?region=us', url: 'https://vimeo.com/1186587766', orient: 'vertical' },
+    { title: 'Marketing reel · edit 2', desc: 'Brand reel with strong identity and motion titles.', cat: 'reels', subCat: 'marketing', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319058-612ad2fba10839dd2b14fe8e3343894dfba4666dd43ddc388151260314c8d9c2-d_600x1067?region=us', url: 'https://vimeo.com/1186587678', orient: 'vertical' },
+    { title: 'Marketing reel · edit 3', desc: 'Commercial reel with color grading and motion graphics.', cat: 'reels', subCat: 'marketing', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319253-dc4c6f842af951827b648f8ea4b419c7d7cbc27d10f2d2f6879f8196fd307b10-d_600x1067?region=us', url: 'https://vimeo.com/1186587930', orient: 'vertical' },
 
     // ===== Reels (General) =====
-    { title: 'General reel · edit 1', desc: 'Reel with creative editing and balanced pacing.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-1.mp4', poster: 'reels/reel-gen-1.jpg', orient: 'vertical' },
-    { title: 'General reel · edit 2', desc: 'Reel with color grading and motion titles.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-2.mp4', poster: 'reels/reel-gen-2.jpg', orient: 'vertical' },
-    { title: 'General reel · edit 3', desc: 'Snappy reel with a strong hook.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-3.mp4', poster: 'reels/reel-gen-3.jpg', orient: 'vertical' },
-    { title: 'General reel · edit 4', desc: 'Instagram-style reel with color work.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-4.mp4', poster: 'reels/reel-gen-4.jpg', orient: 'vertical' },
-    { title: 'General reel · edit 5', desc: 'Voiceover reel with motion titles.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-5.mp4', poster: 'reels/reel-gen-5.jpg', orient: 'vertical' },
-    { title: 'General reel · edit 6', desc: 'Social-ready reel with full edit.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-6.mp4', poster: 'reels/reel-gen-6.jpg', orient: 'vertical' },
-    { title: 'General reel · edit 7', desc: 'Polished reel with punchy pacing.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-7.mp4', poster: 'reels/reel-gen-7.jpg', orient: 'vertical' },
+    { title: 'General reel · edit 1', desc: 'Reel with creative editing and balanced pacing.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318607-202b042e0f2ac7e49daa7323052fb6e6490def8f749f84b4d3b8de2b3d21922b-d_600x1067?region=us', url: 'https://vimeo.com/1186587338', orient: 'vertical' },
+    { title: 'General reel · edit 2', desc: 'Reel with color grading and motion titles.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318674-531ed62631c102c72eb548ca5deeb129c801ed8b55e2ad7d55ed6940487427f8-d_600x1067?region=us', url: 'https://vimeo.com/1186587378', orient: 'vertical' },
+    { title: 'General reel · edit 3', desc: 'Snappy reel with a strong hook.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318669-538ef7e38a4c195e982518e85ea17233f96d958ee792f456c7eff51bb49ccf12-d_600x1067?region=us', url: 'https://vimeo.com/1186587382', orient: 'vertical' },
+    { title: 'General reel · edit 4', desc: 'Instagram-style reel with color work.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318602-0225af6310ac723e59a6473167ee1f14c43b3d4467ba7c8842effecb89c48d80-d_600x1067?region=us', url: 'https://vimeo.com/1186587315', orient: 'vertical' },
+    { title: 'General reel · edit 5', desc: 'Voiceover reel with motion titles.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150319137-202573e75ef32e23824d134ca1386a4919b58533008bd399cf5e14af685fe920-d_600x1067?region=us', url: 'https://vimeo.com/1186587769', orient: 'vertical' },
+    { title: 'General reel · edit 6', desc: 'Social-ready reel with full edit.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Vimeo', thumb: '', poster: 'https://i.vimeocdn.com/video/2150318796-19ab4417e54450a8256ef1f43c0e2df28d32cc26a94a1582f4b809bfffc1590b-d_600x1067?region=us', url: 'https://vimeo.com/1186587432', orient: 'vertical' },
 
     // ===== Long-form YouTube =====
     { cat: 'longyt', title: 'People’s words won’t affect you — pillar theory', desc: 'Dr. Elaf Asfari — psychology of dealing with criticism.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=XumndLdz0Cc&t=12s' },
@@ -881,8 +879,14 @@ function prepareSection(sec) {
     head.querySelectorAll('h2').forEach(h2 => { splitTitleIntoWords(h2); h2.classList.add('se-title'); });
     head.querySelectorAll('.lead').forEach(el => el.classList.add('se-lead'));
   }
-  // Grids that should stagger their children
-  sec.querySelectorAll('.gallery, .designs-grid, .filters').forEach(g => g.classList.add('se-grid'));
+  // Grids that should stagger their children.
+  // Note: .gallery is intentionally excluded. The gallery uses its own
+  // per-card .reveal -> .show system which caps reveal time to ~600ms
+  // and has a 1.2s safety net. Applying .se-grid on top adds up to
+  // 0.72s transition-delay + 0.6s duration which visibly delays the
+  // last cards on slow mobile devices (they stay invisible until the
+  // user taps the area to force a repaint).
+  sec.querySelectorAll('.designs-grid, .filters').forEach(g => g.classList.add('se-grid'));
 }
 const sectionIO = new IntersectionObserver((entries) => {
   entries.forEach(e => {
@@ -891,11 +895,29 @@ const sectionIO = new IntersectionObserver((entries) => {
       sectionIO.unobserve(e.target);
     }
   });
-}, { threshold: 0.18 });
+}, { threshold: 0, rootMargin: '0px 0px -10% 0px' });
 document.querySelectorAll('.section').forEach(sec => {
   prepareSection(sec);
   sectionIO.observe(sec);
 });
+
+// Safety net: any section that's still missing .section-in once the user
+// has scrolled near it gets forced in. This handles oversized sections
+// where the IntersectionObserver threshold can't be satisfied on small
+// viewports and prevents the last cards from staying invisible.
+function forceInVisibleSections() {
+  const margin = 400;
+  document.querySelectorAll('.section.section-enter:not(.section-in)').forEach(sec => {
+    const r = sec.getBoundingClientRect();
+    if (r.top < window.innerHeight + margin && r.bottom > -margin) {
+      sec.classList.add('section-in');
+      sectionIO.unobserve(sec);
+    }
+  });
+}
+window.addEventListener('scroll', forceInVisibleSections, { passive: true });
+window.addEventListener('resize', forceInVisibleSections);
+setTimeout(forceInVisibleSections, 400);
 
 // ====== Card 3D tilt on mousemove ======
 function attachCardTilt(root) {
