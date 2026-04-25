@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=7" />
 </head>
 <body>
   <!-- Subtle background gradient -->
@@ -51,8 +51,8 @@
         </span>
         <h1>
           <span data-i18n="hero.greet">مرحبًا، أنا</span>
-          <span class="gradient-text" data-i18n="hero.name">خالد علي</span><br />
-          <span data-i18n="hero.line">بحوّل الأفكار لقصص بصرية مؤثرة.</span>
+          <span class="gradient-text" data-i18n="hero.name">خالد علي</span>
+          <span class="hero-tagline" data-i18n="hero.line">بنبني براندك ومحتوى يخلّي الناس تفتكرك.</span>
         </h1>
         <p class="hero-sub" data-i18n="hero.sub">
           مونتير فيديو بصنع محتوى يساعد صنّاع المحتوى والبراندات يحوّلوا أفكارهم لفيديوهات مؤثرة. خبرة أكتر من <strong>٤ سنين</strong> في يوتيوب الطويلة، السوشيال ميديا، البودكاست، والبرامج التلفزيونية.
@@ -565,6 +565,18 @@
         <button class="chip active" data-filter="all" data-i18n="filter.all">الكل</button>
         <button class="chip" data-filter="podcast" data-i18n="filter.podcast">بودكاست</button>
         <button class="chip" data-filter="reels" data-i18n="filter.reels">ريلز</button>
+        <button class="chip" data-filter="longyt" data-i18n="filter.longyt">يوتيوب طويلة</button>
+        <button class="chip" data-filter="edu" data-i18n="filter.edu">تعليمي</button>
+        <button class="chip" data-filter="promo" data-i18n="filter.promo">بروموهات</button>
+        <button class="chip" data-filter="wedding" data-i18n="filter.wedding">أفراح</button>
+      </div>
+
+      <div class="subfilters" id="subfilters" hidden>
+        <button class="chip chip-sm active" data-subfilter="all" data-i18n="subfilter.all">كل الريلز</button>
+        <button class="chip chip-sm" data-subfilter="medical" data-i18n="subfilter.medical">طبي</button>
+        <button class="chip chip-sm" data-subfilter="educational" data-i18n="subfilter.educational">تعليمي</button>
+        <button class="chip chip-sm" data-subfilter="marketing" data-i18n="subfilter.marketing">ماركتينج</button>
+        <button class="chip chip-sm" data-subfilter="general" data-i18n="subfilter.general">عام</button>
       </div>
 
       <div class="gallery" id="gallery">
@@ -722,6 +734,6 @@
     <span class="wa-pulse"></span>
   </a>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=7"></script>
 </body>
 </html>

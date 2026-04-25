@@ -20,7 +20,7 @@ const i18n = {
     'bts.desc': 'إعداد إضاءة، إدارة بلاتو، وتصوير بأدوات احترافية.',
     'hero.greet': 'مرحبًا، أنا',
     'hero.name': 'خالد علي',
-    'hero.line': 'بنبني براندك من A لـ Z — ومحتوى يخلّي الناس تفتكرك.',
+    'hero.line': 'بنبني براندك ومحتوى يخلّي الناس تفتكرك.',
     'hero.sub': 'فريق متكامل لتسويقك الرقمي: إدارة صفحات السوشيال، إعلانات ممولة، استراتيجية محتوى، مونتاج، موشن، وتصميم. خبرة <strong>٤+ سنين</strong> مع براندات، فرق إعلامية، وشخصيات عامة.',
     'hero.cta1': 'شوف أعمالي',
     'hero.cta2': 'كلّمني',
@@ -102,6 +102,18 @@ const i18n = {
     'filter.all': 'الكل',
     'filter.podcast': 'بودكاست',
     'filter.reels': 'ريلز',
+    'filter.longyt': 'يوتيوب طويلة',
+    'filter.edu': 'تعليمي',
+    'filter.promo': 'بروموهات',
+    'filter.wedding': 'أفراح',
+
+    'subfilter.all': 'كل الريلز',
+    'subfilter.medical': 'طبي',
+    'subfilter.educational': 'تعليمي',
+    'subfilter.marketing': 'ماركتينج',
+    'subfilter.general': 'عام',
+
+    'empty.soon': 'قريبًا — الأعمال بتتحدّث هنا.',
 
     'contact.tag': 'تواصل',
     'contact.title': 'جاهز نشتغل على مشروعك القادم؟',
@@ -220,7 +232,7 @@ const i18n = {
     'bts.desc': 'Lighting setups, on-set direction, and shooting with professional gear.',
     'hero.greet': 'Hi, I\'m',
     'hero.name': 'Khaled Ali',
-    'hero.line': 'We build your brand from A to Z — and content people remember.',
+    'hero.line': 'I build brands and content people remember.',
     'hero.sub': 'A full-service digital marketing team: social media management, paid ads, content strategy, editing, motion, and design. <strong>4+ years</strong> with brands, media teams, and public figures.',
     'hero.cta1': 'See My Work',
     'hero.cta2': 'Get in Touch',
@@ -293,6 +305,18 @@ const i18n = {
     'filter.all': 'All',
     'filter.podcast': 'Podcast',
     'filter.reels': 'Reels',
+    'filter.longyt': 'Long YouTube',
+    'filter.edu': 'Educational',
+    'filter.promo': 'Promos',
+    'filter.wedding': 'Weddings',
+
+    'subfilter.all': 'All Reels',
+    'subfilter.medical': 'Medical',
+    'subfilter.educational': 'Educational',
+    'subfilter.marketing': 'Marketing',
+    'subfilter.general': 'General',
+
+    'empty.soon': 'Coming soon — new work will appear here.',
 
     'contact.tag': 'Contact',
     'contact.title': 'Ready to work on your next project?',
@@ -394,6 +418,12 @@ const i18n = {
 };
 
 // ====== Projects data ======
+// NOTE:
+//   Each project has:
+//     - cat:    'podcast' | 'reels' | 'longyt' | 'edu' | 'promo' | 'wedding'
+//     - subCat: reels only → 'medical' | 'educational' | 'marketing' | 'general'
+//   To move a reel into a sub-category, change its `subCat` below.
+//   Placeholder entries (no url / placeholder:true) show a "coming soon" card.
 const projects = {
   ar: [
     { title: 'بودكاست — الحلقة الأساسية', desc: 'حلقة كاملة بمونتاج احترافي، عناوين، وموسيقى.', cat: 'podcast', tag: 'بودكاست', badge: 'YouTube', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=xxqtsgYeVCk' },
@@ -407,18 +437,68 @@ const projects = {
     { title: 'بودكاست — حلقة ٩', desc: 'حلقة بمونتاج كامل وعناوين بصرية قوية.', cat: 'podcast', tag: 'بودكاست', badge: 'YouTube', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=yQa4a4LT84w' },
     { title: 'بودكاست — حلقة ١٠', desc: 'حوار بودكاست بمونتاج تلفزيوني.', cat: 'podcast', tag: 'بودكاست', badge: 'YouTube', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=oYPNWHwZJmw' },
     { title: 'بودكاست — حلقة ١١', desc: 'حلقة بمونتاج كامل وموسيقى وعناوين.', cat: 'podcast', tag: 'بودكاست', badge: 'YouTube', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=kNhWHp13mMU' },
-    { title: 'ريلز · مونتاج إنستجرام', desc: 'مثال على مونتاج ريلز بإيقاع سريع و Hook قوي.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-1.mp4', poster: 'reels/reel-1.jpg', orient: 'vertical' },
-    { title: 'ريلز · سوشيال ميديا', desc: 'ريلز بمونتاج كرييتف للسوشيال ميديا.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-2.mp4', poster: 'reels/reel-2.jpg', orient: 'vertical' },
-    { title: 'ريلز · ترند', desc: 'ريلز على ترند بمونتاج سينمائي.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-3.mp4', poster: 'reels/reel-3.jpg', orient: 'vertical' },
-    { title: 'ريلز · براند', desc: 'محتوى ريلز لبراند بإيقاع سريع.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-4.mp4', poster: 'reels/reel-4.jpg', orient: 'vertical' },
-    { title: 'ريلز · سكريبت + مونتاج', desc: 'ريلز بسكريبت احترافي وتصحيح ألوان.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-5.mp4', poster: 'reels/reel-5.jpg', orient: 'vertical' },
-    { title: 'ريلز · موشن جرافيك', desc: 'ريلز فيه موشن جرافيك ولوحات نصوص.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-6.mp4', poster: 'reels/reel-6.jpg', orient: 'vertical' },
-    { title: 'ريلز · إعلان', desc: 'إعلان قصير بمونتاج Reels.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-7.mp4', poster: 'reels/reel-7.jpg', orient: 'vertical' },
-    { title: 'ريلز · Storytelling', desc: 'ريلز بسرد بصري وقصة قصيرة.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-8.mp4', poster: 'reels/reel-8.jpg', orient: 'vertical' },
-    { title: 'ريلز · Hook قوي', desc: 'ريلز بـ Hook قوي في أول ثلاث ثواني.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-9.mp4', poster: 'reels/reel-9.jpg', orient: 'vertical' },
-    { title: 'ريلز · Lifestyle', desc: 'ريلز lifestyle بإيقاع لطيف.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-10.mp4', poster: 'reels/reel-10.jpg', orient: 'vertical' },
-    { title: 'ريلز · Cinematic', desc: 'ريلز بلوك سينمائي وألوان متّزنة.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-11.mp4', poster: 'reels/reel-11.jpg', orient: 'vertical' },
-    { title: 'ريلز · Fast Cuts', desc: 'ريلز قصّ سريع وانتقالات إيقاعية.', cat: 'reels', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-12.mp4', poster: 'reels/reel-12.jpg', orient: 'vertical' }
+
+    // ===== Reels (طبي) =====
+    { title: 'ريل طبي · د. ناهد', desc: 'مونتاج ريل طبي — د. ناهد.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-1.mp4', poster: 'reels/reel-med-1.jpg', orient: 'vertical' },
+    { title: 'ريل طبي · د. م ٢', desc: 'ريل طبي بمونتاج كامل وعناوين.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-2.mp4', poster: 'reels/reel-med-2.jpg', orient: 'vertical' },
+    { title: 'ريل طبي · د. م ٣', desc: 'ريل طبي بإيقاع سريع و Hook قوي.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-3.mp4', poster: 'reels/reel-med-3.jpg', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٤', desc: 'ريل طبي كرييتف للسوشيال ميديا.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-4.mp4', poster: 'reels/reel-med-4.jpg', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٥', desc: 'ريل طبي بمونتاج إنستجرام.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-5.mp4', poster: 'reels/reel-med-5.jpg', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٦', desc: 'ريل طبي بمعالجة ألوان وعناوين.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-6.mp4', poster: 'reels/reel-med-6.jpg', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٧', desc: 'ريل طبي بمونتاج متقن.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-7.mp4', poster: 'reels/reel-med-7.jpg', orient: 'vertical' },
+    { title: 'ريل طبي · مونتاج ٨', desc: 'ريل طبي بمونتاج كامل للسوشيال.', cat: 'reels', subCat: 'medical', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-med-8.mp4', poster: 'reels/reel-med-8.jpg', orient: 'vertical' },
+
+    // ===== Reels (ماركتينج) =====
+    { title: 'ريل ماركتينج · مونتاج ١', desc: 'ريل ماركتينج بإيقاع سريع و Hook قوي.', cat: 'reels', subCat: 'marketing', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-1.mp4', poster: 'reels/reel-mkt-1.jpg', orient: 'vertical' },
+    { title: 'ريل ماركتينج · مونتاج ٢', desc: 'ريل ماركتينج بهوية بصرية وعناوين متحركة.', cat: 'reels', subCat: 'marketing', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-2.mp4', poster: 'reels/reel-mkt-2.jpg', orient: 'vertical' },
+    { title: 'ريل ماركتينج · مونتاج ٣', desc: 'ريل إعلاني بمعالجة ألوان وموشن جرافيك.', cat: 'reels', subCat: 'marketing', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-3.mp4', poster: 'reels/reel-mkt-3.jpg', orient: 'vertical' },
+
+    // ===== Reels (عام) =====
+    { title: 'ريل عام · مونتاج ١', desc: 'ريل بمونتاج كرييتف وإيقاع متّزن.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-1.mp4', poster: 'reels/reel-gen-1.jpg', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٢', desc: 'ريل بمعالجة ألوان وعناوين بصرية.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-2.mp4', poster: 'reels/reel-gen-2.jpg', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٣', desc: 'ريل بمونتاج سريع وHook قوي.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-3.mp4', poster: 'reels/reel-gen-3.jpg', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٤', desc: 'ريل بمونتاج إنستجرام ومعالجة لون.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-4.mp4', poster: 'reels/reel-gen-4.jpg', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٥', desc: 'ريل بتعليق صوتي وعناوين متحركة.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-5.mp4', poster: 'reels/reel-gen-5.jpg', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٦', desc: 'ريل بمونتاج كامل للسوشيال ميديا.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-6.mp4', poster: 'reels/reel-gen-6.jpg', orient: 'vertical' },
+    { title: 'ريل عام · مونتاج ٧', desc: 'ريل بمونتاج متقن وإيقاع سريع.', cat: 'reels', subCat: 'general', tag: 'ريلز', badge: 'Reel', thumb: '', url: 'reels/reel-gen-7.mp4', poster: 'reels/reel-gen-7.jpg', orient: 'vertical' },
+
+    // ===== فيديوهات يوتيوب الطويلة =====
+    { cat: 'longyt', title: 'كلام الناس لا يؤثر عليك — نظرية الأعمدة', desc: 'د. إيلاف أصفري — كيف تجعل كلام الناس لا يؤثر عليك.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=XumndLdz0Cc&t=12s' },
+    { cat: 'longyt', title: 'ليش بنحتفل في يناير؟', desc: 'د. رنا أبو منّس — قصة بداية السنة.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=CWKe23RP49M&t=19s' },
+    { cat: 'longyt', title: 'الطريقة الوحيدة لاكتساب الثقة بالنفس', desc: 'د. إيلاف أصفري — علم نفس الثقة بالنفس.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=vKrjKOaj9eU&t=35s' },
+    { cat: 'longyt', title: 'تأثير الطفولة على حياتنا', desc: 'د. إيلاف أصفري — كيف تتحرر من جروح الطفولة.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=2DxEZSH5FzE&t=31s' },
+    { cat: 'longyt', title: 'طرق للتخلص من توتر الامتحان', desc: 'د. إيلاف أصفري — طرق لم تسمع بها من قبل.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=l-FH_rt7acs&t=81s' },
+    { cat: 'longyt', title: 'الإرهاق النفسي — نصائح قلبت حياتي', desc: 'د. إيلاف أصفري — التعامل مع الإرهاق النفسي.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=jjqkJPCk5A4&t=15s' },
+    { cat: 'longyt', title: 'أسطورة المرأة القوية المستقلة', desc: 'د. رنا أبو منّس — كشف المستور خلف الـ Strong Independent Woman.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=ROcOFeBslMY&t=42s' },
+    { cat: 'longyt', title: 'القضاء على القلق والتوتر', desc: 'د. إيلاف أصفري — بدون أدوية أو معالج نفسي.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=JkRzL08zOgk&t=2s' },
+    { cat: 'longyt', title: 'علاج الأرق ومشاكل النوم', desc: 'د. إيلاف أصفري — طرق فعّالة لتنام بعمق.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=ZyB4jfxyYpU' },
+    { cat: 'longyt', title: 'الوجه الحقيقي للغرب', desc: 'د. رنا أبو منّس — تحليل ثقافي.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=oM7iMqgSxFI&t=6s' },
+    { cat: 'longyt', title: 'كيف أتخلص من الوسواس القهري', desc: 'د. إيلاف أصفري — بدون أدوية.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=yGEJtkjrU9s&t=112s' },
+    { cat: 'longyt', title: 'النجاح: جهد أم ذكاء؟', desc: 'د. رنا أبو منّس — الحقيقة التي يخفيها عنك الـ 1%.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=pfsOGbobqCw&t=32s' },
+    { cat: 'longyt', title: 'تحويل الأفكار السلبية لإيجابية', desc: 'د. إيلاف أصفري — 5 دقائق تغيّر يومك.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=iES1H1Swuos&t=13s' },
+    { cat: 'longyt', title: 'هل أصبحت الشهادات بلا قيمة؟', desc: 'د. رنا أبو منّس — افعل هذا لتجد وظيفة فورًا.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=c5dNzsAgCYA&t=16s' },
+    { cat: 'longyt', title: 'العمل لا يعوّض الحب — خطأ اليابان', desc: 'د. إيلاف أصفري — درس من التجربة اليابانية.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=hDzpfaS-tJI&t=21s' },
+    { cat: 'longyt', title: 'ذعر وادي السيليكون', desc: 'د. رنا أبو منّس — فقاعة الذكاء الاصطناعي في 2026.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=BbUJN4rQGd0&t=1s' },
+
+    // ===== محتوى تعليمي — قناة أ. خالد القصبي =====
+    { cat: 'edu', title: 'علوم أولى إعدادي · المادة وخصائصها', desc: 'من المخلوط للعنصر — الدرس الثالث (الجزء الأول). قناة أ. خالد القصبي.', tag: 'تعليمي', badge: 'علوم', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=mub2BL0Q3Hs&t=772s' },
+    { cat: 'edu', title: 'علوم تانية إعدادي · حالات المادة', desc: 'حالات المادة وخصائصها — الجزء الأول. قناة أ. خالد القصبي.', tag: 'تعليمي', badge: 'علوم', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=hl4x9Uj2Mes' },
+    { cat: 'edu', title: 'علوم تانية إعدادي · تغيّر حالات المادة', desc: 'سر تحولات المادة — الدرس الثاني (الجزء الأول). قناة أ. خالد القصبي.', tag: 'تعليمي', badge: 'علوم', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=L81NGbBuGQw&t=225s' },
+    { cat: 'edu', title: 'علوم تالتة إعدادي · الحركة في اتجاه واحد', desc: 'الدرس الأول (الجزء الأول). قناة أ. خالد القصبي.', tag: 'تعليمي', badge: 'علوم', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=GS0UeHFsQMA&t=877s' },
+    { cat: 'edu', title: 'علوم تانية إعدادي · الطاقة الداخلية', desc: 'الطاقة الداخلية ودرجة الحرارة والعوامل المؤثرة. قناة أ. خالد القصبي.', tag: 'تعليمي', badge: 'علوم', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=pL7oTDvhfQE&t=24s' },
+    { cat: 'edu', title: 'علوم تالتة إعدادي · المسافة والإزاحة', desc: 'الكميات القياسية والمتجهة — الدرس الثالث (الجزء الأول). قناة أ. خالد القصبي.', tag: 'تعليمي', badge: 'علوم', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=QUenDpq5y1Y&t=7s' },
+    { cat: 'edu', title: 'علوم تانية إعدادي · الطاقة الداخلية (ج ٢)', desc: 'الدرس الثالث (الجزء الأول) — الطاقة الداخلية ودرجة الحرارة. قناة أ. خالد القصبي.', tag: 'تعليمي', badge: 'علوم', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=LBD_zKGVkVg' },
+    { cat: 'edu', title: 'علوم أولى إعدادي · الجدول الدوري', desc: 'سر الأبجدية الكيميائية — الجدول الدوري لتصنيف العناصر. قناة أ. خالد القصبي.', tag: 'تعليمي', badge: 'علوم', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=ovbLWPgAKQc&t=81s' },
+
+    // ===== بروموهات =====
+    { cat: 'promo', title: 'برومو — مثال ١', desc: 'برومو منتج / حدث / إطلاق. ضيف لينك الفيديو هنا.', tag: 'برومو', badge: 'Promo', thumb: 'bg-grad-1', url: '', placeholder: true },
+    { cat: 'promo', title: 'برومو — مثال ٢', desc: 'برومو قصير بإيقاع سريع وهوية بصرية قوية.', tag: 'برومو', badge: 'Promo', thumb: 'bg-grad-1', url: '', placeholder: true },
+    { cat: 'promo', title: 'برومو — مثال ٣', desc: 'تيزر قصير لإعلان تجاري.', tag: 'برومو', badge: 'Teaser', thumb: 'bg-grad-1', url: '', placeholder: true },
+
+    // ===== أفراح وويدنج =====
+    { cat: 'wedding', title: 'ويدنج فيلم — مثال ١', desc: 'فيلم فرح سينمائي. ضيف لينك الفيديو هنا.', tag: 'ويدنج', badge: 'Wedding', thumb: 'bg-grad-3', url: '', placeholder: true },
+    { cat: 'wedding', title: 'تيزر فرح — مثال ٢', desc: 'تيزر قصير للسوشيال ميديا بإيقاع حلو.', tag: 'ويدنج', badge: 'Teaser', thumb: 'bg-grad-3', url: '', placeholder: true },
+    { cat: 'wedding', title: 'هاي لايتس — مثال ٣', desc: 'هاي لايتس لليلة الفرح بمونتاج رومانسي.', tag: 'ويدنج', badge: 'Highlights', thumb: 'bg-grad-3', url: '', placeholder: true }
   ],
   en: [
     { title: 'Podcast — Featured Episode', desc: 'Professional podcast episode with full edit, titles, and music.', cat: 'podcast', tag: 'Podcast', badge: 'YouTube', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=xxqtsgYeVCk' },
@@ -432,18 +512,69 @@ const projects = {
     { title: 'Podcast — Episode 9', desc: 'Episode with full edit and strong on-screen titles.', cat: 'podcast', tag: 'Podcast', badge: 'YouTube', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=yQa4a4LT84w' },
     { title: 'Podcast — Episode 10', desc: 'Podcast interview with TV-style edit.', cat: 'podcast', tag: 'Podcast', badge: 'YouTube', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=oYPNWHwZJmw' },
     { title: 'Podcast — Episode 11', desc: 'Full edit episode with music and titles.', cat: 'podcast', tag: 'Podcast', badge: 'YouTube', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=kNhWHp13mMU' },
-    { title: 'Reel · Instagram Edit', desc: 'Reel example with fast pacing and strong hook.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-1.mp4', poster: 'reels/reel-1.jpg', orient: 'vertical' },
-    { title: 'Reel · Social Media', desc: 'Creative Reel edit for social media.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-2.mp4', poster: 'reels/reel-2.jpg', orient: 'vertical' },
-    { title: 'Reel · Trending', desc: 'On-trend Reel with cinematic edit.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-3.mp4', poster: 'reels/reel-3.jpg', orient: 'vertical' },
-    { title: 'Reel · Brand', desc: 'Branded Reel with fast pacing.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-4.mp4', poster: 'reels/reel-4.jpg', orient: 'vertical' },
-    { title: 'Reel · Script + Edit', desc: 'Reel with pro script and color grade.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-5.mp4', poster: 'reels/reel-5.jpg', orient: 'vertical' },
-    { title: 'Reel · Motion Graphics', desc: 'Reel with motion graphics and text plates.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-6.mp4', poster: 'reels/reel-6.jpg', orient: 'vertical' },
-    { title: 'Reel · Promo', desc: 'Short promo with Reels-style edit.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-7.mp4', poster: 'reels/reel-7.jpg', orient: 'vertical' },
-    { title: 'Reel · Storytelling', desc: 'Reel with visual storytelling and a short narrative.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-8.mp4', poster: 'reels/reel-8.jpg', orient: 'vertical' },
-    { title: 'Reel · Strong Hook', desc: 'Reel with a strong opening hook in the first 3s.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-9.mp4', poster: 'reels/reel-9.jpg', orient: 'vertical' },
-    { title: 'Reel · Lifestyle', desc: 'Lifestyle Reel with a smooth rhythm.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-10.mp4', poster: 'reels/reel-10.jpg', orient: 'vertical' },
-    { title: 'Reel · Cinematic', desc: 'Cinematic-look Reel with balanced colors.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-11.mp4', poster: 'reels/reel-11.jpg', orient: 'vertical' },
-    { title: 'Reel · Fast Cuts', desc: 'Reel with fast cuts and rhythmic transitions.', cat: 'reels', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-12.mp4', poster: 'reels/reel-12.jpg', orient: 'vertical' }
+
+
+    // ===== Reels (Medical) =====
+    { title: 'Medical reel · Dr. Nahed', desc: 'Medical reel edit — Dr. Nahed.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-1.mp4', poster: 'reels/reel-med-1.jpg', orient: 'vertical' },
+    { title: 'Medical reel · Dr. M 2', desc: 'Medical reel with full edit and titles.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-2.mp4', poster: 'reels/reel-med-2.jpg', orient: 'vertical' },
+    { title: 'Medical reel · Dr. M 3', desc: 'Medical reel with snappy pacing and strong hook.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-3.mp4', poster: 'reels/reel-med-3.jpg', orient: 'vertical' },
+    { title: 'Medical reel · edit 4', desc: 'Creative medical reel for social media.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-4.mp4', poster: 'reels/reel-med-4.jpg', orient: 'vertical' },
+    { title: 'Medical reel · edit 5', desc: 'Instagram-ready medical reel edit.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-5.mp4', poster: 'reels/reel-med-5.jpg', orient: 'vertical' },
+    { title: 'Medical reel · edit 6', desc: 'Medical reel with color grading and motion titles.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-6.mp4', poster: 'reels/reel-med-6.jpg', orient: 'vertical' },
+    { title: 'Medical reel · edit 7', desc: 'Polished medical reel edit.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-7.mp4', poster: 'reels/reel-med-7.jpg', orient: 'vertical' },
+    { title: 'Medical reel · edit 8', desc: 'Full social-ready medical reel edit.', cat: 'reels', subCat: 'medical', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-med-8.mp4', poster: 'reels/reel-med-8.jpg', orient: 'vertical' },
+
+    // ===== Reels (Marketing) =====
+    { title: 'Marketing reel · edit 1', desc: 'Marketing reel with snappy pacing and strong hook.', cat: 'reels', subCat: 'marketing', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-1.mp4', poster: 'reels/reel-mkt-1.jpg', orient: 'vertical' },
+    { title: 'Marketing reel · edit 2', desc: 'Brand reel with strong identity and motion titles.', cat: 'reels', subCat: 'marketing', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-2.mp4', poster: 'reels/reel-mkt-2.jpg', orient: 'vertical' },
+    { title: 'Marketing reel · edit 3', desc: 'Commercial reel with color grading and motion graphics.', cat: 'reels', subCat: 'marketing', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-mkt-3.mp4', poster: 'reels/reel-mkt-3.jpg', orient: 'vertical' },
+
+    // ===== Reels (General) =====
+    { title: 'General reel · edit 1', desc: 'Reel with creative editing and balanced pacing.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-1.mp4', poster: 'reels/reel-gen-1.jpg', orient: 'vertical' },
+    { title: 'General reel · edit 2', desc: 'Reel with color grading and motion titles.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-2.mp4', poster: 'reels/reel-gen-2.jpg', orient: 'vertical' },
+    { title: 'General reel · edit 3', desc: 'Snappy reel with a strong hook.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-3.mp4', poster: 'reels/reel-gen-3.jpg', orient: 'vertical' },
+    { title: 'General reel · edit 4', desc: 'Instagram-style reel with color work.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-4.mp4', poster: 'reels/reel-gen-4.jpg', orient: 'vertical' },
+    { title: 'General reel · edit 5', desc: 'Voiceover reel with motion titles.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-5.mp4', poster: 'reels/reel-gen-5.jpg', orient: 'vertical' },
+    { title: 'General reel · edit 6', desc: 'Social-ready reel with full edit.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-6.mp4', poster: 'reels/reel-gen-6.jpg', orient: 'vertical' },
+    { title: 'General reel · edit 7', desc: 'Polished reel with punchy pacing.', cat: 'reels', subCat: 'general', tag: 'Reel', badge: 'Reel', thumb: '', url: 'reels/reel-gen-7.mp4', poster: 'reels/reel-gen-7.jpg', orient: 'vertical' },
+
+    // ===== Long-form YouTube =====
+    { cat: 'longyt', title: 'People’s words won’t affect you — pillar theory', desc: 'Dr. Elaf Asfari — psychology of dealing with criticism.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=XumndLdz0Cc&t=12s' },
+    { cat: 'longyt', title: 'Why do we celebrate in January?', desc: 'Dr. Rana Abu-Mounes — the story behind new year.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=CWKe23RP49M&t=19s' },
+    { cat: 'longyt', title: 'The only way to gain self-confidence', desc: 'Dr. Elaf Asfari — the psychology of self-confidence.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=vKrjKOaj9eU&t=35s' },
+    { cat: 'longyt', title: 'How childhood shapes our lives', desc: 'Dr. Elaf Asfari — healing childhood wounds.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=2DxEZSH5FzE&t=31s' },
+    { cat: 'longyt', title: 'Beating exam stress — untold methods', desc: 'Dr. Elaf Asfari — practical anxiety techniques.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=l-FH_rt7acs&t=81s' },
+    { cat: 'longyt', title: 'Mental exhaustion — tips that changed my life', desc: 'Dr. Elaf Asfari — coping with burnout.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=jjqkJPCk5A4&t=15s' },
+    { cat: 'longyt', title: 'The “Strong Independent Woman” myth', desc: 'Dr. Rana Abu-Mounes — unpacking the trope.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=ROcOFeBslMY&t=42s' },
+    { cat: 'longyt', title: 'Beating anxiety — no meds, no therapist', desc: 'Dr. Elaf Asfari — self-regulation techniques.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=JkRzL08zOgk&t=2s' },
+    { cat: 'longyt', title: 'Curing insomnia & sleep problems', desc: 'Dr. Elaf Asfari — effective methods for deep sleep.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=ZyB4jfxyYpU' },
+    { cat: 'longyt', title: 'The real face of the West', desc: 'Dr. Rana Abu-Mounes — cultural commentary.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=oM7iMqgSxFI&t=6s' },
+    { cat: 'longyt', title: 'How to beat OCD — without medication', desc: 'Dr. Elaf Asfari — cognitive techniques for OCD.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=yGEJtkjrU9s&t=112s' },
+    { cat: 'longyt', title: 'Success: hard work or intelligence?', desc: 'Dr. Rana Abu-Mounes — the truth the top 1% hide.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=pfsOGbobqCw&t=32s' },
+    { cat: 'longyt', title: 'Turn negative thoughts positive in 5 minutes', desc: 'Dr. Elaf Asfari — step-by-step technique.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=iES1H1Swuos&t=13s' },
+    { cat: 'longyt', title: 'Are degrees becoming worthless?', desc: 'Dr. Rana Abu-Mounes — how to land a job now.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=c5dNzsAgCYA&t=16s' },
+    { cat: 'longyt', title: 'Work can’t replace love — Japan’s mistake', desc: 'Dr. Elaf Asfari — lessons from the Japanese model.', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=hDzpfaS-tJI&t=21s' },
+    { cat: 'longyt', title: 'Silicon Valley panic — 2026 AI bubble', desc: 'Dr. Rana Abu-Mounes — what happens to our money?', tag: 'YouTube', badge: 'Long-form', thumb: 'bg-grad-3', url: 'https://www.youtube.com/watch?v=BbUJN4rQGd0&t=1s' },
+
+    // ===== Educational — A. Khaled ElKsaby channel =====
+    { cat: 'edu', title: 'Science G7 · Matter & properties', desc: 'From mixture to element — lesson 3 (part 1). A. Khaled ElKsaby.', tag: 'Educational', badge: 'Science', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=mub2BL0Q3Hs&t=772s' },
+    { cat: 'edu', title: 'Science G8 · States of matter', desc: 'States of matter & properties — part 1. A. Khaled ElKsaby.', tag: 'Educational', badge: 'Science', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=hl4x9Uj2Mes' },
+    { cat: 'edu', title: 'Science G8 · State transitions', desc: 'Matter transitions — lesson 2 (part 1). A. Khaled ElKsaby.', tag: 'Educational', badge: 'Science', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=L81NGbBuGQw&t=225s' },
+    { cat: 'edu', title: 'Science G9 · Motion (1D)', desc: 'Lesson 1 (part 1) — motion in one direction. A. Khaled ElKsaby.', tag: 'Educational', badge: 'Science', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=GS0UeHFsQMA&t=877s' },
+    { cat: 'edu', title: 'Science G8 · Internal energy', desc: 'Internal energy, temperature & influencing factors. A. Khaled ElKsaby.', tag: 'Educational', badge: 'Science', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=pL7oTDvhfQE&t=24s' },
+    { cat: 'edu', title: 'Science G9 · Distance vs displacement', desc: 'Scalar & vector quantities — lesson 3 (part 1). A. Khaled ElKsaby.', tag: 'Educational', badge: 'Science', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=QUenDpq5y1Y&t=7s' },
+    { cat: 'edu', title: 'Science G8 · Internal energy (pt 2)', desc: 'Lesson 3 (part 1) — internal energy & temperature. A. Khaled ElKsaby.', tag: 'Educational', badge: 'Science', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=LBD_zKGVkVg' },
+    { cat: 'edu', title: 'Science G7 · Periodic table', desc: 'Periodic table — classifying elements. A. Khaled ElKsaby.', tag: 'Educational', badge: 'Science', thumb: 'bg-grad-2', url: 'https://www.youtube.com/watch?v=ovbLWPgAKQc&t=81s' },
+
+    // ===== Promos =====
+    { cat: 'promo', title: 'Promo — sample 1', desc: 'Product / event / launch promo. Add the video link here.', tag: 'Promo', badge: 'Promo', thumb: 'bg-grad-1', url: '', placeholder: true },
+    { cat: 'promo', title: 'Promo — sample 2', desc: 'Short promo with snappy pacing and strong visual identity.', tag: 'Promo', badge: 'Promo', thumb: 'bg-grad-1', url: '', placeholder: true },
+    { cat: 'promo', title: 'Promo — sample 3', desc: 'Short teaser for a commercial.', tag: 'Promo', badge: 'Teaser', thumb: 'bg-grad-1', url: '', placeholder: true },
+
+    // ===== Weddings =====
+    { cat: 'wedding', title: 'Wedding film — sample 1', desc: 'Cinematic wedding film. Add the video link here.', tag: 'Wedding', badge: 'Wedding', thumb: 'bg-grad-3', url: '', placeholder: true },
+    { cat: 'wedding', title: 'Wedding teaser — sample 2', desc: 'Short social-media teaser with smooth pacing.', tag: 'Wedding', badge: 'Teaser', thumb: 'bg-grad-3', url: '', placeholder: true },
+    { cat: 'wedding', title: 'Wedding highlights — sample 3', desc: 'Romantic highlights edit of the big night.', tag: 'Wedding', badge: 'Highlights', thumb: 'bg-grad-3', url: '', placeholder: true }
   ]
 };
 
@@ -451,7 +582,8 @@ const WA_NUMBER = '201063783219';
 
 // ====== State ======
 let currentLang = localStorage.getItem('lang') || 'ar';
-let currentFilter = 'all';
+let currentFilter = 'all';     // 'all' | 'podcast' | 'reels' | 'longyt' | 'edu' | 'promo' | 'wedding'
+let currentSubFilter = 'all';  // reels sub: 'all' | 'medical' | 'educational' | 'marketing' | 'general'
 
 // ====== Apply language ======
 function applyLanguage(lang) {
@@ -480,7 +612,7 @@ function applyLanguage(lang) {
     ? 'خالد علي — مونتير فيديو وصانع أفلام'
     : 'Khaled Ali — Video Editor & Filmmaker';
 
-  renderGallery(currentFilter);
+  renderGallery(currentFilter, currentSubFilter);
 }
 
 // ====== Helper: extract YouTube/Vimeo ID or detect local mp4 ======
@@ -505,35 +637,68 @@ function getYouTubeThumbnail(url) {
   return ytMatch ? `https://i.ytimg.com/vi/${ytMatch[1]}/hqdefault.jpg` : null;
 }
 
-// ====== Render gallery ======
-function renderGallery(filter = 'all') {
-  currentFilter = filter;
-  const gallery = document.getElementById('gallery');
-  const list = projects[currentLang];
-  const filtered = filter === 'all' ? list : list.filter(p => p.cat === filter);
-  gallery.innerHTML = filtered.map((p, idx) => {
-    const ytThumb = getYouTubeThumbnail(p.url);
-    const poster = p.poster || ytThumb;
-    const thumbStyle = poster ? `style="background-image: url('${poster}'); background-size: cover; background-position: center;"` : '';
-    const playable = isPlayable(p.url);
-    const orientCls = p.orient === 'vertical' ? ' card-vertical' : '';
-    return `
-    <article class="card reveal${orientCls} ${playable ? 'card-playable' : ''}" data-cat="${p.cat}" ${playable ? `data-video-url="${p.url}" data-video-title="${p.title.replace(/"/g, '&quot;')}"` : ''}>
-      <div class="thumb ${p.thumb}" ${thumbStyle}>
+// Build the HTML for a single card from a project object
+function projectCardHTML(p) {
+  const ytThumb = getYouTubeThumbnail(p.url);
+  const poster = p.poster || ytThumb;
+  const thumbStyle = poster ? `style="background-image: url('${poster}'); background-size: cover; background-position: center;"` : '';
+  const playable = isPlayable(p.url);
+  const orientCls = p.orient === 'vertical' ? ' card-vertical' : '';
+  const placeholderCls = p.placeholder ? ' card-placeholder' : '';
+  const catAttr = p.cat ? ` data-cat="${p.cat}"` : '';
+  const subAttr = p.subCat ? ` data-sub="${p.subCat}"` : '';
+  return `
+    <article class="card reveal${orientCls}${placeholderCls} ${playable ? 'card-playable' : ''}"${catAttr}${subAttr} ${playable ? `data-video-url="${p.url}" data-video-title="${p.title.replace(/"/g, '&quot;')}"` : ''}>
+      <div class="thumb ${p.thumb || ''}" ${thumbStyle}>
         <span class="badge">${p.tag} · ${p.badge}</span>
-        <span class="play-icon" aria-hidden="true">▶</span>
+        ${playable ? '<span class="play-icon" aria-hidden="true">▶</span>' : '<span class="soon-icon" aria-hidden="true">⏳</span>'}
       </div>
       <div class="card-body">
         <h3>${p.title}</h3>
         <p>${p.desc}</p>
       </div>
-    </article>
-  `;}).join('');
+    </article>`;
+}
+
+// Build empty state HTML
+function emptyStateHTML() {
+  const t = (i18n[currentLang] && i18n[currentLang]['empty.soon']) || 'Coming soon.';
+  return `<div class="empty-state">${t}</div>`;
+}
+
+// Animate cards on mount
+function staggerReveal(container) {
   requestAnimationFrame(() => {
-    gallery.querySelectorAll('.reveal').forEach((el, i) => {
-      setTimeout(() => el.classList.add('show'), i * 70);
+    const els = container.querySelectorAll('.reveal');
+    // Cap total reveal duration to ~600ms regardless of item count so nothing feels stuck
+    const stride = Math.max(12, Math.min(60, Math.floor(600 / Math.max(1, els.length))));
+    els.forEach((el, i) => {
+      setTimeout(() => el.classList.add('show'), i * stride);
     });
+    // Safety net: after 1.2s force all remaining items visible even if a timer is throttled
+    setTimeout(() => {
+      container.querySelectorAll('.reveal:not(.show)').forEach(el => el.classList.add('show'));
+    }, 1200);
   });
+}
+
+// ====== Render Works gallery (handles all cats + reels subfilter) ======
+function renderGallery(filter = 'all', subFilter = 'all') {
+  currentFilter = filter;
+  currentSubFilter = subFilter;
+  const gallery = document.getElementById('gallery');
+  if (!gallery) return;
+  const list = projects[currentLang];
+  let filtered;
+  if (filter === 'all') {
+    filtered = list;
+  } else if (filter === 'reels') {
+    filtered = list.filter(p => p.cat === 'reels' && (subFilter === 'all' || p.subCat === subFilter));
+  } else {
+    filtered = list.filter(p => p.cat === filter);
+  }
+  gallery.innerHTML = filtered.length ? filtered.map(projectCardHTML).join('') : emptyStateHTML();
+  staggerReveal(gallery);
   attachInteractiveCursorTargets();
 }
 
@@ -606,13 +771,35 @@ document.addEventListener('click', (e) => {
   openLightbox(card.dataset.videoUrl, card.dataset.videoTitle);
 });
 
-// ====== Filters ======
-document.getElementById('filters').addEventListener('click', (e) => {
+// ====== Filters (Works: podcast / reels) ======
+const filtersEl = document.getElementById('filters');
+const subfiltersEl = document.getElementById('subfilters');
+if (filtersEl) filtersEl.addEventListener('click', (e) => {
   const btn = e.target.closest('.chip');
   if (!btn) return;
-  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  filtersEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
   btn.classList.add('active');
-  renderGallery(btn.dataset.filter);
+  const filter = btn.dataset.filter;
+  // show reels sub-filters only when reels is active
+  if (subfiltersEl) {
+    const showSub = filter === 'reels';
+    subfiltersEl.hidden = !showSub;
+    if (!showSub) {
+      // reset sub state visually + data
+      subfiltersEl.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.subfilter === 'all'));
+      currentSubFilter = 'all';
+    }
+  }
+  renderGallery(filter, currentSubFilter);
+});
+
+// Reels sub-filters: medical / educational / marketing / general
+if (subfiltersEl) subfiltersEl.addEventListener('click', (e) => {
+  const btn = e.target.closest('.chip');
+  if (!btn) return;
+  subfiltersEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderGallery('reels', btn.dataset.subfilter);
 });
 
 // ====== Mobile nav toggle ======
@@ -745,10 +932,10 @@ function attachCardTilt(root) {
     });
   });
 }
-// Run after gallery render
+// Run after gallery render — wrap renderGallery so tilt attaches to freshly rendered cards
 const _origRenderGallery = renderGallery;
-renderGallery = function(filter) {
-  _origRenderGallery(filter);
+renderGallery = function(filter, subFilter) {
+  _origRenderGallery(filter, subFilter);
   setTimeout(() => attachCardTilt(document.getElementById('gallery')), 50);
 };
 attachCardTilt(document);
@@ -831,6 +1018,43 @@ window.addEventListener('scroll', () => {
   if (window.scrollY > 30) nav.classList.add('scrolled');
   else nav.classList.remove('scrolled');
 });
+
+// ====== Hero photo — mouse parallax ======
+// (skipped on touch/coarse pointer for performance)
+if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  const hero = document.querySelector('.hero');
+  const photoCard = document.querySelector('.hero-visual .photo-card');
+  if (hero && photoCard) {
+    let raf = null;
+    hero.addEventListener('mousemove', (e) => {
+      const rect = hero.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+      const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        photoCard.style.setProperty('--px', x.toFixed(3));
+        photoCard.style.setProperty('--py', y.toFixed(3));
+      });
+    });
+    hero.addEventListener('mouseleave', () => {
+      photoCard.style.setProperty('--px', 0);
+      photoCard.style.setProperty('--py', 0);
+    });
+  }
+}
+
+// ====== Scroll-linked subtle parallax on bg-gradient & hero text ======
+const bgGrad = document.querySelector('.bg-gradient');
+const heroText = document.querySelector('.hero-text');
+let scrollRaf = null;
+window.addEventListener('scroll', () => {
+  if (scrollRaf) cancelAnimationFrame(scrollRaf);
+  scrollRaf = requestAnimationFrame(() => {
+    const y = window.scrollY;
+    if (bgGrad) bgGrad.style.transform = `translate3d(0, ${y * -0.08}px, 0)`;
+    if (heroText && y < 800) heroText.style.transform = `translate3d(0, ${y * 0.12}px, 0)`;
+  });
+}, { passive: true });
 
 // ====== Init ======
 applyLanguage(currentLang);
