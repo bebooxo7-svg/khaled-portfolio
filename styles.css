@@ -1,3 +1,37 @@
+/* ===== Custom Font: Salma Arabic (Light/Medium/Bold/Black) ===== */
+@font-face {
+  font-family: 'Salma Arabic';
+  src: url('fonts/SalmaArabic-Light.woff2') format('woff2'),
+       url('fonts/SalmaArabic-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Salma Arabic';
+  src: url('fonts/SalmaArabic-Medium.woff2') format('woff2'),
+       url('fonts/SalmaArabic-Medium.otf') format('opentype');
+  font-weight: 400 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Salma Arabic';
+  src: url('fonts/SalmaArabic-Bold.woff2') format('woff2'),
+       url('fonts/SalmaArabic-Bold.otf') format('opentype');
+  font-weight: 600 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Salma Arabic';
+  src: url('fonts/SalmaArabic-Black.woff2') format('woff2'),
+       url('fonts/SalmaArabic-Black.otf') format('opentype');
+  font-weight: 800 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --bg: #0a0e1a;
   --bg-2: #0f172a;
@@ -21,7 +55,7 @@ html, body { margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Rubik', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-family: 'Cairo', 'Rubik', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   font-weight: 500;
   background: var(--bg);
   color: var(--text);
@@ -35,7 +69,7 @@ body {
 }
 
 html[lang="en"] body {
-  font-family: 'Rubik', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  font-family: 'Cairo', 'Rubik', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
   letter-spacing: 0;
   line-height: 1.7;
 }
@@ -96,7 +130,7 @@ img { max-width: 100%; display: block; }
   background: var(--grad);
   border-radius: 11px; color: #0a0e1a; font-weight: 900;
   box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   font-size: 1.2rem;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
 }
@@ -126,7 +160,7 @@ img { max-width: 100%; display: block; }
   color: var(--text);
   padding: 8px 14px;
   border-radius: 10px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
@@ -194,7 +228,7 @@ html[lang="ar"] h1 { line-height: 1.5; letter-spacing: 0; font-weight: 900; }
 .hero h1 .gradient-text { padding-inline: 2px; }
 .hero h1 .hero-tagline { display: block; margin-top: 6px; font-size: 0.86em; font-weight: 800; color: #f2f7fb; }
 html[lang="ar"] .hero h1 .hero-tagline { font-weight: 900; }
-html[lang="en"] h1 { font-family: 'Rubik', sans-serif; letter-spacing: -1px; }
+html[lang="en"] h1 { font-family: 'Cairo', 'Rubik', sans-serif; letter-spacing: -1px; }
 
 .gradient-text {
   background: linear-gradient(135deg, var(--neon) 0%, var(--blue) 50%, var(--neon) 100%);
@@ -269,7 +303,7 @@ html[lang="en"] h1 { font-family: 'Rubik', sans-serif; letter-spacing: -1px; }
   -webkit-background-clip: text; background-clip: text; color: transparent;
   font-weight: 900;
   line-height: 1.1;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
 }
 .hero-stats span { color: var(--muted); font-size: 0.9rem; }
 
@@ -302,7 +336,7 @@ html[lang="en"] h1 { font-family: 'Rubik', sans-serif; letter-spacing: -1px; }
   content: attr(data-tooltip);
   position: absolute;
   bottom: -32px; left: 50%; transform: translateX(-50%);
-  font-size: 0.72rem; font-family: 'Rubik', sans-serif;
+  font-size: 0.72rem; font-family: 'Cairo', 'Rubik', sans-serif;
   font-weight: 600;
   background: rgba(0, 0, 0, 0.85); color: var(--neon);
   padding: 4px 10px; border-radius: 6px;
@@ -429,7 +463,7 @@ html[lang="en"] h1 { font-family: 'Rubik', sans-serif; letter-spacing: -1px; }
   letter-spacing: 0.5px;
   border: 1px solid rgba(34, 197, 94, 0.28);
   margin-bottom: 16px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
 }
 h2 {
   font-size: clamp(1.8rem, 3.5vw, 2.6rem);
@@ -440,7 +474,10 @@ h2 {
   text-wrap: balance;
 }
 html[lang="ar"] h2, html[lang="ar"] h3 { line-height: 1.5; letter-spacing: 0; font-weight: 900; }
-html[lang="en"] h2, html[lang="en"] h3 { font-family: 'Rubik', sans-serif; }
+html[lang="en"] h2, html[lang="en"] h3 { font-family: 'Cairo', 'Rubik', sans-serif; }
+
+/* Salma Arabic used ONLY for Arabic big display headings (h1, h2) — gives a distinctive local feel */
+html[lang="ar"] h1, html[lang="ar"] h2 { font-family: 'Salma Arabic', 'Cairo', 'Rubik', sans-serif; font-weight: 900; }
 
 h3 { line-height: 1.4; }
 
@@ -458,7 +495,7 @@ html[lang="ar"] .lead { line-height: 1.95; }
   font-size: 0.9rem;
   color: #d7d9e3;
   transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
 }
 .tools li:hover { transform: translateY(-3px) scale(1.05); background: var(--surface-2); border-color: var(--neon); color: var(--neon); box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2); }
 
@@ -546,7 +583,7 @@ html[lang="ar"] .lead { line-height: 1.95; }
   position: absolute;
   top: 22px;
   inset-inline-end: 22px;
-  font-family: 'Rubik', sans-serif; font-weight: 800;
+  font-family: 'Cairo', 'Rubik', sans-serif; font-weight: 800;
   font-size: 0.85rem;
   color: rgba(255,255,255,0.32);
   letter-spacing: 1.2px;
@@ -681,7 +718,7 @@ html[lang="en"] .skill:hover { transform: translateX(6px); }
   background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px);
   font-size: 0.78rem; color: #fff; z-index: 2;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
 }
 .card-body { padding: 18px; }
 .card-body h3 { margin: 0 0 6px; font-size: 1.08rem; transition: color 0.3s ease; }
@@ -744,11 +781,11 @@ html[dir="rtl"] .contact-item a:hover { transform: translateX(-6px); }
 }
 .ci-label {
   font-size: 0.78rem; color: var(--muted); font-weight: 600;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
 }
 .ci-value {
   font-size: 0.98rem; color: var(--text); font-weight: 700;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   transition: color 0.3s ease;
 }
 .contact-item a:hover .ci-value { color: var(--neon); }
@@ -879,7 +916,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
 .step:hover::before { opacity: 1; }
 .step-num {
   display: inline-block;
-  font-family: 'Rubik', sans-serif; font-weight: 900;
+  font-family: 'Cairo', 'Rubik', sans-serif; font-weight: 900;
   font-size: 2.6rem;
   background: var(--grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -958,7 +995,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
 /* Countdown */
 .countdown {
   display: flex; align-items: center; gap: 6px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   font-variant-numeric: tabular-nums;
 }
 .cd-block {
@@ -1039,7 +1076,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   text-decoration: line-through;
   text-decoration-color: rgba(239, 68, 68, 0.7);
   text-decoration-thickness: 2px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   font-weight: 600;
 }
 .price-discount {
@@ -1053,7 +1090,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   border: 1px solid rgba(34, 197, 94, 0.45);
   color: var(--neon);
   margin-top: 2px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
 }
 .price-custom {
   font-size: 1.6rem !important;
@@ -1186,7 +1223,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   display: inline-block;
   font-size: 0.74rem; color: var(--muted);
   margin: 0 auto 8px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   letter-spacing: 0.4px;
   text-transform: uppercase;
 }
@@ -1202,12 +1239,12 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   line-height: 1.1;
   background: var(--grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
 }
 .plan-name-sub {
   font-size: 0.78rem;
   color: var(--muted);
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   letter-spacing: 1px;
   text-transform: uppercase;
   font-weight: 600;
@@ -1226,7 +1263,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   margin-top: auto;
 }
 .card-meta .price {
-  font-family: 'Rubik', sans-serif; font-weight: 900;
+  font-family: 'Cairo', 'Rubik', sans-serif; font-weight: 900;
   font-size: 2.6rem;
   background: var(--grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -1247,7 +1284,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   font-size: 0.84rem;
   font-weight: 700;
   cursor: pointer;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
   align-self: center;
   margin-top: 14px;
@@ -1268,7 +1305,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   font-size: 0.74rem; color: var(--neon);
   letter-spacing: 0.5px; text-transform: uppercase;
   margin-bottom: 6px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   position: relative; z-index: 2;
 }
 .card-back .plan-name {
@@ -1278,7 +1315,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   letter-spacing: -0.5px;
   background: var(--grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   position: relative; z-index: 2;
 }
 .card-back .plan-feats {
@@ -1336,7 +1373,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   font-size: 0.95rem;
   transition: all 0.3s ease;
   position: relative; z-index: 2;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   margin-top: auto;
   box-shadow: 0 14px 30px rgba(34, 197, 94, 0.4);
 }
@@ -1358,7 +1395,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   font-size: 0.74rem; font-weight: 800;
   letter-spacing: 0.4px;
   box-shadow: 0 12px 28px rgba(34, 197, 94, 0.45);
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   z-index: 4;
   white-space: nowrap;
 }
@@ -1589,7 +1626,7 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
   border: 1px solid rgba(34, 197, 94, 0.4);
   color: var(--neon);
   font-weight: 700;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   text-transform: uppercase;
 }
 
@@ -1639,7 +1676,7 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
   background: rgba(10, 14, 26, 0.55);
   border: 1px solid rgba(34, 197, 94, 0.32);
   color: var(--text);
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
 }
 @media (max-width: 560px) {
   .designs-cta-band { padding: 26px 18px; }
@@ -1693,7 +1730,7 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
   z-index: 5;
   transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
   display: inline-flex; align-items: center; justify-content: center;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   font-weight: 600;
   line-height: 1;
 }
@@ -1791,7 +1828,7 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
   box-shadow: 0 20px 50px rgba(34,197,94,0.45), 0 0 0 14px rgba(34,197,94,0.12);
   z-index: 2;
   transition: transform 0.4s cubic-bezier(0.22,1,0.36,1), box-shadow 0.4s ease;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   padding-inline-start: 6px;
 }
 .showcase-thumb:hover { transform: scale(1.015); }
@@ -1835,7 +1872,7 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
 .stage-num {
   position: absolute;
   top: 10px; inset-inline-end: 14px;
-  font-family: 'Rubik', sans-serif;
+  font-family: 'Cairo', 'Rubik', sans-serif;
   font-size: 0.7rem;
   letter-spacing: 1.4px;
   color: rgba(255,255,255,0.28);
