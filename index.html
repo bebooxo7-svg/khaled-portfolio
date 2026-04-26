@@ -3,16 +3,91 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Khaled Ali — Video Editor & Filmmaker</title>
-  <meta name="description" data-i18n="meta.desc" content="خالد علي — مونتير فيديو وصانع أفلام بخبرة أكتر من ٤ سنين في صناعة المحتوى البصري." />
+  <meta name="theme-color" content="#0a0e1a" />
+  <title data-i18n="meta.title">خالد علي — مونتاج فيديو · تسويق رقمي · تصميم</title>
+  <meta name="description" data-i18n="meta.desc" content="خالد علي — بقود فريق صغير متخصص في مونتاج الفيديو والتسويق الرقمي والتصميم. خبرة ٤+ سنين مع براندات وفرق إعلامية وشخصيات عامة." />
+  <meta name="author" content="Khaled Ali" />
+  <meta name="keywords" content="مونتاج فيديو, تسويق رقمي, موشن جرافيك, إعلانات ممولة, إنتاج محتوى, خالد علي, video editor, motion graphics, content creation, Egypt" />
+
+  <!-- Canonical (TODO: update to your production domain) -->
+  <link rel="canonical" href="https://khaledali.example/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:locale" content="ar_EG" />
+  <meta property="og:locale:alternate" content="en_US" />
+  <meta property="og:site_name" content="Khaled Ali" />
+  <meta property="og:title" content="خالد علي — مونتاج فيديو · تسويق رقمي · تصميم" />
+  <meta property="og:description" content="بقود فريق صغير متخصص في صناعة المحتوى البصري والتسويق الرقمي. خبرة ٤+ سنين." />
+  <meta property="og:image" content="khaled-hero.jpg" />
+  <meta property="og:image:alt" content="Khaled Ali — Video editor at work" />
+  <meta property="og:url" content="https://khaledali.example/" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="خالد علي — مونتاج فيديو · تسويق رقمي · تصميم" />
+  <meta name="twitter:description" content="بقود فريق صغير متخصص في صناعة المحتوى البصري والتسويق الرقمي." />
+  <meta name="twitter:image" content="khaled-hero.jpg" />
+
+  <!-- Favicon (inline SVG, no extra request) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2322c55e'/%3E%3Cstop offset='100%25' stop-color='%233b82f6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%230a0e1a'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Inter,Arial,sans-serif' font-weight='800' font-size='38' fill='url(%23g)'%3EK%3C/text%3E%3C/svg%3E" />
+  <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2322c55e'/%3E%3Cstop offset='100%25' stop-color='%233b82f6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%230a0e1a'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Inter,Arial,sans-serif' font-weight='800' font-size='38' fill='url(%23g)'%3EK%3C/text%3E%3C/svg%3E" />
+
+  <!-- Fonts (formal: Tajawal AR + Inter EN) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&family=Tajawal:wght@400;500;700;900&family=Poppins:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=11" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Preload hero image (LCP, WebP with JPG fallback) -->
+  <link rel="preload" as="image" href="khaled-hero.webp" type="image/webp" fetchpriority="high" />
+
+  <link rel="stylesheet" href="styles.css?v=18" />
+
+  <!-- Structured data: Person + ProfessionalService -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://khaledali.example/#person",
+        "name": "Khaled Ali",
+        "alternateName": "خالد علي",
+        "jobTitle": "Video Editor, Filmmaker, Digital Marketing Lead",
+        "description": "Leads a small team specialized in video editing, digital marketing, and design. 4+ years of experience.",
+        "url": "https://khaledali.example/",
+        "image": "https://khaledali.example/khaled-hero.jpg",
+        "email": "mailto:bebooxo7@gmail.com",
+        "telephone": "+201063783219",
+        "sameAs": [
+          "https://wa.me/201063783219",
+          "https://instagram.com/kkhalidoxo"
+        ],
+        "knowsAbout": ["Video Editing", "Motion Graphics", "Color Grading", "Digital Marketing", "Paid Ads", "Content Strategy", "Graphic Design"]
+      },
+      {
+        "@type": "ProfessionalService",
+        "@id": "https://khaledali.example/#service",
+        "name": "Khaled Ali — Content & Marketing Team",
+        "image": "https://khaledali.example/khaled-hero.jpg",
+        "url": "https://khaledali.example/",
+        "telephone": "+201063783219",
+        "founder": {"@id": "https://khaledali.example/#person"},
+        "areaServed": {"@type": "Country", "name": "Egypt"},
+        "priceRange": "$$",
+        "serviceType": ["Video editing", "Motion graphics", "Social media management", "Paid ads", "Content strategy", "Graphic design"]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <!-- Subtle background gradient -->
   <div class="bg-gradient" aria-hidden="true"></div>
+
+  <!-- Scroll progress bar -->
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
 
   <!-- Navbar -->
   <header class="nav">
@@ -47,15 +122,15 @@
       <div class="hero-text">
         <span class="eyebrow">
           <span class="dot"></span>
-          <span data-i18n="hero.eyebrow">مونتير فيديو وصانع أفلام · متاح للمشاريع</span>
+          <span data-i18n="hero.eyebrow">خالد علي + الفريق · مونتاج · تسويق رقمي · تصميم</span>
         </span>
         <h1>
           <span data-i18n="hero.greet">مرحبًا، أنا</span>
           <span class="gradient-text" data-i18n="hero.name">خالد علي</span>
-          <span class="hero-tagline" data-i18n="hero.line">بنبني براندك ومحتوى يخلّي الناس تفتكرك.</span>
+          <span class="hero-tagline" data-i18n="hero.line">بنبني براندك ومحتوى يخلّي الناس تفتكرك</span>
         </h1>
         <p class="hero-sub" data-i18n="hero.sub">
-          مونتير فيديو بصنع محتوى يساعد صنّاع المحتوى والبراندات يحوّلوا أفكارهم لفيديوهات مؤثرة. خبرة أكتر من <strong>٤ سنين</strong> في يوتيوب الطويلة، السوشيال ميديا، البودكاست، والبرامج التلفزيونية.
+          أنا خالد. بقود فريق صغير متخصص في صناعة المحتوى البصري والتسويق الرقمي. خبرة <strong>٤+ سنين</strong> في مونتاج اليوتيوب والبودكاست، السوشيال ميديا، الإعلانات الممولة، والتصميم — مع براندات وفرق إعلامية وشخصيات عامة.
         </p>
         <div class="hero-cta">
           <a class="btn btn-primary magnetic" href="#works" data-i18n="hero.cta1">شوف أعمالي</a>
@@ -71,7 +146,7 @@
             <span data-i18n="stats.projects">مشروع منجز</span>
           </li>
           <li>
-            <strong data-counter="30" data-suffix="+">0</strong>
+            <strong data-counter="100" data-suffix="+">0</strong>
             <span data-i18n="stats.clients">عميل سعيد</span>
           </li>
         </ul>
@@ -94,7 +169,10 @@
       </div>
       <div class="hero-visual">
         <figure class="photo-card">
-          <img src="khaled-hero.jpg" alt="Khaled Ali in studio" loading="eager" decoding="async" width="1536" height="1024" />
+          <picture>
+            <source srcset="khaled-hero.webp" type="image/webp" />
+            <img src="khaled-hero.jpg" alt="Khaled Ali in studio" loading="eager" decoding="async" fetchpriority="high" width="1536" height="1024" />
+          </picture>
           <figcaption class="photo-meta">
             <span class="meta-dot"></span>
             <span data-i18n="hero.photo.meta">الاستوديو · جلسة مونتاج</span>
@@ -113,11 +191,14 @@
   <section class="bts-strip" aria-label="Behind the scenes">
     <div class="container">
       <figure class="bts-figure">
-        <img src="khaled-bts.jpg" alt="Behind the scenes" loading="lazy" decoding="async" width="1536" height="1024" />
+        <picture>
+          <source srcset="khaled-bts.webp" type="image/webp" />
+          <img src="khaled-bts.jpg" alt="Behind the scenes" loading="lazy" decoding="async" width="1536" height="1024" />
+        </picture>
         <figcaption class="bts-caption">
           <span class="bts-tag" data-i18n="bts.tag">وراء الكاميرا</span>
-          <h3 data-i18n="bts.title">لقطات في سياقها الصحيح.</h3>
-          <p data-i18n="bts.desc">إعداد إضاءة، إدارة بلاتو، وتصوير بأدوات احترافية.</p>
+          <h3 data-i18n="bts.title">لقطات في سياقها الصحيح</h3>
+          <p data-i18n="bts.desc">إعداد إضاءة، إدارة بلاتو، وتصوير بأدوات احترافية</p>
         </figcaption>
       </figure>
     </div>
@@ -128,12 +209,12 @@
     <div class="container grid-2">
       <div>
         <span class="section-tag" data-i18n="about.tag">عني</span>
-        <h2 data-i18n="about.title">بحوّل الفكرة لفيديو بيجذب الانتباه.</h2>
+        <h2 data-i18n="about.title">بقود فريق صغير بنحوّل الفكرة لمحتوى وتسويق بيؤثر فعلًا</h2>
         <p class="lead" data-i18n="about.p1">
-          أنا خالد علي، مونتير فيديو وصانع أفلام بخبرة أكتر من ٤ سنين في صناعة المحتوى البصري. متخصص في مونتاج فيديوهات يوتيوب الطويلة، السوشيال ميديا، البودكاست، والبرامج بأسلوب تلفزيوني، مع تركيز قوي على السرد البصري والإيقاع اللي يحافظ على انتباه المشاهد.
+          أنا خالد علي، مونتير فيديو وصانع أفلام بخبرة <strong>٤+ سنين</strong>. بقود فريق صغير من مونتيرين ومصممين ومسوّقين، بنقدّم خدمة متكاملة من A إلى Z: مونتاج، موشن، تصميم، استراتيجية محتوى، إدارة صفحات، وإعلانات ممولة.
         </p>
         <p class="lead" data-i18n="about.p2">
-          اشتغلت مع شركات، فرق إعلامية، وشخصيات عامة، ودايمًا هدفي تقديم محتوى احترافي يجمع بين الإبداع والدقة. بشوف إن كل فيديو ليه قصة… ودوري إني أطلعها بأفضل شكل ممكن.
+          اشتغلنا مع شركات، فرق إعلامية، وشخصيات عامة. هدفنا نتايج فعلية: نمو في الجمهور، تفاعل حقيقي، ومبيعات. مش بس فيديوهات حلوة — تسويق بيشتغل.
         </p>
         <ul class="tools">
           <li>Adobe Premiere Pro</li>
@@ -150,28 +231,28 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
           </div>
           <h3 data-i18n="about.card1.t">مونتاج سينمائي</h3>
-          <p data-i18n="about.card1.d">قصّ ذكي، إيقاع محسوب، وانتقالات بتخدم القصة.</p>
+          <p data-i18n="about.card1.d">قصّ ذكي، إيقاع محسوب، وانتقالات بتخدم القصة</p>
         </div>
         <div class="mini-card">
           <div class="mini-ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"></circle><circle cx="6.5" cy="12.5" r="0.5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path></svg>
           </div>
           <h3 data-i18n="about.card2.t">تصحيح ألوان</h3>
-          <p data-i18n="about.card2.d">لوك سينمائي متّزن باستخدام DaVinci Resolve.</p>
+          <p data-i18n="about.card2.d">لوك سينمائي متّزن باستخدام DaVinci Resolve</p>
         </div>
         <div class="mini-card">
           <div class="mini-ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
           </div>
           <h3 data-i18n="about.card3.t">موشن جرافيك</h3>
-          <p data-i18n="about.card3.d">عناوين، لوجوهات، وأنميشن يضيف روح للفيديو.</p>
+          <p data-i18n="about.card3.d">عناوين، لوجوهات، وأنميشن يضيف روح للفيديو</p>
         </div>
         <div class="mini-card">
           <div class="mini-ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22"><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle></svg>
           </div>
           <h3 data-i18n="about.card4.t">تصميم صوتي</h3>
-          <p data-i18n="about.card4.d">ميكس نظيف، موسيقى، ومؤثرات بتكمّل الصورة.</p>
+          <p data-i18n="about.card4.d">ميكس نظيف، موسيقى، ومؤثرات بتكمّل الصورة</p>
         </div>
       </div>
     </div>
@@ -183,56 +264,56 @@
       <div class="section-head">
         <span class="section-tag" data-i18n="services.tag">الخدمات</span>
         <h2 data-i18n="services.title">إيه اللي بقدمه؟</h2>
-        <p class="lead" data-i18n="services.lead">حلول مونتاج كاملة تخلّي محتواك يوصل لجمهورك بأقوى شكل.</p>
+        <p class="lead" data-i18n="services.lead">أنا وفريقي بنغطي كل اللي محتاجه براندك في مكان واحد — من المحتوى للإعلانات للتصميم</p>
       </div>
       <div class="services">
         <article class="service">
           <div class="service-icon">📱</div>
           <span class="num">01</span>
           <h3 data-i18n="services.s1.t">إدارة صفحات السوشيال ميديا</h3>
-          <p data-i18n="services.s1.d">إدارة كاملة لـ Instagram / Facebook / TikTok / LinkedIn — تخطيط، نشر، تفاعل، وتحليلات شهرية.</p>
+          <p data-i18n="services.s1.d">إدارة كاملة لـ Instagram / Facebook / TikTok / LinkedIn — تخطيط، نشر، تفاعل، وتحليلات شهرية</p>
         </article>
         <article class="service">
           <div class="service-icon">📊</div>
           <span class="num">02</span>
           <h3 data-i18n="services.s2.t">إعلانات ممولة (Meta · Google · TikTok)</h3>
-          <p data-i18n="services.s2.d">حملات إعلانية مدروسة بـ targeting دقيق وعائد استثمار قابل للقياس.</p>
+          <p data-i18n="services.s2.d">حملات إعلانية مدروسة بـ targeting دقيق وعائد استثمار قابل للقياس</p>
         </article>
         <article class="service">
           <div class="service-icon">🧠</div>
           <span class="num">03</span>
           <h3 data-i18n="services.s3.t">استراتيجية محتوى وتسويق رقمي</h3>
-          <p data-i18n="services.s3.d">خطة محتوى شهرية، تحليل المنافسين، ودراسة الجمهور — قبل أي حاجة بنبدأها.</p>
+          <p data-i18n="services.s3.d">خطة محتوى شهرية، تحليل المنافسين، ودراسة الجمهور — قبل أي حاجة بنبدأها</p>
         </article>
         <article class="service">
           <div class="service-icon">🎬</div>
           <span class="num">04</span>
           <h3 data-i18n="services.s4.t">مونتاج فيديوهات يوتيوب وبودكاست</h3>
-          <p data-i18n="services.s4.d">فيديوهات طويلة وبودكاست بإيقاع محسّن للريتنشن وجذب المشاهد.</p>
+          <p data-i18n="services.s4.d">فيديوهات طويلة وبودكاست بإيقاع محسّن للريتنشن وجذب المشاهد</p>
         </article>
         <article class="service">
           <div class="service-icon">⚡</div>
           <span class="num">05</span>
           <h3 data-i18n="services.s5.t">ريلز · تيك توك · شورتس</h3>
-          <p data-i18n="services.s5.d">محتوى قصير بإيقاع سريع، Hook قوي، وتسليم منتظم.</p>
+          <p data-i18n="services.s5.d">محتوى قصير بإيقاع سريع، Hook قوي، وتسليم منتظم</p>
         </article>
         <article class="service">
           <div class="service-icon">🎨</div>
           <span class="num">06</span>
           <h3 data-i18n="services.s6.t">موشن جرافيك وColor Grading</h3>
-          <p data-i18n="services.s6.d">عناوين متحركة، Logo animation، ولوك سينمائي بألوان متّزنة.</p>
+          <p data-i18n="services.s6.d">عناوين متحركة، Logo animation، ولوك سينمائي بألوان متّزنة</p>
         </article>
         <article class="service">
           <div class="service-icon">🖌️</div>
           <span class="num">07</span>
           <h3 data-i18n="services.s7.t">تصميم جرافيك (إعلانات + بوسترات + هوية)</h3>
-          <p data-i18n="services.s7.d">إعلانات سوشيال ميديا، بوسترات، وهوية بصرية كاملة (Logo · Brand Book · Templates).</p>
+          <p data-i18n="services.s7.d">إعلانات سوشيال ميديا، بوسترات، وهوية بصرية كاملة (Logo · Brand Book · Templates)</p>
         </article>
         <article class="service service-wide">
           <div class="service-icon">🚀</div>
           <span class="num">08</span>
           <h3 data-i18n="services.s8.t">تنفيذ كامل من الفكرة للنشر</h3>
-          <p data-i18n="services.s8.d">إدارة المشروع من A-Z: تخطيط، تصوير، مونتاج، تصميم، نشر، وقياس النتائج.</p>
+          <p data-i18n="services.s8.d">إدارة المشروع من A-Z: تخطيط، تصوير، مونتاج، تصميم، نشر، وقياس النتائج</p>
         </article>
       </div>
     </div>
@@ -243,257 +324,409 @@
     <div class="container">
       <div class="section-head">
         <span class="section-tag" data-i18n="pricing.tag">الباقات</span>
-        <h2 data-i18n="pricing.title">اختار البطاقة اللي تناسب طموحك</h2>
-        <p class="lead" data-i18n="pricing.lead">كل بطاقة فيها كل اللي محتاجه في مرحلتك — اضغط على البطاقة عشان تشوف التفاصيل ورا.</p>
+        <h2 data-i18n="pricing.title">اختار الباقة اللي تناسب طموحك</h2>
+        <p class="lead" data-i18n="pricing.lead">كل باقة فيها كل اللي محتاجه في مرحلتك — اضغط على الباقة عشان تشوف التفاصيل</p>
       </div>
-      <div class="pricing-grid">
-        <article class="plan card-flip " data-plan="1">
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-face card-front">
-              <span class="card-corner top"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M13 2 4 14h6l-2 8 9-12h-6l2-8z"/></svg></span>
-              <span class="card-corner bottom"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M13 2 4 14h6l-2 8 9-12h-6l2-8z"/></svg></span>
-              <div class="card-illustration">
-                <svg viewBox="0 0 200 200" width="120" height="120" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="grad-spark" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#22C55E"/>
-                      <stop offset="100%" stop-color="#3B82F6"/>
-                    </linearGradient>
-                    <filter id="glow-spark"><feGaussianBlur stdDeviation="3"/></filter>
-                  </defs>
-                  <g filter="url(#glow-spark)" opacity="0.55">
-                    <path d="M110 20 L60 110 H100 L80 180 L150 80 H110 L130 20 Z" fill="url(#grad-spark)"/>
-                  </g>
-                  <path d="M110 20 L60 110 H100 L80 180 L150 80 H110 L130 20 Z" fill="url(#grad-spark)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
-                  <circle cx="40" cy="40" r="3" fill="#22C55E" opacity="0.8"/>
-                  <circle cx="170" cy="60" r="2" fill="#3B82F6" opacity="0.8"/>
-                  <circle cx="160" cy="170" r="2.5" fill="#22C55E" opacity="0.7"/>
-                </svg>
-              </div>
-              <div class="card-meta">
-                <span class="plan-tag" data-i18n="pricing.p1.tag">لما تبدأ بأقوى انطباع</span>
-                <div class="plan-name-wrap"><h3 class="plan-name" data-i18n="pricing.p1.name">البداية</h3></div>
-                <p class="plan-promise" data-i18n="pricing.p1.promise">فيديو يخطف الانتباه ويصنع أول جمهور حقيقي ليك.</p>
-                <div class="plan-price">
-                  <span class="plan-from" data-i18n="pricing.from">يبدأ من</span>
-                  <span class="price" data-i18n="pricing.p1.price">10,000 ج</span>
-                  <span class="per" data-i18n="pricing.month">/ شهريًا</span>
-                </div>
-              </div>
-              <button class="flip-hint" type="button" data-flip aria-label="Flip card">
-                <span data-i18n="pricing.flip">اقلب البطاقة</span>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
-              </button>
-            </div>
 
-            <!-- BACK -->
-            <div class="card-face card-back">
-              <button class="flip-back" type="button" data-flip aria-label="Back to front">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-                <span data-i18n="pricing.flip.back">رجوع</span>
-              </button>
-              <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
-              <h3 class="plan-name" data-i18n="pricing.p1.name">Spark</h3>
-              <ul class="plan-feats">
-            <li data-i18n="pricing.p1.f1">✏️ كتابة Hook script (أقوى ١٠ ثواني)</li>
-            <li data-i18n="pricing.p1.f2">🎬 فيديو يوتيوب (لحد ١٥ دقيقة) أو ٤ ريلز</li>
-            <li data-i18n="pricing.p1.f3">🎨 تصحيح ألوان + لوك واحد</li>
-            <li data-i18n="pricing.p1.f4">🔊 تنظيف صوت + موسيقى مناسبة</li>
-            <li data-i18n="pricing.p1.f5">📝 ١ مراجعة كاملة</li>
-            <li data-i18n="pricing.p1.f6">⚡ تسليم في ٥ أيام</li>
-              </ul>
-              <a class="plan-cta" href="https://wa.me/201063783219?text=عايز%20احجز%20باقة%20Spark" target="_blank" rel="noopener" data-i18n="pricing.cta">احجز الباقة</a>
-            </div>
+      <!-- Discount banner with auto-renewing 7-day countdown -->
+      <div class="discount-banner" role="region" aria-label="Limited offer">
+        <div class="discount-banner-inner">
+          <span class="discount-spark" aria-hidden="true">⚡</span>
+          <div class="discount-text">
+            <span class="discount-title" data-i18n="discount.title">خصم 20% لمدة محدودة</span>
+            <span class="discount-sub" data-i18n="discount.sub">العرض ينتهي خلال:</span>
           </div>
-        </article>
-
-        <article class="plan card-flip plan-popular" data-plan="2">
-          <span class="plan-badge" data-i18n="pricing.popular">الأكثر طلبًا</span>
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-face card-front">
-              <span class="card-corner top"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19l8-9 4 4 6-7"/><path d="M14 5h7v7"/></svg></span>
-              <span class="card-corner bottom"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19l8-9 4 4 6-7"/><path d="M14 5h7v7"/></svg></span>
-              <div class="card-illustration">
-                <svg viewBox="0 0 200 200" width="120" height="120" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="grad-rise" x1="0%" y1="100%" x2="100%" y2="0%">
-                      <stop offset="0%" stop-color="#3B82F6"/>
-                      <stop offset="100%" stop-color="#22C55E"/>
-                    </linearGradient>
-                  </defs>
-                  <path d="M20 160 L70 110 L100 130 L160 50" fill="none" stroke="url(#grad-rise)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M125 50 L160 50 L160 85" fill="none" stroke="url(#grad-rise)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-                  <circle cx="20" cy="160" r="6" fill="#3B82F6"/>
-                  <circle cx="70" cy="110" r="5" fill="#3B82F6" opacity="0.7"/>
-                  <circle cx="100" cy="130" r="5" fill="#22C55E" opacity="0.7"/>
-                  <circle cx="160" cy="50" r="8" fill="#22C55E"/>
-                  <circle cx="160" cy="50" r="14" fill="none" stroke="#22C55E" stroke-width="1.5" opacity="0.4"/>
-                </svg>
-              </div>
-              <div class="card-meta">
-                <span class="plan-tag" data-i18n="pricing.p2.tag">محتوى ثابت يبني جمهورك</span>
-                <div class="plan-name-wrap"><h3 class="plan-name" data-i18n="pricing.p2.name">الانطلاق</h3></div>
-                <p class="plan-promise" data-i18n="pricing.p2.promise">سلسلة محتوى متكاملة تخلي الناس تستنّى الإصدار الجديد.</p>
-                <div class="plan-price">
-                  <span class="plan-from" data-i18n="pricing.from">يبدأ من</span>
-                  <span class="price" data-i18n="pricing.p2.price">18,000 ج</span>
-                  <span class="per" data-i18n="pricing.month">/ شهريًا</span>
-                </div>
-              </div>
-              <button class="flip-hint" type="button" data-flip aria-label="Flip card">
-                <span data-i18n="pricing.flip">اقلب البطاقة</span>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
-              </button>
-            </div>
-
-            <!-- BACK -->
-            <div class="card-face card-back">
-              <button class="flip-back" type="button" data-flip aria-label="Back to front">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-                <span data-i18n="pricing.flip.back">رجوع</span>
-              </button>
-              <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
-              <h3 class="plan-name" data-i18n="pricing.p2.name">Rise</h3>
-              <ul class="plan-feats">
-            <li data-i18n="pricing.p2.f1">✏️ سكريبت كامل + outline سردي</li>
-            <li data-i18n="pricing.p2.f2">🎬 فيديوين يوتيوب + ٨ ريلز/تيك توك</li>
-            <li data-i18n="pricing.p2.f3">🎨 Color Grading سينمائي مخصّص</li>
-            <li data-i18n="pricing.p2.f4">⚡ موشن جرافيك + عناوين متحركة</li>
-            <li data-i18n="pricing.p2.f5">🔊 ميكس صوتي محترف + Sound design</li>
-            <li data-i18n="pricing.p2.f6">📝 ٢ مراجعات · تسليم في ٤ أيام</li>
-              </ul>
-              <a class="plan-cta plan-cta-primary" href="https://wa.me/201063783219?text=عايز%20احجز%20باقة%20Rise" target="_blank" rel="noopener" data-i18n="pricing.cta">احجز الباقة</a>
-            </div>
+          <div class="countdown" id="countdown" aria-live="polite">
+            <span class="cd-block"><span class="cd-num" id="cdDays">0</span><span class="cd-lbl" data-i18n="cd.days">أيام</span></span>
+            <span class="cd-sep">:</span>
+            <span class="cd-block"><span class="cd-num" id="cdHours">00</span><span class="cd-lbl" data-i18n="cd.hours">ساعة</span></span>
+            <span class="cd-sep">:</span>
+            <span class="cd-block"><span class="cd-num" id="cdMinutes">00</span><span class="cd-lbl" data-i18n="cd.minutes">دقيقة</span></span>
+            <span class="cd-sep">:</span>
+            <span class="cd-block"><span class="cd-num" id="cdSeconds">00</span><span class="cd-lbl" data-i18n="cd.seconds">ثانية</span></span>
           </div>
-        </article>
-
-        <article class="plan card-flip plan-power" data-plan="3">
-          <span class="plan-badge plan-badge-power" data-i18n="pricing.popular3">نتائج أقوى ونمو أسرع</span>
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-face card-front">
-              <span class="card-corner top"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2 L13.5 9 L21 10 L15 15 L17 22 L12 18 L7 22 L9 15 L3 10 L10.5 9 Z"/></svg></span>
-              <span class="card-corner bottom"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 2 L13.5 9 L21 10 L15 15 L17 22 L12 18 L7 22 L9 15 L3 10 L10.5 9 Z"/></svg></span>
-              <div class="card-illustration">
-                <svg viewBox="0 0 200 200" width="120" height="120" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="grad-sig" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#22C55E"/>
-                      <stop offset="100%" stop-color="#3B82F6"/>
-                    </linearGradient>
-                  </defs>
-                  <g transform="translate(100,100)">
-                    <g opacity="0.4">
-                      <path d="M0 -75 L15 -15 L75 0 L15 15 L0 75 L-15 15 L-75 0 L-15 -15 Z" fill="url(#grad-sig)" transform="rotate(15)"/>
-                    </g>
-                    <path d="M0 -75 L15 -15 L75 0 L15 15 L0 75 L-15 15 L-75 0 L-15 -15 Z" fill="url(#grad-sig)" stroke="#fff" stroke-width="2" stroke-linejoin="round"/>
-                    <circle r="12" fill="#0a0e1a"/>
-                    <circle r="6" fill="url(#grad-sig)"/>
-                  </g>
-                  <circle cx="40" cy="40" r="2" fill="#22C55E"/>
-                  <circle cx="160" cy="40" r="2" fill="#3B82F6"/>
-                  <circle cx="40" cy="160" r="2" fill="#3B82F6"/>
-                  <circle cx="160" cy="160" r="2" fill="#22C55E"/>
-                </svg>
-              </div>
-              <div class="card-meta">
-                <span class="plan-tag" data-i18n="pricing.p3.tag">هويتك البصرية كاملة</span>
-                <div class="plan-name-wrap"><h3 class="plan-name" data-i18n="pricing.p3.name">القيادة</h3></div>
-                <p class="plan-promise" data-i18n="pricing.p3.promise">بصمة بصرية تميّزك في السوق وتخلّي الناس تفتكرك.</p>
-                <div class="plan-price">
-                  <span class="plan-from" data-i18n="pricing.from">يبدأ من</span>
-                  <span class="price" data-i18n="pricing.p3.price">30,000 ج</span>
-                  <span class="per" data-i18n="pricing.month">/ شهريًا</span>
-                </div>
-              </div>
-              <button class="flip-hint" type="button" data-flip aria-label="Flip card">
-                <span data-i18n="pricing.flip">اقلب البطاقة</span>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
-              </button>
-            </div>
-
-            <!-- BACK -->
-            <div class="card-face card-back">
-              <button class="flip-back" type="button" data-flip aria-label="Back to front">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-                <span data-i18n="pricing.flip.back">رجوع</span>
-              </button>
-              <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
-              <h3 class="plan-name" data-i18n="pricing.p3.name">Signature</h3>
-              <ul class="plan-feats">
-            <li data-i18n="pricing.p3.f1">✏️ سكريبت + Storyboard كامل</li>
-            <li data-i18n="pricing.p3.f2">🎬 ٤ يوتيوب + ١٢ ريلز + بودكاست</li>
-            <li data-i18n="pricing.p3.f3">🎨 Look سينمائي مخصّص لهويتك</li>
-            <li data-i18n="pricing.p3.f4">⚡ موشن متقدّم + Logo animation</li>
-            <li data-i18n="pricing.p3.f5">🧠 جلسة استراتيجية محتوى ١:١</li>
-            <li data-i18n="pricing.p3.f6">📝 ٣ مراجعات · أولوية تسليم</li>
-              </ul>
-              <a class="plan-cta" href="https://wa.me/201063783219?text=عايز%20احجز%20باقة%20Signature" target="_blank" rel="noopener" data-i18n="pricing.cta">احجز الباقة</a>
-            </div>
-          </div>
-        </article>
-
-        <article class="plan card-flip plan-custom" data-plan="4">
-          <div class="card-inner">
-            <!-- FRONT -->
-            <div class="card-face card-front">
-              <span class="card-corner top"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 7l3-4h4l-2 4h2l3-4h4l-3 4h3l3-4h2l-2 4h2v12H3V7z"/></svg></span>
-              <span class="card-corner bottom"><svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 7l3-4h4l-2 4h2l3-4h4l-3 4h3l3-4h2l-2 4h2v12H3V7z"/></svg></span>
-              <div class="card-illustration">
-                <svg viewBox="0 0 200 200" width="120" height="120" aria-hidden="true">
-                  <defs>
-                    <linearGradient id="grad-studio" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stop-color="#22C55E"/>
-                      <stop offset="100%" stop-color="#3B82F6"/>
-                    </linearGradient>
-                  </defs>
-                  <rect x="25" y="60" width="150" height="110" rx="10" fill="#0a0e1a" stroke="url(#grad-studio)" stroke-width="3"/>
-                  <g transform="translate(25,30)">
-                    <path d="M0 30 L0 60 L150 60 L150 30 L130 0 L110 30 L90 0 L70 30 L50 0 L30 30 L10 0 Z" fill="url(#grad-studio)"/>
-                    <path d="M10 0 L30 30 M50 0 L70 30 M90 0 L110 30 M130 0 L150 30" stroke="#0a0e1a" stroke-width="2" stroke-linecap="round"/>
-                  </g>
-                  <circle cx="100" cy="115" r="22" fill="none" stroke="url(#grad-studio)" stroke-width="3"/>
-                  <polygon points="92,105 92,125 112,115" fill="url(#grad-studio)"/>
-                </svg>
-              </div>
-              <div class="card-meta">
-                <span class="plan-tag" data-i18n="pricing.p4.tag">إنتاج كامل من الفكرة للنجاح</span>
-                <div class="plan-name-wrap"><h3 class="plan-name" data-i18n="pricing.p4.name">مخصّصة</h3></div>
-                <p class="plan-promise" data-i18n="pricing.p4.promise">فريقي بالكامل تحت إيدك — إعلانات، أفلام قصيرة، براند فيلم.</p>
-                <div class="plan-price">
-                  <span class="price" data-i18n="pricing.p4.price">نتكلّم</span>
-                  
-                </div>
-              </div>
-              <button class="flip-hint" type="button" data-flip aria-label="Flip card">
-                <span data-i18n="pricing.flip">اقلب البطاقة</span>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
-              </button>
-            </div>
-
-            <!-- BACK -->
-            <div class="card-face card-back">
-              <button class="flip-back" type="button" data-flip aria-label="Back to front">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
-                <span data-i18n="pricing.flip.back">رجوع</span>
-              </button>
-              <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
-              <h3 class="plan-name" data-i18n="pricing.p4.name">Studio</h3>
-              <ul class="plan-feats">
-            <li data-i18n="pricing.p4.f1">✏️ كتابة محتوى استراتيجية متكاملة</li>
-            <li data-i18n="pricing.p4.f2">🎬 إعلانات تجارية + أفلام قصيرة</li>
-            <li data-i18n="pricing.p4.f3">🎥 فريق تصوير + إخراج كامل</li>
-            <li data-i18n="pricing.p4.f4">📋 إدارة مشروع من البداية للنهاية</li>
-            <li data-i18n="pricing.p4.f5">🧠 جلسات تخطيط استراتيجية</li>
-            <li data-i18n="pricing.p4.f6">🎯 جدول تسليم مخصّص</li>
-              </ul>
-              <a class="plan-cta" href="https://wa.me/201063783219?text=عايز%20أتكلم%20عن%20مشروع%20Studio" target="_blank" rel="noopener" data-i18n="pricing.cta.custom">اطلب عرض</a>
-            </div>
-          </div>
-        </article>
+        </div>
       </div>
+
+      <!-- Pricing tabs: Editing / Marketing -->
+      <div class="pricing-tabs" role="tablist" aria-label="Pricing categories">
+        <button class="pricing-tab active" type="button" role="tab" aria-selected="true" data-pane="editing">
+          <span aria-hidden="true">🎬</span>
+          <span data-i18n="pricing.tab.editing">باقات المونتاج</span>
+        </button>
+        <button class="pricing-tab" type="button" role="tab" aria-selected="false" data-pane="marketing">
+          <span aria-hidden="true">📊</span>
+          <span data-i18n="pricing.tab.marketing">باقات التسويق</span>
+        </button>
+      </div>
+      <div class="pricing-panes">
+        <!-- ========== EDITING PANE ========== -->
+        <div class="pricing-pane active" data-pane="editing" role="tabpanel">
+          <div class="pricing-grid">
+
+            <!-- Spark — Editing -->
+            <article class="plan card-flip" data-plan="e1">
+              <div class="card-inner">
+                <div class="card-face card-front">
+                  <span class="card-corner top">⚡</span>
+                  <span class="card-corner bottom">⚡</span>
+                  <div class="card-illustration"><span class="plan-icon">⚡</span></div>
+                  <div class="card-meta">
+                    <span class="plan-tag" data-i18n="pricing.e1.tag">للبداية القوية</span>
+                    <div class="plan-name-wrap">
+                      <h3 class="plan-name" data-i18n="pricing.e1.name">شرارة</h3>
+                      <span class="plan-name-sub">Spark</span>
+                    </div>
+                    <p class="plan-promise" data-i18n="pricing.e1.promise">مونتاج محترف يخلّي المحتوى يلفت الانتباه من أول ثانية</p>
+                    <div class="plan-price has-discount">
+                      <span class="price-old"><span data-i18n="pricing.e1.priceOld">3,000 ج.م</span></span>
+                      <span class="price"><span data-i18n="pricing.e1.priceNew">2,400 ج.م</span></span>
+                      <span class="price-discount" data-i18n="discount.badge">⚡ خصم 20%</span>
+                    </div>
+                  </div>
+                  <button class="flip-hint" type="button" data-flip aria-label="Flip card">
+                    <span data-i18n="pricing.flip">اقلب الباقة</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+                  </button>
+                </div>
+                <div class="card-face card-back">
+                  <button class="flip-back" type="button" data-flip aria-label="Back to front">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                    <span data-i18n="pricing.flip.back">رجوع</span>
+                  </button>
+                  <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
+                  <h3 class="plan-name" data-i18n="pricing.e1.name">شرارة</h3>
+                  <ul class="plan-feats">
+                    <li data-i18n="pricing.e1.f1">🎬 4 ريلز / أو 2 يوتيوب (لحد 5 د) / أو 1 فيديو (لحد 15 د)</li>
+                    <li data-i18n="pricing.e1.f2">✂️ مونتاج احترافي (Cuts + Sound Design)</li>
+                    <li data-i18n="pricing.e1.f3">🎨 تصحيح ألوان بسيط</li>
+                    <li data-i18n="pricing.e1.f4">📝 نصوص خفيفة</li>
+                    <li data-i18n="pricing.e1.f5">🔁 تعديل واحد لكل فيديو</li>
+                  </ul>
+                  <a class="plan-cta" href="https://wa.me/201063783219?text=عايز%20احجز%20باقة%20Spark%20مونتاج" target="_blank" rel="noopener" data-i18n="pricing.cta">احجز الباقة</a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Rise — Editing (popular) -->
+            <article class="plan card-flip plan-popular" data-plan="e2">
+              <span class="plan-badge" data-i18n="pricing.popular">الأكثر طلبًا</span>
+              <div class="card-inner">
+                <div class="card-face card-front">
+                  <span class="card-corner top">📈</span>
+                  <span class="card-corner bottom">📈</span>
+                  <div class="card-illustration"><span class="plan-icon">📈</span></div>
+                  <div class="card-meta">
+                    <span class="plan-tag" data-i18n="pricing.e2.tag">انطلاقة جديّة</span>
+                    <div class="plan-name-wrap">
+                      <h3 class="plan-name" data-i18n="pricing.e2.name">انطلاق</h3>
+                      <span class="plan-name-sub">Rise</span>
+                    </div>
+                    <p class="plan-promise" data-i18n="pricing.e2.promise">سرد متماسك وإيقاع يحبس النفس — Hook أقوى وريتنشن أحسن</p>
+                    <div class="plan-price has-discount">
+                      <span class="price-old"><span data-i18n="pricing.e2.priceOld">5,000 ج.م</span></span>
+                      <span class="price"><span data-i18n="pricing.e2.priceNew">4,000 ج.م</span></span>
+                      <span class="price-discount" data-i18n="discount.badge">⚡ خصم 20%</span>
+                    </div>
+                  </div>
+                  <button class="flip-hint" type="button" data-flip aria-label="Flip card">
+                    <span data-i18n="pricing.flip">اقلب الباقة</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+                  </button>
+                </div>
+                <div class="card-face card-back">
+                  <button class="flip-back" type="button" data-flip aria-label="Back to front">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                    <span data-i18n="pricing.flip.back">رجوع</span>
+                  </button>
+                  <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
+                  <h3 class="plan-name" data-i18n="pricing.e2.name">انطلاق</h3>
+                  <ul class="plan-feats">
+                    <li data-i18n="pricing.e2.f1">🎬 4 ريلز / أو 2 يوتيوب (لحد 5 د) / أو 1 فيديو (لحد 15 د)</li>
+                    <li data-i18n="pricing.e2.f2">🎞️ مونتاج احترافي (Storytelling + Rhythm)</li>
+                    <li data-i18n="pricing.e2.f3">⚡ موشن جرافيك خفيف</li>
+                    <li data-i18n="pricing.e2.f4">🎯 تحسين الـ Hook + اختيار أفضل اللقطات</li>
+                    <li data-i18n="pricing.e2.f5">🔁 تعديلين لكل فيديو</li>
+                  </ul>
+                  <a class="plan-cta plan-cta-primary" href="https://wa.me/201063783219?text=عايز%20احجز%20باقة%20Rise%20مونتاج" target="_blank" rel="noopener" data-i18n="pricing.cta">احجز الباقة</a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Signature — Editing -->
+            <article class="plan card-flip plan-power" data-plan="e3">
+              <div class="card-inner">
+                <div class="card-face card-front">
+                  <span class="card-corner top">✦</span>
+                  <span class="card-corner bottom">✦</span>
+                  <div class="card-illustration"><span class="plan-icon">✦</span></div>
+                  <div class="card-meta">
+                    <span class="plan-tag" data-i18n="pricing.e3.tag">بصمتك البصرية</span>
+                    <div class="plan-name-wrap">
+                      <h3 class="plan-name" data-i18n="pricing.e3.name">بصمة</h3>
+                      <span class="plan-name-sub">Signature</span>
+                    </div>
+                    <p class="plan-promise" data-i18n="pricing.e3.promise">Style ثابت لمحتواك يميّزك في السوق ويرفع الريتنشن لأقصى درجة</p>
+                    <div class="plan-price has-discount">
+                      <span class="price-old"><span data-i18n="pricing.e3.priceOld">7,250 ج.م</span></span>
+                      <span class="price"><span data-i18n="pricing.e3.priceNew">5,800 ج.م</span></span>
+                      <span class="price-discount" data-i18n="discount.badge">⚡ خصم 20%</span>
+                    </div>
+                  </div>
+                  <button class="flip-hint" type="button" data-flip aria-label="Flip card">
+                    <span data-i18n="pricing.flip">اقلب الباقة</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+                  </button>
+                </div>
+                <div class="card-face card-back">
+                  <button class="flip-back" type="button" data-flip aria-label="Back to front">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                    <span data-i18n="pricing.flip.back">رجوع</span>
+                  </button>
+                  <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
+                  <h3 class="plan-name" data-i18n="pricing.e3.name">بصمة</h3>
+                  <ul class="plan-feats">
+                    <li data-i18n="pricing.e3.f1">🎬 12 ريلز / أو 6 يوتيوب (لحد 5 د) / أو 3 فيديوهات (لحد 15 د)</li>
+                    <li data-i18n="pricing.e3.f2">🎞️ مونتاج متقدم + Storytelling + Motion + Color Grading</li>
+                    <li data-i18n="pricing.e3.f3">🔊 Sound Design احترافي + تحسين الريتنشن</li>
+                    <li data-i18n="pricing.e3.f4">🎨 Style ثابت + اقتراح أفكار تقطيع ذكية</li>
+                    <li data-i18n="pricing.e3.f5">🔁 3 تعديلات لكل فيديو</li>
+                  </ul>
+                  <a class="plan-cta" href="https://wa.me/201063783219?text=عايز%20احجز%20باقة%20Signature%20مونتاج" target="_blank" rel="noopener" data-i18n="pricing.cta">احجز الباقة</a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Studio — Editing (custom) -->
+            <article class="plan card-flip plan-custom" data-plan="e4">
+              <div class="card-inner">
+                <div class="card-face card-front">
+                  <span class="card-corner top">🎬</span>
+                  <span class="card-corner bottom">🎬</span>
+                  <div class="card-illustration"><span class="plan-icon">🎬</span></div>
+                  <div class="card-meta">
+                    <span class="plan-tag" data-i18n="pricing.e4.tag">مشاريع كبيرة وشغل مستمر</span>
+                    <div class="plan-name-wrap">
+                      <h3 class="plan-name" data-i18n="pricing.e4.name">استوديو</h3>
+                      <span class="plan-name-sub">Studio</span>
+                    </div>
+                    <p class="plan-promise" data-i18n="pricing.e4.promise">بودكاست، يوتيوب طويل، أو مشروع كبير — كل ده بسعر مخصّص حسب احتياجك</p>
+                    <div class="plan-price">
+                      <span class="price price-custom" data-i18n="pricing.custom">حسب الاتفاق</span>
+                    </div>
+                  </div>
+                  <button class="flip-hint" type="button" data-flip aria-label="Flip card">
+                    <span data-i18n="pricing.flip">اقلب الباقة</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+                  </button>
+                </div>
+                <div class="card-face card-back">
+                  <button class="flip-back" type="button" data-flip aria-label="Back to front">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                    <span data-i18n="pricing.flip.back">رجوع</span>
+                  </button>
+                  <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
+                  <h3 class="plan-name" data-i18n="pricing.e4.name">استوديو</h3>
+                  <ul class="plan-feats">
+                    <li data-i18n="pricing.e4.f1">🎙️ بودكاست كامل (مونتاج + موشن + تحسين صوت)</li>
+                    <li data-i18n="pricing.e4.f2">📺 يوتيوب طويل (دروس، مقابلات، vlog)</li>
+                    <li data-i18n="pricing.e4.f3">🎬 مشاريع كبيرة وأفلام قصيرة</li>
+                    <li data-i18n="pricing.e4.f4">📋 شغل مستمر بالشهر أو بالحلقة</li>
+                    <li data-i18n="pricing.e4.f5">💰 السعر بيتحدّد حسب نطاق الشغل</li>
+                  </ul>
+                  <a class="plan-cta" href="https://wa.me/201063783219?text=عايز%20أتكلم%20عن%20مشروع%20Studio%20مونتاج" target="_blank" rel="noopener" data-i18n="pricing.cta.custom">اطلب عرض</a>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+        <!-- ========== MARKETING PANE ========== -->
+        <div class="pricing-pane" data-pane="marketing" role="tabpanel" hidden>
+          <div class="pricing-grid">
+
+            <!-- Spark — Marketing -->
+            <article class="plan card-flip" data-plan="m1">
+              <div class="card-inner">
+                <div class="card-face card-front">
+                  <span class="card-corner top">⚡</span>
+                  <span class="card-corner bottom">⚡</span>
+                  <div class="card-illustration"><span class="plan-icon">⚡</span></div>
+                  <div class="card-meta">
+                    <span class="plan-tag" data-i18n="pricing.m1.tag">للبداية على السوشيال</span>
+                    <div class="plan-name-wrap">
+                      <h3 class="plan-name" data-i18n="pricing.m1.name">شرارة</h3>
+                      <span class="plan-name-sub">Spark</span>
+                    </div>
+                    <p class="plan-promise" data-i18n="pricing.m1.promise">حضور احترافي على حساب واحد بمحتوى ثابت ومنظم</p>
+                    <div class="plan-price has-discount">
+                      <span class="price-old"><span data-i18n="pricing.m1.priceOld">11,250 ج.م</span></span>
+                      <span class="price"><span data-i18n="pricing.m1.priceNew">9,000 ج.م</span></span>
+                      <span class="price-discount" data-i18n="discount.badge">⚡ خصم 20%</span>
+                    </div>
+                  </div>
+                  <button class="flip-hint" type="button" data-flip aria-label="Flip card">
+                    <span data-i18n="pricing.flip">اقلب الباقة</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+                  </button>
+                </div>
+                <div class="card-face card-back">
+                  <button class="flip-back" type="button" data-flip aria-label="Back to front">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                    <span data-i18n="pricing.flip.back">رجوع</span>
+                  </button>
+                  <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
+                  <h3 class="plan-name" data-i18n="pricing.m1.name">شرارة</h3>
+                  <ul class="plan-feats">
+                    <li data-i18n="pricing.m1.f1">📱 إدارة حساب واحد</li>
+                    <li data-i18n="pricing.m1.f2">🎨 4 تصاميم بوست + 8 ستوري</li>
+                    <li data-i18n="pricing.m1.f3">🎬 4 ريلز (مونتاج احترافي)</li>
+                    <li data-i18n="pricing.m1.f4">💬 ردود أساسية على التعليقات</li>
+                    <li data-i18n="pricing.m1.f5">📊 تقرير شهري</li>
+                  </ul>
+                  <a class="plan-cta" href="https://wa.me/201063783219?text=عايز%20احجز%20باقة%20Spark%20تسويق" target="_blank" rel="noopener" data-i18n="pricing.cta">احجز الباقة</a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Rise — Marketing (popular) -->
+            <article class="plan card-flip plan-popular" data-plan="m2">
+              <span class="plan-badge" data-i18n="pricing.popular">الأكثر طلبًا</span>
+              <div class="card-inner">
+                <div class="card-face card-front">
+                  <span class="card-corner top">📈</span>
+                  <span class="card-corner bottom">📈</span>
+                  <div class="card-illustration"><span class="plan-icon">📈</span></div>
+                  <div class="card-meta">
+                    <span class="plan-tag" data-i18n="pricing.m2.tag">نمو ثابت ومدروس</span>
+                    <div class="plan-name-wrap">
+                      <h3 class="plan-name" data-i18n="pricing.m2.name">انطلاق</h3>
+                      <span class="plan-name-sub">Rise</span>
+                    </div>
+                    <p class="plan-promise" data-i18n="pricing.m2.promise">إدارة احترافية لحسابين بخطة محتوى شهرية وهوية أقوى</p>
+                    <div class="plan-price has-discount">
+                      <span class="price-old"><span data-i18n="pricing.m2.priceOld">20,000 ج.م</span></span>
+                      <span class="price"><span data-i18n="pricing.m2.priceNew">16,000 ج.م</span></span>
+                      <span class="price-discount" data-i18n="discount.badge">⚡ خصم 20%</span>
+                    </div>
+                  </div>
+                  <button class="flip-hint" type="button" data-flip aria-label="Flip card">
+                    <span data-i18n="pricing.flip">اقلب الباقة</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+                  </button>
+                </div>
+                <div class="card-face card-back">
+                  <button class="flip-back" type="button" data-flip aria-label="Back to front">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                    <span data-i18n="pricing.flip.back">رجوع</span>
+                  </button>
+                  <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
+                  <h3 class="plan-name" data-i18n="pricing.m2.name">انطلاق</h3>
+                  <ul class="plan-feats">
+                    <li data-i18n="pricing.m2.f1">📱 إدارة حسابين</li>
+                    <li data-i18n="pricing.m2.f2">🎨 10 تصاميم بوست + 15 ستوري</li>
+                    <li data-i18n="pricing.m2.f3">🎬 6 ريلز (مونتاج احترافي)</li>
+                    <li data-i18n="pricing.m2.f4">✨ تحسين البايو والهوية + إدارة الرسائل والتعليقات</li>
+                    <li data-i18n="pricing.m2.f5">📋 خطة محتوى شهرية + تقرير وتوصيات</li>
+                  </ul>
+                  <a class="plan-cta plan-cta-primary" href="https://wa.me/201063783219?text=عايز%20احجز%20باقة%20Rise%20تسويق" target="_blank" rel="noopener" data-i18n="pricing.cta">احجز الباقة</a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Signature — Marketing -->
+            <article class="plan card-flip plan-power" data-plan="m3">
+              <div class="card-inner">
+                <div class="card-face card-front">
+                  <span class="card-corner top">✦</span>
+                  <span class="card-corner bottom">✦</span>
+                  <div class="card-illustration"><span class="plan-icon">✦</span></div>
+                  <div class="card-meta">
+                    <span class="plan-tag" data-i18n="pricing.m3.tag">براند متكامل</span>
+                    <div class="plan-name-wrap">
+                      <h3 class="plan-name" data-i18n="pricing.m3.name">بصمة</h3>
+                      <span class="plan-name-sub">Signature</span>
+                    </div>
+                    <p class="plan-promise" data-i18n="pricing.m3.promise">إدارة كاملة + سكريبتات + إعلانات + جلسة تصوير شهرية وGrowth Plan</p>
+                    <div class="plan-price has-discount">
+                      <span class="price-old"><span data-i18n="pricing.m3.priceOld">36,250 ج.م</span></span>
+                      <span class="price"><span data-i18n="pricing.m3.priceNew">29,000 ج.م</span></span>
+                      <span class="price-discount" data-i18n="discount.badge">⚡ خصم 20%</span>
+                    </div>
+                  </div>
+                  <button class="flip-hint" type="button" data-flip aria-label="Flip card">
+                    <span data-i18n="pricing.flip">اقلب الباقة</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+                  </button>
+                </div>
+                <div class="card-face card-back">
+                  <button class="flip-back" type="button" data-flip aria-label="Back to front">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                    <span data-i18n="pricing.flip.back">رجوع</span>
+                  </button>
+                  <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
+                  <h3 class="plan-name" data-i18n="pricing.m3.name">بصمة</h3>
+                  <ul class="plan-feats">
+                    <li data-i18n="pricing.m3.f1">📱 إدارة 2-3 حسابات</li>
+                    <li data-i18n="pricing.m3.f2">🎨 14 تصميم بوست + 20 ستوري</li>
+                    <li data-i18n="pricing.m3.f3">🎬 8 ريلز (مونتاج متقدم) + جلسة تصوير شهرية</li>
+                    <li data-i18n="pricing.m3.f4">✏️ كتابة سكريبتات + تطوير الهوية البصرية</li>
+                    <li data-i18n="pricing.m3.f5">📊 إدارة إعلانات (بدون الميزانية) + تحليل منافسين + Growth Plan</li>
+                  </ul>
+                  <a class="plan-cta" href="https://wa.me/201063783219?text=عايز%20احجز%20باقة%20Signature%20تسويق" target="_blank" rel="noopener" data-i18n="pricing.cta">احجز الباقة</a>
+                </div>
+              </div>
+            </article>
+
+            <!-- Studio — Marketing (custom) -->
+            <article class="plan card-flip plan-custom" data-plan="m4">
+              <div class="card-inner">
+                <div class="card-face card-front">
+                  <span class="card-corner top">🎬</span>
+                  <span class="card-corner bottom">🎬</span>
+                  <div class="card-illustration"><span class="plan-icon">🎬</span></div>
+                  <div class="card-meta">
+                    <span class="plan-tag" data-i18n="pricing.m4.tag">إدارة كاملة من A لـ Z</span>
+                    <div class="plan-name-wrap">
+                      <h3 class="plan-name" data-i18n="pricing.m4.name">استوديو</h3>
+                      <span class="plan-name-sub">Studio</span>
+                    </div>
+                    <p class="plan-promise" data-i18n="pricing.m4.promise">إنتاج محتوى + تصوير + مونتاج + إعلانات — حلّ متكامل لبراندك</p>
+                    <div class="plan-price">
+                      <span class="price price-custom" data-i18n="pricing.custom">حسب الاتفاق</span>
+                    </div>
+                  </div>
+                  <button class="flip-hint" type="button" data-flip aria-label="Flip card">
+                    <span data-i18n="pricing.flip">اقلب الباقة</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg>
+                  </button>
+                </div>
+                <div class="card-face card-back">
+                  <button class="flip-back" type="button" data-flip aria-label="Back to front">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
+                    <span data-i18n="pricing.flip.back">رجوع</span>
+                  </button>
+                  <span class="back-tag" data-i18n="pricing.includes">كل اللي هتاخده</span>
+                  <h3 class="plan-name" data-i18n="pricing.m4.name">استوديو</h3>
+                  <ul class="plan-feats">
+                    <li data-i18n="pricing.m4.f1">🏢 إدارة كاملة للبراند</li>
+                    <li data-i18n="pricing.m4.f2">📝 إنتاج محتوى من الصفر</li>
+                    <li data-i18n="pricing.m4.f3">📸 تصوير + مونتاج كامل</li>
+                    <li data-i18n="pricing.m4.f4">📢 إدارة إعلانات (Meta + Google + TikTok)</li>
+                    <li data-i18n="pricing.m4.f5">💰 السعر بيتحدّد حسب نطاق الشغل</li>
+                  </ul>
+                  <a class="plan-cta" href="https://wa.me/201063783219?text=عايز%20أتكلم%20عن%20مشروع%20Studio%20تسويق" target="_blank" rel="noopener" data-i18n="pricing.cta.custom">اطلب عرض</a>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing footer note -->
+      <p class="pricing-note" data-i18n="pricing.note">💡 جميع الباقات تشمل محتوى بصري احترافي (تصميم + مونتاج) لبناء هوية قوية وزيادة الوصول والمبيعات</p>
     </div>
   </section>
 
@@ -504,32 +737,70 @@
       <div class="section-head">
         <span class="section-tag" data-i18n="process.tag">طريقة الشغل</span>
         <h2 data-i18n="process.title">إزاي بنهدّي فيديو يستحقّ المشاهدة؟</h2>
-        <p class="lead" data-i18n="process.lead">عملية واضحة ومدروسة بتضمن إن كل فيديو يطلع بأعلى جودة وفي الموعد.</p>
+        <p class="lead" data-i18n="process.lead">عملية واضحة ومدروسة بتضمن إن كل فيديو يطلع بأعلى جودة وفي الموعد</p>
       </div>
       <div class="process-grid">
         <article class="step" data-step="01">
           <span class="step-num">01</span>
           <div class="step-line"></div>
           <h3 data-i18n="process.s1.t">الاستكشاف والتخطيط</h3>
-          <p data-i18n="process.s1.d">بنفهم جمهورك، أهدافك، وبوزيشن براندك علشان نبني خطة محتوى تخدمها.</p>
+          <p data-i18n="process.s1.d">بنفهم جمهورك، أهدافك، وبوزيشن براندك علشان نبني خطة محتوى تخدمها</p>
         </article>
         <article class="step" data-step="02">
           <span class="step-num">02</span>
           <div class="step-line"></div>
           <h3 data-i18n="process.s2.t">السكريبت والستوريبورد</h3>
-          <p data-i18n="process.s2.d">بنكتب سكريبت سردي وبنرسم ستوريبورد تفصيلي بيغيّر تجربة المشاهد.</p>
+          <p data-i18n="process.s2.d">بنكتب سكريبت سردي وبنرسم ستوريبورد تفصيلي بيغيّر تجربة المشاهد</p>
         </article>
         <article class="step" data-step="03">
           <span class="step-num">03</span>
           <div class="step-line"></div>
           <h3 data-i18n="process.s3.t">التصوير والإدارة</h3>
-          <p data-i18n="process.s3.d">إعداد إضاءة سينمائي، إدارة بلاتو، وتصوير بأعلى جودة بأدوات احترافية.</p>
+          <p data-i18n="process.s3.d">إعداد إضاءة سينمائي، إدارة بلاتو، وتصوير بأعلى جودة بأدوات احترافية</p>
         </article>
         <article class="step" data-step="04">
           <span class="step-num">04</span>
           <h3 data-i18n="process.s4.t">المونتاج والتسليم</h3>
-          <p data-i18n="process.s4.d">مونتاج سينمائي + تصحيح ألوان + موشن + صوت، ثم تسليم بعد المراجعات.</p>
+          <p data-i18n="process.s4.d">مونتاج سينمائي + تصحيح ألوان + موشن + صوت، ثم تسليم بعد المراجعات</p>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <!-- TODO (khaled): replace the 3 testimonial cards below with real client quotes + names. -->
+  <section class="section testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag" data-i18n="testimonials.tag">آراء العملاء</span>
+        <h2 data-i18n="testimonials.title">ناس اشتغلت معاهم بتقول إيه؟</h2>
+        <p class="lead" data-i18n="testimonials.lead">كل مشروع علاقة طويلة. ودي بعض الكلمات اللي وصلتنا من شركاء الشغل</p>
+      </div>
+      <div class="testimonial-grid">
+        <figure class="testimonial-card">
+          <svg class="quote-mark" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M7.17 4C4.32 4 2 6.32 2 9.17c0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C11.77 6.32 9.45 4 6.6 4h.57zm9.66 0c-2.85 0-5.17 2.32-5.17 5.17 0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C21.43 6.32 19.11 4 16.26 4h.57z"/></svg>
+          <blockquote data-i18n="testimonials.t1.q">"خالد رفع جودة المحتوى عندنا بشكل ملحوظ. الإيقاع، الألوان، والصوت بقت احترافية بجد، والريتنشن اتحسّن في أول شهرين."</blockquote>
+          <figcaption>
+            <span class="t-name" data-i18n="testimonials.t1.n">— م. أحمد ع</span>
+            <span class="t-role" data-i18n="testimonials.t1.r">صاحب قناة بودكاست</span>
+          </figcaption>
+        </figure>
+        <figure class="testimonial-card">
+          <svg class="quote-mark" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M7.17 4C4.32 4 2 6.32 2 9.17c0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C11.77 6.32 9.45 4 6.6 4h.57zm9.66 0c-2.85 0-5.17 2.32-5.17 5.17 0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C21.43 6.32 19.11 4 16.26 4h.57z"/></svg>
+          <blockquote data-i18n="testimonials.t2.q">"تعامل محترم والتزام بالمواعيد. الفريق بيفهم البريف من أول مرة، والريلز اللي بنطلعها بتشتغل صح على إنستجرام وتيك توك."</blockquote>
+          <figcaption>
+            <span class="t-name" data-i18n="testimonials.t2.n">— د. س. م</span>
+            <span class="t-role" data-i18n="testimonials.t2.r">صاحبة براند طبي</span>
+          </figcaption>
+        </figure>
+        <figure class="testimonial-card">
+          <svg class="quote-mark" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M7.17 4C4.32 4 2 6.32 2 9.17c0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C11.77 6.32 9.45 4 6.6 4h.57zm9.66 0c-2.85 0-5.17 2.32-5.17 5.17 0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C21.43 6.32 19.11 4 16.26 4h.57z"/></svg>
+          <blockquote data-i18n="testimonials.t3.q">"الفريق بيعرف يحوّل الفكرة لمحتوى يبيع. كنا محتاجين هوية بصرية + إعلانات، وخرجنا بنتائج فعلية على Meta Ads."</blockquote>
+          <figcaption>
+            <span class="t-name" data-i18n="testimonials.t3.n">— أ. م. ح</span>
+            <span class="t-role" data-i18n="testimonials.t3.r">صاحب براند تجاري</span>
+          </figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -558,7 +829,7 @@
       <div class="section-head">
         <span class="section-tag" data-i18n="works.tag">الأعمال</span>
         <h2 data-i18n="works.title">آخر أعمالنا — حلقات بودكاست وريلز</h2>
-        <p class="lead" data-i18n="works.lead">اضغط على أي فيديو يشتغل جوّا الموقع — دي نماذج من حلقات البودكاست وأمثلة على مونتاج الريلز.</p>
+        <p class="lead" data-i18n="works.lead">اضغط على أي فيديو يشتغل جوّا الموقع — دي نماذج من حلقات البودكاست وأمثلة على مونتاج الريلز</p>
       </div>
 
       <div class="filters" id="filters">
@@ -567,7 +838,6 @@
         <button class="chip" data-filter="reels" data-i18n="filter.reels">ريلز</button>
         <button class="chip" data-filter="longyt" data-i18n="filter.longyt">يوتيوب طويلة</button>
         <button class="chip" data-filter="edu" data-i18n="filter.edu">تعليمي</button>
-        <button class="chip" data-filter="promo" data-i18n="filter.promo">بروموهات</button>
         <button class="chip" data-filter="wedding" data-i18n="filter.wedding">أفراح</button>
       </div>
 
@@ -576,6 +846,7 @@
         <button class="chip chip-sm" data-subfilter="medical" data-i18n="subfilter.medical">طبي</button>
         <button class="chip chip-sm" data-subfilter="educational" data-i18n="subfilter.educational">تعليمي</button>
         <button class="chip chip-sm" data-subfilter="marketing" data-i18n="subfilter.marketing">ماركتينج</button>
+        <button class="chip chip-sm" data-subfilter="ai" data-i18n="subfilter.ai">AI</button>
         <button class="chip chip-sm" data-subfilter="general" data-i18n="subfilter.general">عام</button>
       </div>
 
@@ -590,49 +861,19 @@
     <div class="container">
       <div class="section-head">
         <span class="section-tag" data-i18n="designs.tag">تصاميمنا</span>
-        <h2 data-i18n="designs.title">إعلانات وتصاميم بتبيع.</h2>
-        <p class="lead" data-i18n="designs.lead">مختارات من تصاميم البوسترات والإعلانات اللي اشتغلناها لبراندات مختلفة.</p>
+        <h2 data-i18n="designs.title">إعلانات وتصاميم بتبيع</h2>
+        <p class="lead" data-i18n="designs.lead">مختارات من تصاميم البوسترات والإعلانات اللي اشتغلناها لبراندات مختلفة</p>
       </div>
-      <div class="designs-grid">
-        <figure class="design-card design-1">
-          <div class="design-thumb">
-            <span class="design-badge">Social Ad</span>
-            <span class="design-icon">🎨</span>
-          </div>
-        </figure>
-        <figure class="design-card design-2">
-          <div class="design-thumb">
-            <span class="design-badge">Poster</span>
-            <span class="design-icon">📌</span>
-          </div>
-        </figure>
-        <figure class="design-card design-3">
-          <div class="design-thumb">
-            <span class="design-badge">Brand Identity</span>
-            <span class="design-icon">✦</span>
-          </div>
-        </figure>
-        <figure class="design-card design-4">
-          <div class="design-thumb">
-            <span class="design-badge">Reels Cover</span>
-            <span class="design-icon">📱</span>
-          </div>
-        </figure>
-        <figure class="design-card design-5">
-          <div class="design-thumb">
-            <span class="design-badge">YouTube Thumbnail</span>
-            <span class="design-icon">▶</span>
-          </div>
-        </figure>
-        <figure class="design-card design-6">
-          <div class="design-thumb">
-            <span class="design-badge">Logo</span>
-            <span class="design-icon">⚡</span>
-          </div>
-        </figure>
-      </div>
-      <div class="designs-cta">
-        <a href="https://instagram.com/kkhalidoxo" target="_blank" rel="noopener" class="btn btn-primary" data-i18n="designs.cta">شاهد المزيد على إنستجرام</a>
+      <div class="designs-cta-band">
+        <ul class="design-tags">
+          <li data-i18n="designs.tag1">Social Ads</li>
+          <li data-i18n="designs.tag2">Posters</li>
+          <li data-i18n="designs.tag3">Brand Identity</li>
+          <li data-i18n="designs.tag4">YouTube Thumbnails</li>
+          <li data-i18n="designs.tag5">Reels Covers</li>
+          <li data-i18n="designs.tag6">Logos</li>
+        </ul>
+        <a href="https://instagram.com/kkhalidoxo" target="_blank" rel="noopener" class="btn btn-primary magnetic" data-i18n="designs.cta">شاهد المزيد على إنستجرام</a>
       </div>
     </div>
   </section>
@@ -643,7 +884,7 @@
       <div>
         <span class="section-tag" data-i18n="contact.tag">تواصل</span>
         <h2 data-i18n="contact.title">جاهز نشتغل على مشروعك القادم؟</h2>
-        <p class="lead" data-i18n="contact.lead">ابعتلي تفاصيل الفكرة وهرجع لك خلال ٢٤ ساعة.</p>
+        <p class="lead" data-i18n="contact.lead">ابعتلي تفاصيل الفكرة وهرجع لك خلال ٢٤ ساعة</p>
         <ul class="contact-list">
           <li class="contact-item">
             <a href="https://wa.me/201063783219" target="_blank" rel="noopener">
@@ -691,14 +932,26 @@
           </li>
         </ul>
       </div>
-      <form class="contact-form" id="contactForm" novalidate>
+      <form class="contact-form" id="contactForm" action="https://formsubmit.co/bebooxo7@gmail.com" method="POST" novalidate>
+        <!-- Formsubmit.co configuration -->
+        <input type="hidden" name="_subject" value="📩 طلب جديد من موقع خالد علي" />
+        <input type="hidden" name="_template" value="table" />
+        <input type="hidden" name="_captcha" value="false" />
+        <input type="hidden" name="_autoresponse" value="تم استلام طلبك. هنرد عليك خلال ٢٤ ساعة. — خالد علي" />
+        <!-- Honeypot -->
+        <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" />
+
         <label>
           <span data-i18n="form.name">الاسم</span>
-          <input type="text" name="name" data-i18n-ph="form.name.ph" placeholder="اسمك الكامل" required />
+          <input type="text" name="name" data-i18n-ph="form.name.ph" placeholder="اسمك الكامل" autocomplete="name" required />
+        </label>
+        <label>
+          <span data-i18n="form.phone">رقم الموبايل / واتساب</span>
+          <input type="tel" name="phone" data-i18n-ph="form.phone.ph" placeholder="+20 1XX XXX XXXX" pattern="[0-9+\s\-]{8,}" autocomplete="tel" required />
         </label>
         <label>
           <span data-i18n="form.email">البريد الإلكتروني</span>
-          <input type="email" name="email" placeholder="example@mail.com" required />
+          <input type="email" name="email" placeholder="example@mail.com" autocomplete="email" required />
         </label>
         <label>
           <span data-i18n="form.type">نوع المشروع</span>
@@ -708,6 +961,7 @@
             <option data-i18n="form.type.short">محتوى قصير (Reels/TikTok)</option>
             <option data-i18n="form.type.podcast">بودكاست</option>
             <option data-i18n="form.type.tv">تلفزيوني/برامج</option>
+            <option data-i18n="form.type.marketing">باقة تسويق (سوشيال)</option>
             <option data-i18n="form.type.other">مشروع آخر</option>
           </select>
         </label>
@@ -723,10 +977,15 @@
 
   <footer class="footer">
     <div class="container footer-inner">
-      <p>© <span id="year"></span> <span data-i18n="footer.rights">خالد علي — جميع الحقوق محفوظة.</span></p>
+      <p>© <span id="year"></span> <span data-i18n="footer.rights">خالد علي — جميع الحقوق محفوظة</span></p>
       <p class="muted" data-i18n="footer.tag">Turning ideas into visual impact 🎬</p>
     </div>
   </footer>
+
+  <!-- Back to top button -->
+  <button id="backToTop" class="back-to-top" type="button" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg>
+  </button>
 
   <!-- WhatsApp floating button -->
   <a class="wa-float" href="https://wa.me/201063783219" target="_blank" rel="noopener" aria-label="WhatsApp">
@@ -734,6 +993,6 @@
     <span class="wa-pulse"></span>
   </a>
 
-  <script src="script.js?v=11"></script>
+  <script src="script.js?v=18"></script>
 </body>
 </html>
