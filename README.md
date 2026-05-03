@@ -16,7 +16,7 @@
 | `projects-defaults.js` | قائمة الفيديوهات الافتراضية (الأعمال). **لا تعدّله يدويًا** |
 | `projects.json` | قائمة فيديوهات بتعمل override على الافتراضي. **هذا اللي بتعدّله من الداشبورد (تبويب الفيديوهات)** |
 | `admin.html` | لوحة التحكم — تبويبين: نصوص/أسعار، وفيديوهات الأعمال |
-| `fonts/` | فونتات Salma Arabic (.woff2 و .otf) — **لازم ترفعها على جيت هب** |
+| `fonts/` | (احتياطي) فونتات قديمة محفوظة كنسخة احتياطية. الفونتات الفعّالة بتيجي من Google Fonts CDN |
 | `khaled-hero.webp` / `khaled-hero.jpg` / `khaled-bts.webp` / `khaled-bts.jpg` | صور الـ hero و BTS |
 
 ---
@@ -54,7 +54,7 @@ git push -u origin main
 
 استبدل `<username>` باسم حسابك على GitHub.
 
-> **مهم جدًا:** استخدم Git CLI (الأوامر اللي فوق) ولا تستخدم الـ "Upload files" من واجهة GitHub لرفع الفونتات. الـ web upload أحيانًا بيلخبط ملفات الـ binary (.woff2 / .otf) فالخط بيطلع غلط على الموقع.
+> **ملاحظة:** الفونتات بقت بتيجي كلها من Google Fonts CDN، فمش هتقابل مشكلة الـ binary upload القديمة. أي طريقة رفع (Git CLI أو واجهة GitHub) هتشتغل صح للنصوص و الصور.
 
 ### الخطوة ٤: تفعيل GitHub Pages
 
@@ -69,26 +69,15 @@ git push -u origin main
 
 ### الخطوة ٥: التأكد إن الفونتات بتشتغل
 
-افتح الموقع، ولو الفونت بيظهر مختلف عن جهازك:
+الموقع بيستخدم **IBM Plex Sans Arabic** للعربي و **Inter** للإنجليزي — الاتنين من Google Fonts CDN، يعني مفيش ملفات فونت بترفعها على ريبوك. ده معناه إن الفونت هيشتغل **زي ما هو** على GitHub Pages من غير أي إعدادات إضافية.
 
-1. افتح **Developer Tools** (F12) → **Network** → فلتر **Font**.
+لو حبّيت تتأكد:
+
+1. افتح الموقع → **Developer Tools** (F12) → **Network** → فلتر **Font**.
 2. ريفريش الصفحة (Ctrl+F5).
-3. شوف لو فيه ملفات `SalmaArabic-*.woff2` بتظهر بـ status `200` ولا `404`.
-   - **`200` = شغّال تمام**.
-   - **`404` = الملف مش موجود**: تأكد إن مجلد `fonts/` اترفع. على GitHub، افتح الريبو وشوف لو شايف:
-     - `fonts/SalmaArabic-Black.woff2`
-     - `fonts/SalmaArabic-Bold.woff2`
-     - `fonts/SalmaArabic-Light.woff2`
-     - `fonts/SalmaArabic-Medium.woff2`
+3. هتلاقي ملفات بتيجي من `fonts.gstatic.com` (وليس من ريبوك)، وكلها لازم تكون status `200`.
 
-   لو مش ظاهرين، رفع المجلد:
-   ```bash
-   git add fonts/
-   git commit -m "Add fonts"
-   git push
-   ```
-
-> **Fallback آمن:** حتى لو فونت Salma Arabic ما اتحمّلش (مثلاً مشكلة في الـ MIME type)، الموقع بيستخدم فونت `Reem Kufi` من Google Fonts كبديل قوي للعناوين العربية، فمش هيظهر شكل عشوائي مهما حصل.
+> **Fallback آمن:** لو في أي ظرف Google Fonts ما اشتغلش، الـ CSS فيه fallback chain على فونتات النظام (Segoe UI, Tahoma, system-ui)، فالموقع هيفضل بشكل احترافي ومقروء.
 
 ---
 
