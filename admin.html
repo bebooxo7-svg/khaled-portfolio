@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>لوحة التحكم — Khaled Ali</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a0e1a'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Inter,Arial,sans-serif' font-weight='800' font-size='30' fill='%2322c55e'%3EAdmin%3C/text%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --bg: #0a0e1a;
+  --bg-2: #0f172a;
+  --surface: rgba(255,255,255,0.04);
+  --surface-2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.10);
+  --border-2: rgba(255,255,255,0.18);
+  --text: #e6edf6;
+  --muted: #8d96a8;
+  --accent: #22c55e;
+  --accent-2: #3b82f6;
+  --warn: #f59e0b;
+  --danger: #ef4444;
+  --radius: 14px;
+  --shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+* { box-sizing: border-box; }
+html, body { margin:0; padding:0; background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%); color: var(--text); font-family: 'Cairo','Rubik',system-ui,sans-serif; min-height: 100vh; }
+a { color: var(--accent); text-decoration: none; }
+
+/* ===== Layout ===== */
+.shell { max-width: 1200px; margin: 0 auto; padding: 24px clamp(16px, 3vw, 32px) 80px; }
+header.topbar {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 14px 18px; margin-bottom: 24px;
+  background: rgba(10,14,26,0.85); backdrop-filter: blur(10px);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+header.topbar .brand { display: flex; align-items: center; gap: 12px; }
+header.topbar .brand .logo {
+  width: 38px; height: 38px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  display: grid; place-items: center; font-weight: 800; color: #0a0e1a;
+}
+header.topbar h1 { font-size: 1.1rem; margin: 0; }
+header.topbar .sub { color: var(--muted); font-size: 0.85rem; }
+header.topbar .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+button, .btn {
+  font: inherit; cursor: pointer;
+  padding: 9px 14px; border-radius: 10px;
+  border: 1px solid var(--border-2);
+  background: var(--surface-2); color: var(--text);
+  transition: transform .12s ease, background .12s ease, border-color .12s ease;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+button:hover, .btn:hover { background: rgba(255,255,255,0.10); transform: translateY(-1px); }
+button.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #0a0e1a; border-color: transparent; font-weight: 700; }
+button.primary:hover { filter: brightness(1.05); }
+button.warn { background: rgba(245,158,11,0.14); border-color: rgba(245,158,11,0.4); color: var(--warn); }
+button.danger { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0.4); color: var(--danger); }
+
+/* ===== Toolbar ===== */
+.toolbar {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  padding: 12px 14px; margin-bottom: 18px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+}
+.toolbar .search {
+  flex: 1; min-width: 220px;
+  position: relative;
+}
+.toolbar .search input {
+  width: 100%; padding: 9px 14px; padding-inline-start: 36px;
+  border-radius: 10px; border: 1px solid var(--border-2);
+  background: rgba(0,0,0,0.25); color: var(--text); font: inherit;
+  outline: none;
+}
+.toolbar .search::before {
+  content: "🔍"; position: absolute; inset-inline-start: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 14px; opacity: .7;
+}
+.toolbar .filter {
+  display: inline-flex; padding: 4px; gap: 4px;
+  background: rgba(0,0,0,0.25); border-radius: 10px;
+}
+.toolbar .filter button {
+  padding: 6px 12px; border: 0; background: transparent; color: var(--muted); border-radius: 8px;
+}
+.toolbar .filter button.active { background: var(--surface-2); color: var(--text); }
+
+.status-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 0.78rem; font-weight: 600;
+  background: rgba(34,197,94,0.12); color: var(--accent); border: 1px solid rgba(34,197,94,0.3);
+}
+.status-pill.dirty { background: rgba(245,158,11,0.12); color: var(--warn); border-color: rgba(245,158,11,0.3); }
+.status-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+/* ===== Section accordion ===== */
+.section {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 14px; overflow: hidden;
+}
+.section.hidden { display: none; }
+.section > .head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 14px 18px; cursor: pointer;
+  background: var(--surface-2);
+  user-select: none;
+}
+.section > .head:hover { background: rgba(255,255,255,0.06); }
+.section > .head .left { display: flex; align-items: center; gap: 10px; }
+.section > .head .icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.06); display: grid; place-items: center; font-size: 16px; }
+.section > .head .title { font-weight: 700; font-size: 1.0rem; }
+.section > .head .count { color: var(--muted); font-size: 0.82rem; }
+.section > .head .chev { color: var(--muted); transition: transform .2s ease; }
+.section.open > .head .chev { transform: rotate(180deg); }
+.section > .body { display: none; padding: 6px 18px 18px; }
+.section.open > .body { display: block; }
+
+/* ===== Field row ===== */
+.field {
+  display: grid; grid-template-columns: 220px 1fr 1fr; gap: 12px; align-items: start;
+  padding: 10px 8px;
+  border-bottom: 1px dashed var(--border);
+}
+.field:last-child { border-bottom: 0; }
+.field.dirty { background: rgba(245,158,11,0.05); border-radius: 8px; }
+.field .label {
+  display: flex; flex-direction: column; gap: 3px;
+  padding-top: 8px;
+}
+.field .label .key { font-family: 'Rubik', monospace; font-size: 0.78rem; color: var(--muted); direction: ltr; text-align: start; }
+.field .label .hint { font-size: 0.74rem; color: rgba(141,150,168,0.7); }
+.field .input-wrap { position: relative; }
+.field .input-wrap .lang-tag {
+  position: absolute; top: 4px; inset-inline-end: 6px;
+  background: rgba(0,0,0,0.4); padding: 1px 6px; border-radius: 6px;
+  font-size: 0.65rem; color: var(--muted); letter-spacing: 0.5px;
+}
+.field input, .field textarea {
+  width: 100%; padding: 9px 12px;
+  border-radius: 10px; border: 1px solid var(--border);
+  background: rgba(0,0,0,0.30); color: var(--text);
+  font: inherit; resize: vertical; min-height: 38px;
+  outline: none;
+}
+.field input:focus, .field textarea:focus { border-color: var(--accent); }
+.field textarea { min-height: 78px; line-height: 1.6; }
+.field input.ar, .field textarea.ar { font-family: 'Cairo', sans-serif; direction: rtl; text-align: right; }
+.field input.en, .field textarea.en { font-family: 'Rubik', sans-serif; direction: ltr; text-align: left; }
+
+@media (max-width: 800px) {
+  .field { grid-template-columns: 1fr; }
+  .field .label { padding-top: 0; }
+  header.topbar { flex-direction: column; align-items: stretch; }
+  header.topbar .actions { justify-content: stretch; }
+  header.topbar .actions .btn { flex: 1; justify-content: center; }
+}
+
+/* ===== Pricing special table ===== */
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px;
+  margin: 8px 4px 4px;
+}
+.pricing-card {
+  background: rgba(0,0,0,0.25); border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px;
+}
+.pricing-card h4 {
+  margin: 0 0 8px; font-size: 0.95rem; font-family: 'Rubik', monospace; color: var(--accent);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.pricing-card .badge { background: rgba(34,197,94,0.15); border: 1px solid rgba(34,197,94,0.3); color: var(--accent); font-size: 0.7rem; padding: 2px 8px; border-radius: 999px; font-family: 'Cairo', sans-serif; }
+.pricing-card .price-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 6px; }
+.pricing-card .price-row label { font-size: 0.78rem; color: var(--muted); display: block; margin-bottom: 4px; }
+.pricing-card .price-row input { padding: 7px 10px; }
+
+/* ===== Toast ===== */
+.toast-wrap { position: fixed; bottom: 24px; inset-inline-end: 24px; display: flex; flex-direction: column; gap: 10px; z-index: 100; }
+.toast {
+  padding: 12px 16px; border-radius: 10px;
+  background: var(--surface-2); border: 1px solid var(--border-2);
+  box-shadow: var(--shadow); animation: pop .22s ease;
+  display: flex; align-items: center; gap: 10px;
+}
+.toast.success { border-color: rgba(34,197,94,0.4); }
+.toast.error { border-color: rgba(239,68,68,0.4); }
+@keyframes pop { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== Modal ===== */
+.modal-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px);
+  display: none; align-items: center; justify-content: center; z-index: 80;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 16px;
+  padding: 24px; max-width: 420px; width: calc(100% - 32px);
+  box-shadow: var(--shadow);
+}
+.modal h3 { margin: 0 0 8px; font-size: 1.1rem; }
+.modal p { margin: 0 0 16px; color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+.modal .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ===== Empty state ===== */
+.empty { padding: 40px 20px; text-align: center; color: var(--muted); }
+.empty .em { font-size: 2.4rem; margin-bottom: 6px; }
+
+/* ===== Tabs (top-level panel switcher) ===== */
+.panel-tabs {
+  display: inline-flex; padding: 4px; gap: 4px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; margin-bottom: 18px;
+}
+.panel-tabs button {
+  padding: 10px 18px; border: 0; background: transparent; color: var(--muted);
+  border-radius: 9px; font: inherit; font-weight: 600;
+}
+.panel-tabs button.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #0a0e1a; }
+
+/* ===== Videos panel ===== */
+.videos-row {
+  display: grid; grid-template-columns: 80px 1fr auto; gap: 14px; align-items: center;
+  padding: 12px; margin-bottom: 10px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+}
+.videos-row .thumb {
+  width: 80px; height: 56px; border-radius: 8px; overflow: hidden;
+  background: linear-gradient(135deg, #1f2937, #0f172a);
+  display: grid; place-items: center; font-size: 22px; color: var(--muted);
+}
+.videos-row .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.videos-row .meta .ar-title { font-weight: 700; font-size: 0.95rem; }
+.videos-row .meta .en-title { color: var(--muted); font-size: 0.8rem; direction: ltr; text-align: start; }
+.videos-row .meta .badges { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.videos-row .meta .b {
+  padding: 2px 8px; border-radius: 999px; font-size: 0.72rem;
+  background: rgba(34,197,94,0.12); color: var(--accent); border: 1px solid rgba(34,197,94,0.3);
+}
+.videos-row .meta .b.cat { background: rgba(59,130,246,0.12); color: var(--accent-2); border-color: rgba(59,130,246,0.3); }
+.videos-row .meta .b.empty-url { background: rgba(239,68,68,0.12); color: var(--danger); border-color: rgba(239,68,68,0.3); }
+.videos-row .actions-col { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.videos-row .actions-col button { padding: 6px 10px; font-size: 0.8rem; }
+.videos-cat-group { margin-bottom: 22px; }
+.videos-cat-group h3 {
+  display: flex; align-items: center; gap: 8px; justify-content: space-between;
+  margin: 0 0 10px; font-size: 1rem; color: var(--text);
+  padding: 10px 14px; background: var(--surface-2); border-radius: 10px;
+  border: 1px solid var(--border);
+}
+.videos-cat-group h3 .count { color: var(--muted); font-size: 0.8rem; font-weight: 400; }
+.video-modal { max-width: 720px; }
+.video-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.video-form .full { grid-column: 1 / -1; }
+.video-form label { display: flex; flex-direction: column; gap: 4px; font-size: 0.82rem; color: var(--muted); }
+.video-form input, .video-form textarea, .video-form select {
+  padding: 9px 12px; border-radius: 10px; border: 1px solid var(--border);
+  background: rgba(0,0,0,0.30); color: var(--text); font: inherit; outline: none;
+}
+.video-form input:focus, .video-form textarea:focus, .video-form select:focus { border-color: var(--accent); }
+.video-form textarea { min-height: 70px; resize: vertical; }
+.video-form .ar-input { font-family: 'Cairo', sans-serif; direction: rtl; text-align: right; }
+.video-form .en-input { font-family: 'Rubik', sans-serif; direction: ltr; text-align: left; }
+.video-form fieldset {
+  grid-column: 1 / -1; border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 14px 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;
+}
+.video-form fieldset > * { grid-column: 1 / -1; }
+.video-form fieldset legend { color: var(--accent); padding: 0 6px; font-size: 0.85rem; font-weight: 700; }
+@media (max-width: 700px) {
+  .video-form { grid-template-columns: 1fr; }
+  .videos-row { grid-template-columns: 64px 1fr; }
+  .videos-row .actions-col { grid-column: 1 / -1; justify-content: stretch; }
+  .videos-row .actions-col button { flex: 1; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">K</div>
+      <div>
+        <h1>لوحة التحكم</h1>
+        <div class="sub">عدّل النصوص والأسعار، ثم نزّل ملف <code style="color:var(--accent)">content.json</code></div>
+      </div>
+    </div>
+    <div class="actions">
+      <span id="statusPill" class="status-pill"><span class="dot"></span><span id="statusText">محفوظ</span></span>
+      <button class="btn" id="previewBtn" title="فتح الموقع للمعاينة">👁️ معاينة</button>
+      <button class="btn primary" id="downloadBtn" title="تنزيل ملف JSON">⬇️ تنزيل JSON</button>
+      <button class="btn danger" id="resetBtn" title="إعادة كل الحقول للقيم الأصلية">↺ إعادة تعيين</button>
+    </div>
+  </header>
+
+  <div class="panel-tabs" role="tablist" aria-label="لوحات التحكم">
+    <button data-panel="texts" class="active">📝 النصوص والأسعار</button>
+    <button data-panel="videos">🎬 فيديوهات الأعمال</button>
+  </div>
+
+  <div id="textsPanel">
+    <div class="toolbar">
+      <div class="search"><input id="searchInput" type="search" placeholder="ابحث في النصوص (مثلاً: 'سعر' أو 'hero')..." /></div>
+      <div class="filter" role="tablist" aria-label="فلتر العرض">
+        <button data-filter="all" class="active">الكل</button>
+        <button data-filter="dirty">المعدّل فقط</button>
+      </div>
+    </div>
+    <div id="sectionsRoot"></div>
+  </div>
+
+  <div id="videosPanel" hidden>
+    <div class="toolbar">
+      <div class="search"><input id="videosSearch" type="search" placeholder="ابحث في الفيديوهات (عنوان أو وصف)..." /></div>
+      <div class="filter" role="tablist" aria-label="فلتر القسم">
+        <button data-cat="all" class="active">الكل</button>
+        <button data-cat="podcast">بودكاست</button>
+        <button data-cat="reels">ريلز</button>
+        <button data-cat="longyt">يوتيوب طويل</button>
+        <button data-cat="edu">تعليمي</button>
+        <button data-cat="wedding">أفراح</button>
+      </div>
+      <button class="btn primary" id="addVideoBtn">+ فيديو جديد</button>
+    </div>
+    <div id="videosRoot"></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" role="dialog" aria-modal="true">
+    <h3 id="modalTitle">تأكيد</h3>
+    <p id="modalBody"></p>
+    <div class="modal-actions">
+      <button class="btn" id="modalCancel">إلغاء</button>
+      <button class="btn danger" id="modalConfirm">تأكيد</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="videoModalBg">
+  <div class="modal video-modal" role="dialog" aria-modal="true">
+    <h3 id="videoModalTitle">إضافة فيديو</h3>
+    <div class="video-form">
+      <label>القسم
+        <select id="vCat">
+          <option value="podcast">بودكاست</option>
+          <option value="reels">ريلز</option>
+          <option value="longyt">يوتيوب طويل</option>
+          <option value="edu">تعليمي</option>
+          <option value="wedding">أفراح</option>
+        </select>
+      </label>
+      <label id="vSubCatLabel">القسم الفرعي (للريلز فقط)
+        <select id="vSubCat">
+          <option value="">— بدون —</option>
+          <option value="general">عام</option>
+          <option value="medical">طبي</option>
+          <option value="educational">تعليمي</option>
+          <option value="marketing">تسويقي</option>
+          <option value="ai">ذكاء اصطناعي</option>
+        </select>
+      </label>
+      <label>الاتجاه
+        <select id="vOrient">
+          <option value="horizontal">أفقي (16:9)</option>
+          <option value="vertical">رأسي (9:16)</option>
+        </select>
+      </label>
+      <label>المنصّة (Badge)
+        <input id="vBadge" placeholder="YouTube · Vimeo · Facebook ..." />
+      </label>
+      <label class="full">رابط الفيديو
+        <input id="vUrl" placeholder="https://www.youtube.com/watch?v=... أو https://vimeo.com/..." />
+      </label>
+      <label class="full">صورة المعاينة (Poster) — اختياري
+        <input id="vPoster" placeholder="رابط مباشر للصورة (لو فاضي هيظهر تدرّج لوني افتراضي)" />
+      </label>
+      <fieldset>
+        <legend>العربي</legend>
+        <input id="vTitleAr" class="ar-input" placeholder="عنوان الفيديو بالعربي" />
+        <textarea id="vDescAr" class="ar-input" placeholder="وصف قصير بالعربي"></textarea>
+        <input id="vTagAr" class="ar-input" placeholder="التاج (مثال: بودكاست)" />
+      </fieldset>
+      <fieldset>
+        <legend>English</legend>
+        <input id="vTitleEn" class="en-input" placeholder="Title in English" />
+        <textarea id="vDescEn" class="en-input" placeholder="Short description in English"></textarea>
+        <input id="vTagEn" class="en-input" placeholder="Tag (e.g., Podcast)" />
+      </fieldset>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="vCancel">إلغاء</button>
+      <button class="btn primary" id="vSave">حفظ الفيديو</button>
+    </div>
+  </div>
+</div>
+
+<script src="content-defaults.js?v=27"></script>
+<script src="projects-defaults.js?v=27"></script>
+<script>
+'use strict';
+
+// ===== Config: section metadata (icon, title, description, hint per key) =====
+const SECTION_META = {
+  meta:         { icon: '🌐', title: 'بيانات الموقع (SEO)', desc: 'العنوان والوصف اللي يظهر في جوجل وفيس بوك.' },
+  nav:          { icon: '🧭', title: 'القائمة العلوية', desc: 'روابط التنقّل.' },
+  hero:         { icon: '🎬', title: 'القسم الرئيسي (Hero)', desc: 'الجملة الكبيرة في أول الصفحة.' },
+  bts:          { icon: '🎥', title: 'وراء الكواليس', desc: 'بطاقة BTS تحت صورة الـ hero.' },
+  stats:        { icon: '📊', title: 'الأرقام', desc: 'سنين الخبرة، المشاريع، العملاء.' },
+  about:        { icon: '👤', title: 'عني', desc: 'القسم التعريفي والكروت الأربعة.' },
+  services:     { icon: '🛠️', title: 'الخدمات', desc: 'كروت الخدمات اللي تقدّمها.' },
+  skills:       { icon: '⚡', title: 'المهارات', desc: 'قائمة المهارات والخبرات التقنية.' },
+  works:        { icon: '🎞️', title: 'الأعمال', desc: 'قسم معرض الفيديوهات.' },
+  filter:       { icon: '🔘', title: 'فلتر الأعمال', desc: 'أزرار تصنيف المعرض.' },
+  subfilter:    { icon: '🔻', title: 'فلتر الريلز', desc: 'تصنيفات فرعية للريلز.' },
+  empty:        { icon: '⏳', title: 'حالة فارغة', desc: 'الرسالة لما القسم لسه فاضي.' },
+  designs:      { icon: '🎨', title: 'التصاميم', desc: 'قسم البوسترات والإعلانات.' },
+  showcase:     { icon: '🌟', title: 'عرض الأعمال', desc: 'تفاصيل بطاقات الأعمال البارزة.' },
+  testimonials: { icon: '💬', title: 'آراء العملاء', desc: 'الشهادات اللي بتظهر في القسم.' },
+  process:      { icon: '🔄', title: 'خطوات الشغل', desc: 'الـ Process من الفكرة للتسليم.' },
+  pricing:      { icon: '💰', title: 'الباقات والأسعار', desc: 'الأسعار، المميزات، والوصف.' },
+  discount:     { icon: '🏷️', title: 'العداد التنازلي للخصم', desc: 'بانر الخصم المؤقت.' },
+  cd:           { icon: '⏱️', title: 'بطاقة العد التنازلي', desc: 'نصوص العداد.' },
+  contact:      { icon: '📞', title: 'تواصل معاي', desc: 'بيانات الاتصال (تظهر للعميل).' },
+  form:         { icon: '✉️', title: 'فورم التواصل', desc: 'نصوص الفورم والرسائل.' },
+  footer:       { icon: '⚓', title: 'الفوتر', desc: 'حقوق النشر والتاج لاين.' },
+};
+
+// Special pricing plan groups
+const PRICING_PLANS = [
+  { id: 'e1', name: 'Editing · شرارة' },
+  { id: 'e2', name: 'Editing · انطلاق' },
+  { id: 'e3', name: 'Editing · بصمة' },
+  { id: 'm1', name: 'Marketing · شرارة' },
+  { id: 'm2', name: 'Marketing · انطلاق' },
+  { id: 'm3', name: 'Marketing · بصمة' },
+  { id: 'st', name: 'Studio · حسب الاتفاق' },
+];
+
+// ===== State =====
+const defaults = (window.__i18n_defaults && JSON.parse(JSON.stringify(window.__i18n_defaults))) || { ar: {}, en: {} };
+let draft = loadDraft();
+let openSections = new Set(['hero', 'about', 'pricing']);
+let currentFilter = 'all';
+let currentSearch = '';
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem('khaled_content_draft');
+    if (!raw) return { ar: {}, en: {} };
+    const parsed = JSON.parse(raw);
+    return { ar: parsed.ar || {}, en: parsed.en || {} };
+  } catch { return { ar: {}, en: {} }; }
+}
+
+function persistDraft() {
+  // Only save keys that differ from defaults
+  const out = { ar: {}, en: {} };
+  for (const lang of ['ar', 'en']) {
+    for (const k of Object.keys(draft[lang] || {})) {
+      if ((draft[lang][k] ?? '') !== (defaults[lang][k] ?? '')) {
+        out[lang][k] = draft[lang][k];
+      }
+    }
+  }
+  if (Object.keys(out.ar).length === 0 && Object.keys(out.en).length === 0) {
+    localStorage.removeItem('khaled_content_draft');
+  } else {
+    localStorage.setItem('khaled_content_draft', JSON.stringify(out));
+  }
+  updateStatus();
+}
+
+function updateStatus() {
+  const dirty = isDirty();
+  const pill = document.getElementById('statusPill');
+  const text = document.getElementById('statusText');
+  if (dirty) {
+    pill.classList.add('dirty');
+    text.textContent = 'فيه تعديلات غير مُنزَّلة';
+  } else {
+    pill.classList.remove('dirty');
+    text.textContent = 'لا توجد تعديلات';
+  }
+}
+
+function isDirty() {
+  for (const lang of ['ar', 'en']) {
+    for (const k of Object.keys(draft[lang] || {})) {
+      if ((draft[lang][k] ?? '') !== (defaults[lang][k] ?? '')) return true;
+    }
+  }
+  return false;
+}
+
+function getValue(lang, key) {
+  if (draft[lang] && draft[lang][key] !== undefined) return draft[lang][key];
+  return defaults[lang][key] ?? '';
+}
+
+function setValue(lang, key, val) {
+  draft[lang] = draft[lang] || {};
+  draft[lang][key] = val;
+}
+
+function isFieldDirty(key) {
+  return ['ar','en'].some(lang =>
+    (draft[lang]?.[key] ?? defaults[lang][key] ?? '') !== (defaults[lang][key] ?? '')
+  );
+}
+
+// ===== Group keys by section =====
+function groupKeys() {
+  const groups = {};
+  for (const k of Object.keys(defaults.ar)) {
+    const sec = k.split('.')[0];
+    (groups[sec] = groups[sec] || []).push(k);
+  }
+  return groups;
+}
+
+// ===== Render =====
+function render() {
+  const root = document.getElementById('sectionsRoot');
+  const groups = groupKeys();
+  const order = [
+    'meta','nav','hero','about','services','skills','works','filter','subfilter','empty',
+    'designs','showcase','bts','stats','testimonials','process','pricing','discount','cd',
+    'contact','form','footer'
+  ];
+  root.innerHTML = '';
+
+  let visibleCount = 0;
+  for (const sec of order) {
+    if (!groups[sec]) continue;
+    const meta = SECTION_META[sec] || { icon: '•', title: sec, desc: '' };
+    const keys = groups[sec];
+    const filteredKeys = keys.filter(k => keyMatchesFilter(k));
+    if (filteredKeys.length === 0) continue;
+    visibleCount++;
+
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'section' + (openSections.has(sec) ? ' open' : '');
+    sectionEl.dataset.section = sec;
+
+    const dirtyInSection = keys.filter(isFieldDirty).length;
+    const dirtyBadge = dirtyInSection > 0 ? `<span class="status-pill dirty" style="margin-inline-start:8px"><span class="dot"></span>${dirtyInSection} معدّل</span>` : '';
+
+    sectionEl.innerHTML = `
+      <div class="head" data-toggle="${sec}">
+        <div class="left">
+          <div class="icon">${meta.icon}</div>
+          <div>
+            <div class="title">${meta.title}${dirtyBadge}</div>
+            <div class="count">${meta.desc} · ${filteredKeys.length} حقل${keys.length !== filteredKeys.length ? ` (من ${keys.length})` : ''}</div>
+          </div>
+        </div>
+        <div class="chev">▾</div>
+      </div>
+      <div class="body" id="body-${sec}"></div>
+    `;
+    root.appendChild(sectionEl);
+
+    if (openSections.has(sec)) {
+      const body = sectionEl.querySelector('.body');
+      if (sec === 'pricing') renderPricingSection(body, filteredKeys);
+      else renderFieldList(body, filteredKeys);
+    }
+  }
+
+  if (visibleCount === 0) {
+    root.innerHTML = `<div class="empty"><div class="em">🔎</div>مفيش نتايج للبحث "${escapeHtml(currentSearch)}"</div>`;
+  }
+
+  // Toggle section handlers
+  root.querySelectorAll('[data-toggle]').forEach(el => {
+    el.addEventListener('click', () => {
+      const sec = el.dataset.toggle;
+      if (openSections.has(sec)) openSections.delete(sec); else openSections.add(sec);
+      render();
+    });
+  });
+
+  updateStatus();
+}
+
+function keyMatchesFilter(key) {
+  // Filter by dirty
+  if (currentFilter === 'dirty' && !isFieldDirty(key)) return false;
+  // Filter by search
+  if (currentSearch) {
+    const q = currentSearch.toLowerCase();
+    const arVal = (getValue('ar', key) ?? '').toString().toLowerCase();
+    const enVal = (getValue('en', key) ?? '').toString().toLowerCase();
+    if (!key.toLowerCase().includes(q) && !arVal.includes(q) && !enVal.includes(q)) return false;
+  }
+  return true;
+}
+
+function renderFieldList(container, keys) {
+  for (const key of keys) {
+    container.appendChild(buildFieldRow(key));
+  }
+}
+
+function buildFieldRow(key) {
+  const row = document.createElement('div');
+  row.className = 'field' + (isFieldDirty(key) ? ' dirty' : '');
+  row.dataset.key = key;
+
+  const arVal = getValue('ar', key);
+  const enVal = getValue('en', key);
+  const isLong = (arVal && arVal.length > 80) || (enVal && enVal.length > 80) || /\.(p\d|lead|desc|sub|q\d?|features|line|message|body)/.test(key);
+  const tag = isLong ? 'textarea' : 'input';
+
+  row.innerHTML = `
+    <div class="label">
+      <div class="key">${escapeHtml(key)}</div>
+      <div class="hint">${hintFor(key)}</div>
+    </div>
+    <div class="input-wrap">
+      <span class="lang-tag">AR</span>
+      <${tag} class="ar" data-lang="ar" data-key="${escapeHtml(key)}" ${tag === 'input' ? `value="${escapeAttr(arVal)}"` : `>${escapeHtml(arVal)}</textarea`}>
+      ${tag === 'input' ? '' : ''}
+    </div>
+    <div class="input-wrap">
+      <span class="lang-tag">EN</span>
+      <${tag} class="en" data-lang="en" data-key="${escapeHtml(key)}" ${tag === 'input' ? `value="${escapeAttr(enVal)}"` : `>${escapeHtml(enVal)}</textarea`}>
+    </div>
+  `;
+  // Wire up listeners
+  row.querySelectorAll('input, textarea').forEach(el => {
+    el.addEventListener('input', (e) => {
+      const lang = e.target.dataset.lang;
+      const k = e.target.dataset.key;
+      setValue(lang, k, e.target.value);
+      // toggle dirty class without re-render
+      if (isFieldDirty(k)) row.classList.add('dirty'); else row.classList.remove('dirty');
+      persistDraft();
+    });
+  });
+  return row;
+}
+
+function hintFor(key) {
+  const parts = key.split('.');
+  const last = parts.slice(-1)[0];
+  const sec = parts[0];
+  // Special cases per section
+  if (sec === 'pricing') {
+    if (last === 'name') return 'اسم الباقة';
+    if (last === 'tag') return 'وصف قصير فوق الاسم';
+    if (last === 'promise') return 'الوعد / الفايدة';
+    if (last === 'priceOld') return 'السعر قبل الخصم';
+    if (last === 'priceNew') return 'السعر بعد الخصم';
+    if (/^f\d+$/.test(last)) return 'بند من المميزات';
+  }
+  if (sec === 'testimonials') {
+    if (last === 'q') return 'نص الاقتباس';
+    if (last === 'n') return 'اسم العميل';
+    if (last === 'r') return 'وظيفة / صفة العميل';
+  }
+  if (sec === 'process') {
+    if (/^s\d+\.t$/.test(parts.slice(1).join('.'))) return 'عنوان الخطوة';
+    if (/^s\d+\.d$/.test(parts.slice(1).join('.'))) return 'وصف الخطوة';
+  }
+  // Generic mapping by last segment
+  const map = {
+    title: 'العنوان', t: 'العنوان', tag: 'الكلمة الصغيرة فوق العنوان', lead: 'فقرة وصفية',
+    sub: 'العنوان الفرعي', desc: 'الوصف', d: 'الوصف', p1: 'فقرة 1', p2: 'فقرة 2',
+    cta1: 'زر 1', cta2: 'زر 2',
+    name: 'الاسم', q: 'الاقتباس', r: 'الصفة',
+    badge: 'شارة', label: 'النص على الزر',
+    line: 'الجملة الرئيسية', greet: 'كلمة الترحيب',
+    eyebrow: 'الكلمة الصغيرة فوق العنوان',
+    home: 'الصفحة الرئيسية', about: 'عني', services: 'الخدمات', skills: 'المهارات',
+    works: 'الأعمال', designs: 'التصاميم', process: 'إزاي بشتغل', pricing: 'الباقات', contact: 'تواصل',
+    rights: 'حقوق النشر',
+  };
+  return map[last] || '';
+}
+
+function renderPricingSection(container, keys) {
+  const grid = document.createElement('div');
+  grid.className = 'pricing-grid';
+  for (const plan of PRICING_PLANS) {
+    const planKeys = keys.filter(k => k.startsWith(`pricing.${plan.id}.`));
+    if (planKeys.length === 0) continue;
+    const card = document.createElement('div');
+    card.className = 'pricing-card';
+    const dirtyN = planKeys.filter(isFieldDirty).length;
+    card.innerHTML = `<h4><span>${escapeHtml(plan.name)}</span>${dirtyN > 0 ? `<span class="badge">${dirtyN} معدّل</span>` : ''}</h4>`;
+    // Render each key as a normal field row (compact)
+    for (const k of planKeys) {
+      card.appendChild(buildFieldRow(k));
+    }
+    grid.appendChild(card);
+  }
+  container.appendChild(grid);
+}
+
+// ===== Toolbar handlers =====
+document.getElementById('searchInput').addEventListener('input', (e) => {
+  currentSearch = e.target.value.trim();
+  // Open all sections when searching to show results
+  if (currentSearch) {
+    openSections = new Set(Object.keys(SECTION_META));
+  }
+  render();
+});
+
+document.querySelectorAll('.toolbar .filter button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.toolbar .filter button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = btn.dataset.filter;
+    if (currentFilter === 'dirty') openSections = new Set(Object.keys(SECTION_META));
+    render();
+  });
+});
+
+// ===== Top action handlers =====
+document.getElementById('previewBtn').addEventListener('click', () => {
+  persistDraft();
+  persistVideosDraft();
+  toast('بنفتح الموقع بالتعديلات الحالية…', 'success');
+  setTimeout(() => window.open('index.html', '_blank'), 200);
+});
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if (activePanel === 'videos') {
+    downloadProjectsJson();
+  } else {
+    downloadContentJson();
+  }
+});
+
+function downloadContentJson() {
+  // Build content.json (only changed keys)
+  const out = { ar: {}, en: {} };
+  for (const lang of ['ar','en']) {
+    for (const k of Object.keys(draft[lang] || {})) {
+      if ((draft[lang][k] ?? '') !== (defaults[lang][k] ?? '')) {
+        out[lang][k] = draft[lang][k];
+      }
+    }
+  }
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'content.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  if (Object.keys(out.ar).length === 0 && Object.keys(out.en).length === 0) {
+    toast('مفيش تعديلات لتنزّلها — الملف فاضي.', 'error');
+  } else {
+    toast('تم تنزيل content.json — حطّه في نفس مجلد الموقع وارفعه على جيت هب.', 'success');
+  }
+}
+
+function downloadProjectsJson() {
+  const out = { ar: videos.ar, en: videos.en };
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'projects.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
+  toast(`تم تنزيل projects.json (${videos.ar.length} فيديو) — حطّه في نفس مجلد الموقع وارفعه على جيت هب.`, 'success');
+}
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  if (activePanel === 'videos') {
+    showModal({
+      title: 'إعادة تعيين الفيديوهات',
+      body: 'كل التعديلات على الفيديوهات هتترجع للقائمة الأصلية. متأكد؟',
+      confirmText: 'إعادة تعيين',
+      onConfirm: () => {
+        videos = clone(projectsDefaults);
+        localStorage.removeItem('khaled_projects_draft');
+        toast('تم استرجاع قائمة الفيديوهات الأصلية.', 'success');
+        renderVideos();
+      }
+    });
+  } else {
+    showModal({
+      title: 'تأكيد إعادة التعيين',
+      body: 'كل تعديلات النصوص والأسعار المحفوظة محليًا هتتمسح وهترجع للقيم الأصلية. متأكد؟',
+      confirmText: 'مسح كل التعديلات',
+      onConfirm: () => {
+        draft = { ar: {}, en: {} };
+        localStorage.removeItem('khaled_content_draft');
+        toast('تم استرجاع كل القيم الأصلية.', 'success');
+        render();
+      }
+    });
+  }
+});
+
+// ============================================================
+// ===== Videos panel ==========================================
+// ============================================================
+
+const projectsDefaults = (window.__projects_defaults && JSON.parse(JSON.stringify(window.__projects_defaults))) || { ar: [], en: [] };
+let videos = loadVideosDraft();
+let activePanel = 'texts';
+let videosFilter = 'all';
+let videosSearch = '';
+let editingIndex = -1; // -1 = adding new
+
+function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+function loadVideosDraft() {
+  try {
+    const raw = localStorage.getItem('khaled_projects_draft');
+    if (!raw) return clone(projectsDefaults);
+    const parsed = JSON.parse(raw);
+    return {
+      ar: Array.isArray(parsed.ar) ? parsed.ar : clone(projectsDefaults.ar),
+      en: Array.isArray(parsed.en) ? parsed.en : clone(projectsDefaults.en),
+    };
+  } catch { return clone(projectsDefaults); }
+}
+
+function persistVideosDraft() {
+  // Only persist if something differs from defaults
+  const diff = JSON.stringify(videos) !== JSON.stringify(projectsDefaults);
+  if (diff) {
+    localStorage.setItem('khaled_projects_draft', JSON.stringify(videos));
+  } else {
+    localStorage.removeItem('khaled_projects_draft');
+  }
+}
+
+const CAT_LABEL = {
+  podcast: 'بودكاست',
+  reels: 'ريلز',
+  longyt: 'يوتيوب طويل',
+  edu: 'تعليمي',
+  wedding: 'أفراح',
+};
+const SUBCAT_LABEL = {
+  general: 'عام',
+  medical: 'طبي',
+  educational: 'تعليمي',
+  marketing: 'تسويقي',
+  ai: 'ذكاء اصطناعي',
+};
+
+function setActivePanel(name) {
+  activePanel = name;
+  document.querySelectorAll('.panel-tabs button').forEach(b => {
+    b.classList.toggle('active', b.dataset.panel === name);
+  });
+  document.getElementById('textsPanel').hidden = name !== 'texts';
+  document.getElementById('videosPanel').hidden = name !== 'videos';
+  // Update download button label/title
+  const dlBtn = document.getElementById('downloadBtn');
+  if (name === 'videos') {
+    dlBtn.title = 'تنزيل ملف projects.json';
+    dlBtn.textContent = '⬇️ تنزيل projects.json';
+  } else {
+    dlBtn.title = 'تنزيل ملف content.json';
+    dlBtn.textContent = '⬇️ تنزيل JSON';
+  }
+  if (name === 'videos') renderVideos();
+}
+
+document.querySelectorAll('.panel-tabs button').forEach(b => {
+  b.addEventListener('click', () => setActivePanel(b.dataset.panel));
+});
+
+document.getElementById('videosSearch').addEventListener('input', e => {
+  videosSearch = (e.target.value || '').trim().toLowerCase();
+  renderVideos();
+});
+
+document.querySelectorAll('#videosPanel .filter button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('#videosPanel .filter button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    videosFilter = btn.dataset.cat;
+    renderVideos();
+  });
+});
+
+document.getElementById('addVideoBtn').addEventListener('click', () => openVideoEditor(-1));
+
+function videoMatchesSearch(v, vEn) {
+  if (!videosSearch) return true;
+  const s = videosSearch;
+  const fields = [v.title, v.desc, v.tag, vEn?.title, vEn?.desc, vEn?.tag, v.cat, v.subCat]
+    .map(x => (x || '').toString().toLowerCase());
+  return fields.some(f => f.includes(s));
+}
+
+function renderVideos() {
+  const root = document.getElementById('videosRoot');
+  const ar = videos.ar || [];
+  const en = videos.en || [];
+  const N = Math.max(ar.length, en.length);
+
+  // Group by cat (using AR as authoritative)
+  const order = ['podcast','reels','longyt','edu','wedding'];
+  const groups = {};
+  for (let i = 0; i < N; i++) {
+    const v = ar[i] || en[i] || {};
+    const cat = v.cat || 'unknown';
+    if (videosFilter !== 'all' && cat !== videosFilter) continue;
+    if (!videoMatchesSearch(ar[i] || {}, en[i] || {})) continue;
+    (groups[cat] = groups[cat] || []).push(i);
+  }
+
+  root.innerHTML = '';
+  let total = 0;
+  for (const cat of order) {
+    const idxs = groups[cat];
+    if (!idxs || idxs.length === 0) continue;
+    total += idxs.length;
+    const group = document.createElement('div');
+    group.className = 'videos-cat-group';
+    group.innerHTML = `<h3><span>${CAT_LABEL[cat] || cat}</span><span class="count">${idxs.length} فيديو</span></h3>`;
+    for (const i of idxs) {
+      group.appendChild(buildVideoRow(i));
+    }
+    root.appendChild(group);
+  }
+
+  if (total === 0) {
+    root.innerHTML = `<div class="empty"><div class="em">🎬</div>${videosSearch ? `مفيش فيديوهات مطابقة لبحث "${escapeHtml(videosSearch)}"` : 'مفيش فيديوهات في القسم ده — استخدم "+ فيديو جديد".'}</div>`;
+  }
+}
+
+function buildVideoRow(i) {
+  const ar = videos.ar[i] || {};
+  const en = videos.en[i] || {};
+  const row = document.createElement('div');
+  row.className = 'videos-row';
+
+  const poster = ar.poster || en.poster || '';
+  const thumbHtml = poster
+    ? `<img src="${escapeAttr(poster)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🎬'}))" />`
+    : '🎬';
+
+  const url = ar.url || en.url || '';
+  const noUrl = !url;
+
+  row.innerHTML = `
+    <div class="thumb">${thumbHtml}</div>
+    <div class="meta">
+      <div class="ar-title">${escapeHtml(ar.title || '(بدون عنوان)')}</div>
+      <div class="en-title">${escapeHtml(en.title || '(no English title)')}</div>
+      <div class="badges">
+        <span class="b cat">${escapeHtml(CAT_LABEL[ar.cat] || ar.cat || '?')}</span>
+        ${ar.subCat ? `<span class="b cat">${escapeHtml(SUBCAT_LABEL[ar.subCat] || ar.subCat)}</span>` : ''}
+        ${ar.badge ? `<span class="b">${escapeHtml(ar.badge)}</span>` : ''}
+        ${ar.orient === 'vertical' ? `<span class="b">9:16</span>` : ''}
+        ${noUrl ? `<span class="b empty-url">رابط ناقص</span>` : ''}
+      </div>
+    </div>
+    <div class="actions-col">
+      <button class="btn" data-act="up" title="فوق">▲</button>
+      <button class="btn" data-act="down" title="تحت">▼</button>
+      <button class="btn" data-act="edit">✎ تعديل</button>
+      <button class="btn danger" data-act="del">🗑️</button>
+    </div>
+  `;
+
+  row.querySelectorAll('button[data-act]').forEach(b => {
+    b.addEventListener('click', () => handleVideoAction(b.dataset.act, i));
+  });
+  return row;
+}
+
+function handleVideoAction(act, i) {
+  if (act === 'edit') {
+    openVideoEditor(i);
+  } else if (act === 'del') {
+    showModal({
+      title: 'تأكيد الحذف',
+      body: `هتمسح الفيديو رقم ${i+1}: "${(videos.ar[i] && videos.ar[i].title) || '(بدون عنوان)'}". متأكد؟`,
+      confirmText: 'حذف',
+      onConfirm: () => {
+        videos.ar.splice(i, 1);
+        videos.en.splice(i, 1);
+        persistVideosDraft();
+        toast('تم حذف الفيديو.', 'success');
+        renderVideos();
+      }
+    });
+  } else if (act === 'up' && i > 0) {
+    [videos.ar[i-1], videos.ar[i]] = [videos.ar[i], videos.ar[i-1]];
+    [videos.en[i-1], videos.en[i]] = [videos.en[i], videos.en[i-1]];
+    persistVideosDraft();
+    renderVideos();
+  } else if (act === 'down' && i < videos.ar.length - 1) {
+    [videos.ar[i+1], videos.ar[i]] = [videos.ar[i], videos.ar[i+1]];
+    [videos.en[i+1], videos.en[i]] = [videos.en[i], videos.en[i+1]];
+    persistVideosDraft();
+    renderVideos();
+  }
+}
+
+// ===== Video editor modal =====
+const videoModalBg = document.getElementById('videoModalBg');
+function openVideoEditor(i) {
+  editingIndex = i;
+  document.getElementById('videoModalTitle').textContent = i < 0 ? 'إضافة فيديو جديد' : `تعديل الفيديو #${i+1}`;
+  const ar = (i >= 0 && videos.ar[i]) || {};
+  const en = (i >= 0 && videos.en[i]) || {};
+  document.getElementById('vCat').value = ar.cat || 'podcast';
+  document.getElementById('vSubCat').value = ar.subCat || '';
+  document.getElementById('vOrient').value = ar.orient || 'horizontal';
+  document.getElementById('vBadge').value = ar.badge || '';
+  document.getElementById('vUrl').value = ar.url || '';
+  document.getElementById('vPoster').value = ar.poster || '';
+  document.getElementById('vTitleAr').value = ar.title || '';
+  document.getElementById('vDescAr').value = ar.desc || '';
+  document.getElementById('vTagAr').value = ar.tag || '';
+  document.getElementById('vTitleEn').value = en.title || '';
+  document.getElementById('vDescEn').value = en.desc || '';
+  document.getElementById('vTagEn').value = en.tag || '';
+  updateSubCatVisibility();
+  videoModalBg.classList.add('open');
+}
+function closeVideoModal() { videoModalBg.classList.remove('open'); editingIndex = -1; }
+function updateSubCatVisibility() {
+  const cat = document.getElementById('vCat').value;
+  document.getElementById('vSubCatLabel').style.display = cat === 'reels' ? '' : 'none';
+}
+document.getElementById('vCat').addEventListener('change', updateSubCatVisibility);
+document.getElementById('vCancel').addEventListener('click', closeVideoModal);
+videoModalBg.addEventListener('click', (e) => { if (e.target === videoModalBg) closeVideoModal(); });
+
+document.getElementById('vSave').addEventListener('click', () => {
+  const cat = document.getElementById('vCat').value;
+  const subCat = cat === 'reels' ? (document.getElementById('vSubCat').value || undefined) : undefined;
+  const orient = document.getElementById('vOrient').value;
+  const badge = document.getElementById('vBadge').value.trim();
+  const url = document.getElementById('vUrl').value.trim();
+  const poster = document.getElementById('vPoster').value.trim();
+  const titleAr = document.getElementById('vTitleAr').value.trim();
+  const descAr = document.getElementById('vDescAr').value.trim();
+  const tagAr = document.getElementById('vTagAr').value.trim();
+  const titleEn = document.getElementById('vTitleEn').value.trim();
+  const descEn = document.getElementById('vDescEn').value.trim();
+  const tagEn = document.getElementById('vTagEn').value.trim();
+
+  if (!titleAr && !titleEn) { toast('أدخل عنوان عربي أو إنجليزي على الأقل.', 'error'); return; }
+  if (!cat) { toast('اختار القسم.', 'error'); return; }
+
+  const arItem = {
+    cat, ...(subCat ? { subCat } : {}),
+    title: titleAr || titleEn,
+    desc: descAr || descEn,
+    tag: tagAr || tagEn,
+    badge: badge || undefined,
+    thumb: '',
+    ...(poster ? { poster } : {}),
+    ...(url ? { url } : { placeholder: true }),
+    orient,
+  };
+  const enItem = {
+    cat, ...(subCat ? { subCat } : {}),
+    title: titleEn || titleAr,
+    desc: descEn || descAr,
+    tag: tagEn || tagAr,
+    badge: badge || undefined,
+    thumb: '',
+    ...(poster ? { poster } : {}),
+    ...(url ? { url } : { placeholder: true }),
+    orient,
+  };
+
+  if (editingIndex < 0) {
+    videos.ar.push(arItem);
+    videos.en.push(enItem);
+    toast('تمت إضافة الفيديو.', 'success');
+  } else {
+    videos.ar[editingIndex] = arItem;
+    videos.en[editingIndex] = enItem;
+    toast('تم تحديث الفيديو.', 'success');
+  }
+  persistVideosDraft();
+  closeVideoModal();
+  renderVideos();
+});
+
+// ===== Modal =====
+const modalBg = document.getElementById('modalBg');
+let modalConfirmHandler = null;
+function showModal({ title, body, confirmText = 'تأكيد', onConfirm }) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').textContent = body;
+  document.getElementById('modalConfirm').textContent = confirmText;
+  modalConfirmHandler = onConfirm;
+  modalBg.classList.add('open');
+}
+function closeModal() { modalBg.classList.remove('open'); modalConfirmHandler = null; }
+document.getElementById('modalCancel').addEventListener('click', closeModal);
+document.getElementById('modalConfirm').addEventListener('click', () => {
+  if (modalConfirmHandler) modalConfirmHandler();
+  closeModal();
+});
+modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModal(); });
+
+// ===== Toast =====
+function toast(msg, type = 'success') {
+  const wrap = document.getElementById('toastWrap');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  wrap.appendChild(t);
+  setTimeout(() => { t.style.opacity = '0'; t.style.transform = 'translateY(10px)'; t.style.transition = 'all .3s'; }, 2400);
+  setTimeout(() => t.remove(), 2800);
+}
+
+// ===== Helpers =====
+function escapeHtml(s) {
+  return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escapeAttr(s) {
+  return escapeHtml(s);
+}
+
+// Keyboard shortcut: Ctrl+S to download
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    e.preventDefault();
+    document.getElementById('downloadBtn').click();
+  }
+});
+
+// ===== Boot =====
+if (!window.__i18n_defaults) {
+  document.getElementById('sectionsRoot').innerHTML = `<div class="empty"><div class="em">⚠️</div>تعذّر تحميل النصوص الافتراضية. تأكّد إن ملف <code>content-defaults.js</code> موجود.</div>`;
+} else {
+  render();
+}
+</script>
+
+</body>
+</html>
