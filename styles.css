@@ -1,9 +1,10 @@
-/* ===== Typography: IBM Plex Sans Arabic (AR) + Inter (EN) loaded from Google Fonts in <head>. ===== */
+/* ===== Typography: Cairo (AR — clean geometric, used by most sites) + Inter (EN). ===== */
 
 :root {
-  /* Font stacks: clean & professional, with system fallbacks if Google Fonts fail to load */
-  --font-ar: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, system-ui, -apple-system, 'Noto Sans Arabic', sans-serif;
-  --font-en: 'Inter', 'IBM Plex Sans Arabic', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  /* Font stacks: clean geometric, no decoration — system fallbacks if Google Fonts fail */
+  --font-ar-display: 'Cairo', 'Segoe UI', Tahoma, system-ui, -apple-system, 'Noto Sans Arabic', sans-serif;
+  --font-ar: 'Cairo', 'Segoe UI', Tahoma, system-ui, -apple-system, 'Noto Sans Arabic', sans-serif;
+  --font-en: 'Inter', 'Cairo', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
 
   --bg: #0a0e1a;
   --bg-2: #0f172a;
@@ -22,16 +23,16 @@
   --glow: 0 0 0 1px rgba(34, 197, 94, 0.4), 0 0 25px rgba(34, 197, 94, 0.35);
 
   /* ===== Type scale (modular, ~1.18 ratio) ===== */
-  --fs-2xs:  0.75rem;   /* 12px — badges, micro labels, sr-only, badge dates */
-  --fs-xs:   0.8125rem; /* 13px — captions, small footer text */
-  --fs-sm:   0.875rem;  /* 14px — small body, meta, form helper */
-  --fs-base: 1rem;      /* 16px — body default */
-  --fs-md:   1.0625rem; /* 17px — emphasised body, plan sub */
-  --fs-lg:   1.125rem;  /* 18px — lead paragraph */
-  --fs-xl:   1.25rem;   /* 20px — h3 small, mini titles */
-  --fs-2xl:  clamp(1.4rem, 2.4vw, 1.75rem);   /* h3 / card titles */
-  --fs-3xl:  clamp(1.75rem, 3.5vw, 2.5rem);   /* h2 section headers */
-  --fs-4xl:  clamp(2rem, 4.2vw, 3rem);        /* h1 hero */
+  --fs-2xs:  0.75rem;    /* 12px — badges, micro labels, sr-only, badge dates */
+  --fs-xs:   0.8125rem;  /* 13px — captions, small footer text */
+  --fs-sm:   0.9rem;     /* 14.4px — small body, meta, form helper */
+  --fs-base: 1rem;       /* 16px — body default */
+  --fs-md:   1.0625rem;  /* 17px — emphasised body, plan sub */
+  --fs-lg:   1.125rem;   /* 18px — lead paragraph */
+  --fs-xl:   1.2rem;     /* 19.2px — h3 small, mini titles */
+  --fs-2xl:  clamp(1.3rem, 2.1vw, 1.55rem);   /* h3 / card titles */
+  --fs-3xl:  clamp(1.625rem, 3.0vw, 2.15rem); /* h2 section headers */
+  --fs-4xl:  clamp(1.85rem, 3.6vw, 2.55rem);  /* h1 hero */
 
   /* Display sizes (kept for marquee numbers / hero stats) */
   --fs-display-sm: 1.75rem;   /* hero-stats / count-up */
@@ -48,7 +49,7 @@ body {
   font-weight: 400;
   background: var(--bg);
   color: var(--text);
-  line-height: 1.75;
+  line-height: 1.85;
   letter-spacing: 0;
   overflow-x: hidden;
   position: relative;
@@ -63,9 +64,8 @@ html[lang="en"] body {
   line-height: 1.7;
 }
 
-p { margin-block: 0 0.75em; }
-p, li { word-spacing: 0.5px; }
-html[lang="en"] p, html[lang="en"] li { word-spacing: 0; }
+p { margin-block: 0 0.85em; text-wrap: pretty; }
+p, li { word-spacing: 0; }
 
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
@@ -112,19 +112,70 @@ img { max-width: 100%; display: block; }
   display: flex; align-items: center; justify-content: space-between;
   height: 72px;
 }
-.logo { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: 0.2px; transition: transform 0.2s ease; }
-.logo:hover { transform: translateY(-2px); }
-.logo-mark {
-  width: 40px; height: 40px; display: grid; place-items: center;
-  background: var(--grad);
-  border-radius: 11px; color: #0a0e1a; font-weight: 900;
-  box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
-  font-family: var(--font-ar);
-  font-size: var(--fs-xl);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+.logo {
+  display: flex; align-items: center; gap: 12px;
+  font-weight: 600; letter-spacing: 0.1px;
+  transition: opacity 0.3s ease;
+  position: relative;
 }
-.logo:hover .logo-mark { transform: rotate(-12deg) scale(1.08); box-shadow: 0 18px 40px rgba(34, 197, 94, 0.55); }
-.logo-text { font-size: var(--fs-md); }
+.logo:hover { opacity: 1; }
+
+/* Logo mark — image-based, refined hover */
+.logo-mark {
+  position: relative;
+  width: 52px; height: 52px;
+  display: inline-grid; place-items: center;
+  border-radius: 12px;
+  isolation: isolate;
+  transition: transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+@media (max-width: 640px) {
+  .logo-mark { width: 44px; height: 44px; }
+}
+.logo-mark picture, .logo-mark img {
+  display: block; width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(34, 197, 94, 0.18)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+  transition: filter 0.5s ease, transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Soft glow behind the mark, hidden by default */
+.logo-glow {
+  position: absolute; inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(34, 197, 94, 0.35) 0%, rgba(59, 130, 246, 0.18) 40%, transparent 70%);
+  opacity: 0; transform: scale(0.7);
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Elegant hover: gentle lift, softer glow, subtle saturation pop */
+.logo:hover .logo-mark,
+.logo:focus-visible .logo-mark { transform: translateY(-2px) scale(1.04); }
+.logo:hover .logo-mark img,
+.logo:focus-visible .logo-mark img {
+  filter: drop-shadow(0 10px 22px rgba(34, 197, 94, 0.45)) drop-shadow(0 4px 10px rgba(59, 130, 246, 0.3)) saturate(1.15);
+}
+.logo:hover .logo-glow,
+.logo:focus-visible .logo-glow { opacity: 1; transform: scale(1.1); }
+
+/* Looped breathing effect (very subtle, only when not hovering) */
+@keyframes logoBreathe {
+  0%, 100% { filter: drop-shadow(0 4px 12px rgba(34, 197, 94, 0.18)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)); }
+  50%      { filter: drop-shadow(0 6px 16px rgba(34, 197, 94, 0.3)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4)); }
+}
+.logo-mark img { animation: logoBreathe 4.5s ease-in-out infinite; }
+.logo:hover .logo-mark img,
+.logo:focus-visible .logo-mark img { animation-play-state: paused; }
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-mark, .logo-mark img, .logo-glow { transition: none !important; animation: none !important; }
+  .logo:hover .logo-mark, .logo:focus-visible .logo-mark { transform: none; }
+}
+
+.logo-text { font-size: var(--fs-md); font-weight: 600; }
+html[lang="ar"] .logo-text { font-weight: 600; }
 
 .nav-links { display: flex; gap: 28px; }
 .nav-links a {
@@ -212,12 +263,35 @@ h1 {
   font-weight: 700;
   animation: slideInUp 0.9s ease 0.1s both;
   text-wrap: balance;
+  max-width: 22ch;
 }
-html[lang="ar"] h1 { line-height: 1.55; letter-spacing: 0; font-weight: 700; }
+html[lang="ar"] h1 { font-family: var(--font-ar-display); line-height: 1.4; letter-spacing: 0; font-weight: 800; max-width: 20ch; }
 .hero h1 .gradient-text { padding-inline: 2px; }
 .hero h1 .hero-tagline { display: block; margin-top: 8px; font-size: 0.82em; font-weight: 600; color: #f2f7fb; }
 html[lang="ar"] .hero h1 .hero-tagline { font-weight: 700; }
-html[lang="en"] h1 { font-family: var(--font-en); letter-spacing: -1px; font-weight: 800; }
+html[lang="en"] h1 { font-family: var(--font-en); letter-spacing: -1px; font-weight: 700; }
+
+/* Hero name — BIG centerpiece (the brand) */
+.hero h1.hero-name {
+  font-size: clamp(2.6rem, 6vw, 4.4rem);
+  line-height: 1.1;
+  margin: 0 0 14px;
+  font-weight: 800;
+  max-width: none;
+}
+html[lang="ar"] .hero h1.hero-name { font-weight: 900; line-height: 1.2; }
+html[lang="en"] .hero h1.hero-name { font-weight: 800; letter-spacing: -1.5px; }
+
+.hero-role {
+  font-size: var(--fs-lg);
+  color: var(--text);
+  font-weight: 600;
+  margin: 0 0 22px;
+  opacity: 0.92;
+  animation: slideInUp 0.9s ease 0.15s both;
+}
+html[lang="ar"] .hero-role { font-family: var(--font-ar-display); font-weight: 700; }
+html[lang="en"] .hero-role { font-family: var(--font-en); }
 
 .gradient-text {
   background: linear-gradient(135deg, var(--neon) 0%, var(--blue) 50%, var(--neon) 100%);
@@ -290,7 +364,7 @@ html[lang="en"] h1 { font-family: var(--font-en); letter-spacing: -1px; font-wei
   font-size: var(--fs-display-sm);
   background: var(--grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
-  font-weight: 900;
+  font-weight: 700;
   line-height: 1.1;
   font-family: var(--font-ar);
 }
@@ -456,22 +530,33 @@ html[lang="en"] h1 { font-family: var(--font-en); letter-spacing: -1px; font-wei
 }
 h2 {
   font-size: var(--fs-3xl);
-  margin: 0 0 18px;
+  margin: 0 0 16px;
   font-weight: 700;
   letter-spacing: -0.2px;
-  line-height: 1.4;
+  line-height: 1.35;
   text-wrap: balance;
+  max-width: 26ch;
 }
-html[lang="ar"] h2, html[lang="ar"] h3 { line-height: 1.55; letter-spacing: 0; font-weight: 700; }
+html[lang="ar"] h2, html[lang="ar"] h3 { font-family: var(--font-ar-display); line-height: 1.4; letter-spacing: 0; font-weight: 800; }
+html[lang="ar"] h2 { max-width: 28ch; }
 html[lang="en"] h2, html[lang="en"] h3 { font-family: var(--font-en); letter-spacing: -0.3px; }
 
-/* Arabic display headings: clean & professional via IBM Plex Sans Arabic */
-html[lang="ar"] h1, html[lang="ar"] h2 { font-family: var(--font-ar); font-weight: 700; }
+/* Arabic display headings: clean geometric via Cairo */
+html[lang="ar"] h1, html[lang="ar"] h2, html[lang="ar"] h3, html[lang="ar"] .display { font-family: var(--font-ar-display); font-weight: 800; }
 
-h3 { line-height: 1.4; }
+/* Center headings within centred sections (pricing/services lead area) */
+.section-head h2, .section-head h2.title { margin-inline: auto; }
 
-.lead { color: var(--muted); font-size: var(--fs-lg); max-width: 680px; margin-inline: auto; line-height: 1.85; }
-html[lang="ar"] .lead { line-height: 1.95; }
+h3 { line-height: 1.4; max-width: 30ch; }
+
+.lead {
+  color: var(--muted);
+  font-size: var(--fs-lg);
+  max-width: 58ch; margin-inline: auto;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+html[lang="ar"] .lead { line-height: 1.85; max-width: 50ch; }
 
 /* ===== About ===== */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; }
@@ -583,7 +668,7 @@ html[lang="ar"] .lead { line-height: 1.95; }
 .service h3 {
   margin: 0 0 8px;
   font-size: var(--fs-md);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.35;
   transition: color 0.3s ease;
 }
@@ -698,7 +783,7 @@ html[lang="en"] .skill:hover { transform: translateX(6px); }
   position: relative; z-index: 2;
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5), 0 0 30px rgba(34, 197, 94, 0.4);
-  font-weight: 900;
+  font-weight: 700;
 }
 .card:hover .play-icon { transform: scale(1.18) rotate(360deg); }
 .thumb .badge {
@@ -975,7 +1060,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
 .discount-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 [dir="rtl"] .discount-text { align-items: flex-end; }
 .discount-title {
-  font-weight: 800; font-size: var(--fs-md);
+  font-weight: 700; font-size: var(--fs-md);
   background: var(--grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
@@ -996,7 +1081,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   border: 1px solid var(--border);
 }
 .cd-num {
-  font-size: 1.375rem; font-weight: 900; line-height: 1;
+  font-size: 1.375rem; font-weight: 700; line-height: 1;
   color: var(--neon);
   letter-spacing: 0.5px;
 }
@@ -1005,7 +1090,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   margin-top: 4px; letter-spacing: 0.4px;
   text-transform: uppercase;
 }
-.cd-sep { color: var(--neon); font-weight: 900; opacity: 0.6; align-self: flex-start; padding-top: 6px; }
+.cd-sep { color: var(--neon); font-weight: 700; opacity: 0.6; align-self: flex-start; padding-top: 6px; }
 
 @media (max-width: 600px) {
   .discount-banner { padding: 14px 16px; }
@@ -1071,7 +1156,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
 .price-discount {
   display: inline-block;
   font-size: var(--fs-2xs);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.4px;
   padding: 4px 10px;
   border-radius: 999px;
@@ -1223,7 +1308,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
 .card-meta .plan-name {
   margin: 0;
   font-size: 1.875rem;
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.5px;
   line-height: 1.1;
   background: var(--grad);
@@ -1300,7 +1385,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
 .card-back .plan-name {
   margin: 0 0 14px;
   font-size: var(--fs-2xl);
-  font-weight: 900;
+  font-weight: 700;
   letter-spacing: -0.5px;
   background: var(--grad);
   -webkit-background-clip: text; background-clip: text; color: transparent;
@@ -1358,7 +1443,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   background: var(--grad);
   border: 1px solid transparent;
   color: #0a0e1a;
-  font-weight: 800;
+  font-weight: 700;
   font-size: var(--fs-base);
   transition: all 0.3s ease;
   position: relative; z-index: 2;
@@ -1381,7 +1466,7 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
   border-radius: 999px;
   background: var(--grad);
   color: #0a0e1a;
-  font-size: var(--fs-2xs); font-weight: 800;
+  font-size: var(--fs-2xs); font-weight: 700;
   letter-spacing: 0.4px;
   box-shadow: 0 12px 28px rgba(34, 197, 94, 0.45);
   font-family: var(--font-ar);
@@ -1865,7 +1950,7 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
   font-size: var(--fs-2xs);
   letter-spacing: 1.4px;
   color: rgba(255,255,255,0.28);
-  font-weight: 800;
+  font-weight: 700;
 }
 .stage-icon {
   width: 42px; height: 42px;
@@ -1883,7 +1968,7 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
 .stage h3 {
   margin: 0;
   font-size: var(--fs-base);
-  font-weight: 800;
+  font-weight: 700;
 }
 .stage p {
   margin: 0;
