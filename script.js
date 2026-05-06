@@ -686,4 +686,22 @@ async function loadProjectsOverrides() {
 (async () => {
   await Promise.all([loadContentOverrides(), loadProjectsOverrides()]);
   applyLanguage(currentLang);
+  // Tell parent (admin live preview iframe) we're ready.
+  try { window.parent && window.parent !== window && window.parent.postMessage({ type: 'kha-preview-ready' }, '*'); } catch {}
 })();
+
+// Live preview hook: when admin posts 'kha-refresh', re-read drafts and re-apply.
+window.addEventListener('message', async (ev) => {
+  if (!ev.data || ev.data.type !== 'kha-refresh') return;
+  try {
+    // Reset to defaults and re-merge drafts + content.json on top.
+    Object.keys(i18n).forEach(k => delete i18n[k]);
+    Object.assign(i18n, JSON.parse(JSON.stringify((window && window.__i18n_defaults) || { ar: {}, en: {} })));
+    Object.keys(projects).forEach(k => delete projects[k]);
+    Object.assign(projects, JSON.parse(JSON.stringify((window && window.__projects_defaults) || { ar: [], en: [] })));
+    await Promise.all([loadContentOverrides(), loadProjectsOverrides()]);
+    applyLanguage(currentLang);
+    // Acknowledge so admin knows soft refresh succeeded (no need for hard reload).
+    try { window.parent && window.parent !== window && window.parent.postMessage({ type: 'kha-refresh-ack' }, '*'); } catch {}
+  } catch (e) { console.warn('[preview] refresh failed:', e.message); }
+});
