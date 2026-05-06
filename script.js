@@ -52,6 +52,11 @@ function applyLanguage(lang) {
                       : 'Khaled Ali — Video Editing · Digital Marketing · Design');
 
   renderGallery(currentFilter, currentSubFilter);
+
+  // Re-render Designs grid when language changes (keys may differ per lang)
+  if (typeof window.__renderDesigns === 'function') {
+    try { window.__renderDesigns(lang); } catch {}
+  }
 }
 
 // ====== Helper: extract YouTube/Vimeo ID or detect local mp4 ======
@@ -701,6 +706,9 @@ window.addEventListener('message', async (ev) => {
     Object.assign(projects, JSON.parse(JSON.stringify((window && window.__projects_defaults) || { ar: [], en: [] })));
     await Promise.all([loadContentOverrides(), loadProjectsOverrides()]);
     applyLanguage(currentLang);
+    // Also refresh theme + designs from disk if their loaders are present.
+    try { window.__reloadTheme && window.__reloadTheme(); } catch {}
+    try { window.__loadDesigns && window.__loadDesigns(currentLang); } catch {}
     // Acknowledge so admin knows soft refresh succeeded (no need for hard reload).
     try { window.parent && window.parent !== window && window.parent.postMessage({ type: 'kha-refresh-ack' }, '*'); } catch {}
   } catch (e) { console.warn('[preview] refresh failed:', e.message); }
