@@ -58,6 +58,7 @@ button, .btn {
   transition: transform .12s ease, background .12s ease, border-color .12s ease;
   display: inline-flex; align-items: center; gap: 6px;
 }
+[hidden] { display: none !important; }
 button:hover, .btn:hover { background: rgba(255,255,255,0.10); transform: translateY(-1px); }
 button.primary { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #0a0e1a; border-color: transparent; font-weight: 700; }
 button.primary:hover { filter: brightness(1.05); }
@@ -213,6 +214,235 @@ button.danger { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0
 .empty { padding: 40px 20px; text-align: center; color: var(--muted); }
 .empty .em { font-size: 2.4rem; margin-bottom: 6px; }
 
+/* ===== GitHub bar ===== */
+.gh-bar {
+  background: linear-gradient(135deg, rgba(59,130,246,0.10), rgba(34,197,94,0.10));
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  padding: 12px 16px; margin-bottom: 18px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  animation: pop .35s ease;
+}
+.gh-bar.connected { border-color: rgba(34,197,94,0.45); background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(34,197,94,0.04)); }
+.gh-bar .gh-status {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 12px; border-radius: 999px;
+  background: rgba(245,158,11,0.10); color: var(--warn);
+  border: 1px solid rgba(245,158,11,0.35);
+  font-weight: 700; font-size: 0.85rem;
+}
+.gh-bar.connected .gh-status { background: rgba(34,197,94,0.14); color: var(--accent); border-color: rgba(34,197,94,0.4); }
+.gh-bar .gh-status .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; animation: ghPulse 1.6s ease-in-out infinite; }
+@keyframes ghPulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.5; transform:scale(1.3); } }
+.gh-bar .gh-info { color: var(--muted); font-size: 0.85rem; flex: 1; min-width: 220px; }
+.gh-bar .gh-info b { color: var(--text); }
+.gh-bar .gh-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.gh-form-modal { max-width: 480px; }
+.gh-form { display: grid; gap: 12px; margin-bottom: 14px; }
+.gh-form label { display: flex; flex-direction: column; gap: 4px; font-size: 0.82rem; color: var(--muted); }
+.gh-form input { padding: 9px 12px; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.30); color: var(--text); font: inherit; outline: none; }
+.gh-form input:focus { border-color: var(--accent); }
+.gh-form .help { color: var(--muted); font-size: 0.78rem; line-height: 1.6; }
+.gh-form .help a { color: var(--accent-2); }
+.gh-form .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 600px) { .gh-form .grid2 { grid-template-columns: 1fr; } }
+
+/* ===== Images panel ===== */
+.images-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px;
+  margin-top: 16px;
+}
+.image-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  overflow: hidden; transition: transform .18s ease, border-color .18s ease;
+  display: flex; flex-direction: column;
+}
+.image-card:hover { transform: translateY(-3px); border-color: rgba(34,197,94,0.4); }
+.image-card .thumb { aspect-ratio: 4/3; background: #0f172a; display: grid; place-items: center; overflow: hidden; }
+.image-card .thumb img { width: 100%; height: 100%; object-fit: cover; }
+.image-card .meta { padding: 8px 10px; }
+.image-card .name { font-family: 'Inter',monospace; font-size: 0.78rem; color: var(--text); word-break: break-all; }
+.image-card .size { color: var(--muted); font-size: 0.72rem; margin-top: 2px; }
+.image-card .row-actions { display: flex; gap: 4px; padding: 0 8px 8px; }
+.image-card .row-actions button { flex: 1; padding: 5px 8px; font-size: 0.75rem; }
+.dropzone {
+  border: 2px dashed var(--border-2); border-radius: 14px; padding: 30px 20px;
+  text-align: center; color: var(--muted);
+  background: rgba(255,255,255,0.02);
+  transition: border-color .2s ease, background .2s ease, transform .25s ease;
+}
+.dropzone.over { border-color: var(--accent); background: rgba(34,197,94,0.07); transform: scale(1.01); }
+.dropzone .em { font-size: 2.6rem; margin-bottom: 8px; }
+.dropzone input[type=file] { display: none; }
+.dropzone .pick {
+  display: inline-block; margin-top: 12px;
+  padding: 9px 16px; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #0a0e1a; font-weight: 700; cursor: pointer;
+}
+
+/* Subtle stagger animation for newly rendered sections */
+.section { animation: secIn .35s ease both; }
+@keyframes secIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.field { animation: fieldIn .25s ease both; }
+@keyframes fieldIn { from { opacity: 0; transform: translateX(4px); } to { opacity: 1; transform: translateX(0); } }
+
+/* ===== v2: Ripple effect for buttons ===== */
+button, .btn { position: relative; overflow: hidden; }
+.ripple {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  background: rgba(255,255,255,0.35);
+  transform: scale(0); animation: rippleAnim .55s ease-out;
+}
+@keyframes rippleAnim { to { transform: scale(2.5); opacity: 0; } }
+
+/* ===== v2: Command Palette (Cmd+K) ===== */
+.cmd-palette-bg {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+  display: none; align-items: flex-start; justify-content: center; z-index: 200;
+  padding-top: 12vh;
+}
+.cmd-palette-bg.open { display: flex; animation: cpFade .15s ease; }
+@keyframes cpFade { from { opacity:0; } to { opacity:1; } }
+.cmd-palette {
+  width: min(640px, calc(100% - 32px));
+  background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  overflow: hidden;
+  animation: cpSlide .22s cubic-bezier(.34,1.4,.64,1);
+}
+@keyframes cpSlide { from { transform: translateY(-12px) scale(.97); opacity:0; } to { transform: translateY(0) scale(1); opacity:1; } }
+.cmd-palette input {
+  width: 100%; padding: 18px 22px; border: 0; outline: 0;
+  background: transparent; color: var(--text); font: inherit; font-size: 1.05rem;
+  border-bottom: 1px solid var(--border);
+}
+.cmd-palette input::placeholder { color: var(--muted); }
+.cmd-palette .results { max-height: 50vh; overflow-y: auto; }
+.cmd-result {
+  display: flex; align-items: center; gap: 12px; padding: 11px 18px;
+  cursor: pointer; border-bottom: 1px solid var(--border);
+  transition: background .12s ease;
+}
+.cmd-result:hover, .cmd-result.active { background: rgba(34,197,94,0.10); }
+.cmd-result .ico { font-size: 1.1rem; opacity: 0.85; }
+.cmd-result .text .title { font-weight: 700; font-size: 0.92rem; }
+.cmd-result .text .sub { font-size: 0.77rem; color: var(--muted); margin-top: 1px; max-width: 380px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Flash effect when jumping to a field via Cmd+K */
+.field-flash { animation: fieldFlash 1.4s ease; }
+@keyframes fieldFlash {
+  0% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+  20% { box-shadow: 0 0 0 4px rgba(34,197,94,0.55); }
+  100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+}
+.cmd-result .key { margin-inline-start: auto; font-family: 'Inter',monospace; font-size: 0.72rem; color: var(--muted); padding: 2px 7px; background: rgba(255,255,255,0.06); border-radius: 6px; }
+.cmd-palette .footer { padding: 8px 18px; font-size: 0.74rem; color: var(--muted); border-top: 1px solid var(--border); display:flex; gap:14px; flex-wrap:wrap; }
+.cmd-palette .footer kbd {
+  font-family: 'Inter',monospace; font-size: 0.7rem; padding: 1px 6px;
+  background: var(--surface-2); border: 1px solid var(--border-2); border-radius: 5px;
+}
+
+/* ===== v2: Live preview pane ===== */
+body.preview-open .shell { max-width: none; padding-inline-end: calc(min(45vw, 600px) + 24px); transition: padding .25s ease; }
+.preview-pane {
+  position: fixed;
+  top: 0; bottom: 0;
+  inset-inline-end: 0;
+  width: min(45vw, 600px);
+  height: 100vh;
+  background: var(--bg-2);
+  border-inline-start: 2px solid var(--border-2);
+  display: none; flex-direction: column;
+  z-index: 40; box-shadow: -10px 0 30px rgba(0,0,0,0.4);
+  animation: paneSlide .3s ease;
+}
+.preview-pane.open { display: flex; }
+@keyframes paneSlide { from { transform: translateX(100%); } to { transform: translateX(0); } }
+html[dir="rtl"] .preview-pane { animation-name: paneSlideRtl; }
+@keyframes paneSlideRtl { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+.preview-pane .pp-head {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-bottom: 1px solid var(--border); flex-wrap: wrap;
+}
+.preview-pane .pp-head .pp-title { font-weight: 700; flex: 1; }
+.preview-pane .pp-head .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: ghPulse 1.4s ease-in-out infinite; }
+.preview-pane .pp-head select { padding: 6px 10px; border-radius: 8px; background: rgba(0,0,0,0.3); color: var(--text); border: 1px solid var(--border); font: inherit; }
+.preview-pane .pp-frame-wrap { flex: 1; position: relative; background: var(--bg); }
+.preview-pane iframe { width: 100%; height: 100%; border: 0; background: var(--bg); }
+.preview-pane .pp-overlay {
+  position: absolute; inset: 0; pointer-events: none;
+  display: flex; align-items: flex-start; justify-content: center;
+  padding-top: 12px;
+}
+.preview-pane .pp-overlay .pp-toast {
+  background: rgba(34,197,94,0.95); color: #0a0e1a; font-weight: 700;
+  padding: 6px 14px; border-radius: 999px; font-size: 0.78rem;
+  opacity: 0; transform: translateY(-8px); transition: opacity .25s ease, transform .25s ease;
+}
+.preview-pane .pp-overlay.show .pp-toast { opacity: 1; transform: translateY(0); }
+@media (max-width: 900px) {
+  body.preview-open .shell { padding-inline-end: 24px; }
+  .preview-pane { width: 100%; inset-inline-start: 0; }
+}
+
+/* ===== v2: Diff viewer ===== */
+.diff-modal { max-width: 720px; width: calc(100% - 32px); }
+.diff-list { max-height: 50vh; overflow-y: auto; padding: 4px; }
+.diff-row {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 12px; margin-bottom: 8px;
+}
+.diff-row .key {
+  font-family: 'Inter',monospace; font-size: 0.78rem; color: var(--accent);
+  margin-bottom: 4px;
+}
+.diff-row .lang-tag { display: inline-block; font-size: 0.7rem; padding: 1px 6px; border-radius: 5px; background: rgba(59,130,246,0.15); color: var(--accent-2); margin-inline-end: 6px; }
+.diff-row .old, .diff-row .new {
+  padding: 6px 10px; border-radius: 8px; font-size: 0.85rem; line-height: 1.5;
+  white-space: pre-wrap; word-break: break-word;
+}
+.diff-row .old { background: rgba(239,68,68,0.10); border-left: 3px solid var(--danger); margin-bottom: 4px; }
+.diff-row .new { background: rgba(34,197,94,0.10); border-left: 3px solid var(--accent); }
+html[dir="rtl"] .diff-row .old, html[dir="rtl"] .diff-row .new { border-left: 0; border-right: 3px solid; }
+html[dir="rtl"] .diff-row .old { border-right-color: var(--danger); }
+html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
+.diff-row .new::before, .diff-row .old::before { font-weight: 800; opacity: 0.7; margin-inline-end: 6px; }
+.diff-row .old::before { content: '−'; color: var(--danger); }
+.diff-row .new::before { content: '+'; color: var(--accent); }
+
+/* ===== v2: Drag handle for video rows ===== */
+.videos-row { cursor: default; }
+.videos-row .drag-handle {
+  cursor: grab; user-select: none; padding: 0 6px; color: var(--muted);
+  font-size: 1.25rem; line-height: 1; opacity: 0.7;
+  transition: opacity .15s ease, color .15s ease, transform .15s ease;
+}
+.videos-row .drag-handle:hover { opacity: 1; color: var(--accent); transform: scale(1.1); }
+.videos-row.dragging { opacity: 0.4; transform: scale(.98); transition: opacity .15s ease, transform .15s ease; }
+.videos-row.drop-target {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.4);
+}
+
+/* ===== v2: Pages deploy indicator ===== */
+.deploy-toast {
+  position: fixed; bottom: 24px; inset-inline-start: 24px; z-index: 110;
+  background: var(--bg-2); border: 1px solid var(--border-2);
+  border-radius: 12px; padding: 14px 18px; min-width: 280px;
+  box-shadow: var(--shadow); display: none; flex-direction: column; gap: 6px;
+  animation: pop .25s ease;
+}
+.deploy-toast.show { display: flex; }
+.deploy-toast .head { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.deploy-toast .stage { font-size: 0.84rem; color: var(--muted); }
+.deploy-toast .bar { height: 4px; border-radius: 2px; background: rgba(255,255,255,0.08); overflow: hidden; }
+.deploy-toast .bar > span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: width .4s ease; }
+.deploy-toast.done .bar > span { width: 100% !important; }
+.deploy-toast.error .bar > span { background: var(--danger) !important; }
+.deploy-toast a { font-size: 0.82rem; }
+
 /* ===== Tabs (top-level panel switcher) ===== */
 .panel-tabs {
   display: inline-flex; padding: 4px; gap: 4px;
@@ -266,7 +496,7 @@ button.danger { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0
 }
 .video-form input:focus, .video-form textarea:focus, .video-form select:focus { border-color: var(--accent); }
 .video-form textarea { min-height: 70px; resize: vertical; }
-.video-form .ar-input { font-family: 'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif; direction: rtl; text-align: right; }
+.video-form .ar-input { font-family: 'Cairo','Segoe UI',Tahoma,sans-serif; direction: rtl; text-align: right; }
 .video-form .en-input { font-family: 'Inter',system-ui,sans-serif; direction: ltr; text-align: left; }
 .video-form fieldset {
   grid-column: 1 / -1; border: 1px solid var(--border); border-radius: 10px;
@@ -295,15 +525,29 @@ button.danger { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0
     </div>
     <div class="actions">
       <span id="statusPill" class="status-pill"><span class="dot"></span><span id="statusText">محفوظ</span></span>
-      <button class="btn" id="previewBtn" title="فتح الموقع للمعاينة">👁️ معاينة</button>
-      <button class="btn primary" id="downloadBtn" title="تنزيل ملف JSON">⬇️ تنزيل JSON</button>
+      <button class="btn" id="cmdkBtn" title="فتح القائمة السريعة (Ctrl+K)">⌘ بحث سريع</button>
+      <button class="btn" id="livePreviewBtn" title="فتح/إغلاق المعاينة الجانبية">👁️ معاينة لايف</button>
+      <button class="btn" id="previewBtn" title="فتح الموقع في تبويب جديد">↗ فتح الموقع</button>
+      <button class="btn primary" id="saveGhBtn" title="حفظ مباشر على GitHub" hidden>💾 حفظ على GitHub</button>
+      <button class="btn" id="downloadBtn" title="تنزيل ملف JSON">⬇️ تنزيل JSON</button>
       <button class="btn danger" id="resetBtn" title="إعادة كل الحقول للقيم الأصلية">↺ إعادة تعيين</button>
     </div>
   </header>
 
+  <!-- GitHub connection bar -->
+  <div class="gh-bar" id="ghBar">
+    <span class="gh-status" id="ghStatus"><span class="dot"></span><span id="ghStatusText">GitHub غير مهيّأ</span></span>
+    <div class="gh-info" id="ghInfo">اربط حسابك مرة واحدة عشان كل تعديل ينحفظ مباشرة على الموقع — مفيش تنزيل ولا رفع يدوي.</div>
+    <div class="gh-actions">
+      <button class="btn" id="ghTestBtn" hidden>🔌 اختبار</button>
+      <button class="btn primary" id="ghSetupBtn">🔐 إعداد GitHub</button>
+    </div>
+  </div>
+
   <div class="panel-tabs" role="tablist" aria-label="لوحات التحكم">
     <button data-panel="texts" class="active">📝 النصوص والأسعار</button>
     <button data-panel="videos">🎬 فيديوهات الأعمال</button>
+    <button data-panel="images">🖼️ الصور</button>
   </div>
 
   <div id="textsPanel">
@@ -332,6 +576,59 @@ button.danger { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0
     </div>
     <div id="videosRoot"></div>
   </div>
+
+  <div id="imagesPanel" hidden>
+    <label class="dropzone" id="imgDropzone">
+      <div class="em">🖼️</div>
+      <div>اسحب صورة هنا، أو</div>
+      <span class="pick">اختار صورة من جهازك</span>
+      <input type="file" id="imgFileInput" accept="image/*" multiple />
+      <div style="margin-top:14px; font-size:0.78rem;">
+        الصور بتترفع مباشرة على الريبو في GitHub. الأنواع المدعومة: <b>JPG, PNG, WebP, SVG, GIF</b>. حجم مفضّل أقل من 2MB.
+      </div>
+    </label>
+    <div id="imagesRoot"></div>
+  </div>
+</div>
+
+<!-- v2: Live Preview side pane -->
+<aside class="preview-pane" id="previewPane">
+  <div class="pp-head">
+    <span class="live-dot"></span>
+    <span class="pp-title">معاينة لايف — تحدّث ذاتي</span>
+    <select id="ppLang" title="اللغة">
+      <option value="ar">عربي</option>
+      <option value="en">EN</option>
+    </select>
+    <button class="btn" id="ppReloadBtn" title="إعادة تحميل المعاينة">↻</button>
+    <button class="btn" id="ppCloseBtn" title="إغلاق">✕</button>
+  </div>
+  <div class="pp-frame-wrap">
+    <iframe id="ppFrame" title="Live Preview" sandbox="allow-same-origin allow-scripts allow-forms"></iframe>
+    <div class="pp-overlay" id="ppOverlay"><span class="pp-toast" id="ppToast">تم التحديث</span></div>
+  </div>
+</aside>
+
+<!-- v2: Command Palette (Ctrl+K) -->
+<div class="cmd-palette-bg" id="cmdPaletteBg">
+  <div class="cmd-palette" role="dialog" aria-modal="true">
+    <input id="cmdPaletteInput" type="text" placeholder="ابحث عن أي حقل، باقة، فيديو أو إعداد… (اكتب ar أو en للفلترة)" autocomplete="off" />
+    <div class="results" id="cmdPaletteResults"></div>
+    <div class="footer">
+      <span><kbd>↑↓</kbd> تنقّل</span>
+      <span><kbd>↵</kbd> فتح</span>
+      <span><kbd>Esc</kbd> إغلاق</span>
+      <span style="margin-inline-start:auto;">Ctrl/⌘ + K</span>
+    </div>
+  </div>
+</div>
+
+<!-- v2: Pages deployment progress toast -->
+<div class="deploy-toast" id="deployToast">
+  <div class="head"><span id="deployIcon">🚀</span><span id="deployTitle">جاري النشر…</span></div>
+  <div class="stage" id="deployStage">…</div>
+  <div class="bar"><span id="deployBar"></span></div>
+  <a id="deployLink" target="_blank" rel="noopener" hidden>↗ افتح الموقع</a>
 </div>
 
 <div class="toast-wrap" id="toastWrap"></div>
@@ -405,8 +702,53 @@ button.danger { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0
   </div>
 </div>
 
+<!-- GitHub setup modal -->
+<div class="modal-bg" id="ghModalBg">
+  <div class="modal gh-form-modal" role="dialog" aria-modal="true">
+    <h3>🔐 إعداد GitHub</h3>
+    <p style="color:var(--muted); font-size:0.86rem; line-height:1.7;">
+      عشان الداش بورد تكتب التعديلات على الموقع مباشرة، محتاج Personal Access Token من GitHub بصلاحية <b>Contents: Read &amp; write</b> على ريبو الموقع بس.
+      التوكن بيتخزن في المتصفح بتاعك ومش بيتبعت لأي حد غير github.com.
+    </p>
+    <div class="gh-form">
+      <div class="grid2">
+        <label>اسم المستخدم (Owner)
+          <input id="ghOwner" placeholder="username" autocomplete="username" />
+        </label>
+        <label>اسم الريبو
+          <input id="ghRepo" placeholder="khaled-portfolio" />
+        </label>
+      </div>
+      <div class="grid2">
+        <label>الفرع
+          <input id="ghBranch" placeholder="main" value="main" />
+        </label>
+        <label>اسم العامل بالكوميت (اختياري)
+          <input id="ghCommitName" placeholder="Khaled Ali" />
+        </label>
+      </div>
+      <label>Personal Access Token
+        <input id="ghToken" type="password" placeholder="github_pat_…" autocomplete="new-password" />
+      </label>
+      <label>إيميل الكوميت (اختياري)
+        <input id="ghCommitEmail" type="email" placeholder="bebooxo7@gmail.com" />
+      </label>
+      <div class="help">
+        🔗 <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">اعمل Fine-grained PAT جديد</a>
+        — اختار الريبو ده فقط، ومن الصلاحيات اضغط <b>Repository permissions → Contents → Read and write</b>.
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" id="ghClearBtn" title="مسح الإعدادات">🗑️ مسح</button>
+      <button class="btn" id="ghCancelBtn">إلغاء</button>
+      <button class="btn primary" id="ghSaveBtn">💾 حفظ واختبار</button>
+    </div>
+  </div>
+</div>
+
 <script src="content-defaults.js?v=27"></script>
 <script src="projects-defaults.js?v=27"></script>
+<script src="github-api.js?v=27"></script>
 <script>
 'use strict';
 
@@ -862,18 +1204,34 @@ function setActivePanel(name) {
   document.querySelectorAll('.panel-tabs button').forEach(b => {
     b.classList.toggle('active', b.dataset.panel === name);
   });
-  document.getElementById('textsPanel').hidden = name !== 'texts';
+  document.getElementById('textsPanel').hidden  = name !== 'texts';
   document.getElementById('videosPanel').hidden = name !== 'videos';
-  // Update download button label/title
+  document.getElementById('imagesPanel').hidden = name !== 'images';
+  // Update download/save buttons label
   const dlBtn = document.getElementById('downloadBtn');
+  const saveBtn = document.getElementById('saveGhBtn');
+  const resetBtn = document.getElementById('resetBtn');
   if (name === 'videos') {
     dlBtn.title = 'تنزيل ملف projects.json';
     dlBtn.textContent = '⬇️ تنزيل projects.json';
+    if (saveBtn) saveBtn.textContent = '💾 حفظ على GitHub';
+    if (resetBtn) resetBtn.hidden = false;
+  } else if (name === 'images') {
+    dlBtn.hidden = true;
+    if (resetBtn) resetBtn.hidden = true;
+    if (saveBtn) saveBtn.hidden = true;
   } else {
     dlBtn.title = 'تنزيل ملف content.json';
     dlBtn.textContent = '⬇️ تنزيل JSON';
+    if (saveBtn) saveBtn.textContent = '💾 حفظ على GitHub';
+    if (resetBtn) resetBtn.hidden = false;
+  }
+  if (name !== 'images') {
+    dlBtn.hidden = false;
+    syncGhButtons();
   }
   if (name === 'videos') renderVideos();
+  if (name === 'images') renderImagesPanel();
 }
 
 document.querySelectorAll('.panel-tabs button').forEach(b => {
@@ -1133,13 +1491,671 @@ function escapeAttr(s) {
   return escapeHtml(s);
 }
 
-// Keyboard shortcut: Ctrl+S to download
+// Keyboard shortcut: Ctrl+S to save to GitHub (or download as fallback)
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key === 's') {
     e.preventDefault();
-    document.getElementById('downloadBtn').click();
+    if (window.GitHubAPI && window.GitHubAPI.isConfigured() && activePanel !== 'images') {
+      document.getElementById('saveGhBtn').click();
+    } else {
+      document.getElementById('downloadBtn').click();
+    }
   }
 });
+
+// ============================================================
+// ===== GitHub bar + setup modal =============================
+// ============================================================
+
+function syncGhButtons() {
+  const bar = document.getElementById('ghBar');
+  const statusText = document.getElementById('ghStatusText');
+  const info = document.getElementById('ghInfo');
+  const setupBtn = document.getElementById('ghSetupBtn');
+  const testBtn  = document.getElementById('ghTestBtn');
+  const saveBtn  = document.getElementById('saveGhBtn');
+  const dlBtn    = document.getElementById('downloadBtn');
+
+  const cfg = window.GitHubAPI ? window.GitHubAPI.config : {};
+  const ok = !!(window.GitHubAPI && window.GitHubAPI.isConfigured());
+
+  bar.classList.toggle('connected', ok);
+  if (ok) {
+    statusText.textContent = 'GitHub متصل';
+    info.innerHTML = `<b>${escapeHtml(cfg.owner)}/${escapeHtml(cfg.repo)}</b> · فرع <code style="color:var(--accent)">${escapeHtml(cfg.branch || 'main')}</code> · أي حفظ هيكوميت مباشرة وهيظهر على الموقع خلال دقيقة.`;
+    setupBtn.textContent = '⚙️ تعديل الإعدادات';
+    testBtn.hidden = false;
+    if (activePanel !== 'images') {
+      saveBtn.hidden = false;
+      saveBtn.classList.add('primary');
+      dlBtn.classList.remove('primary');
+      dlBtn.title = 'تنزيل احتياطي (مش لازم لو GitHub متصل)';
+    }
+  } else {
+    statusText.textContent = 'GitHub غير مهيّأ';
+    info.textContent = 'اربط حسابك مرة واحدة عشان كل تعديل ينحفظ مباشرة على الموقع — مفيش تنزيل ولا رفع يدوي.';
+    setupBtn.textContent = '🔐 إعداد GitHub';
+    testBtn.hidden = true;
+    saveBtn.hidden = true;
+    dlBtn.classList.add('primary');
+  }
+}
+
+function openGhModal() {
+  const cfg = window.GitHubAPI ? window.GitHubAPI.config : {};
+  document.getElementById('ghOwner').value  = cfg.owner  || '';
+  document.getElementById('ghRepo').value   = cfg.repo   || '';
+  document.getElementById('ghBranch').value = cfg.branch || 'main';
+  document.getElementById('ghToken').value  = cfg.token  || '';
+  document.getElementById('ghCommitName').value  = cfg.commitName  || '';
+  document.getElementById('ghCommitEmail').value = cfg.commitEmail || '';
+  document.getElementById('ghModalBg').classList.add('open');
+}
+function closeGhModal() {
+  document.getElementById('ghModalBg').classList.remove('open');
+}
+
+document.getElementById('ghSetupBtn').addEventListener('click', openGhModal);
+document.getElementById('ghCancelBtn').addEventListener('click', closeGhModal);
+document.getElementById('ghClearBtn').addEventListener('click', () => {
+  if (!confirm('مسح إعدادات GitHub من المتصفح؟')) return;
+  window.GitHubAPI.clearConfig();
+  closeGhModal();
+  syncGhButtons();
+  toast('تم مسح إعدادات GitHub.', 'success');
+});
+
+document.getElementById('ghSaveBtn').addEventListener('click', async () => {
+  const owner  = document.getElementById('ghOwner').value.trim();
+  const repo   = document.getElementById('ghRepo').value.trim();
+  const branch = document.getElementById('ghBranch').value.trim() || 'main';
+  const token  = document.getElementById('ghToken').value.trim();
+  const commitName  = document.getElementById('ghCommitName').value.trim();
+  const commitEmail = document.getElementById('ghCommitEmail').value.trim();
+  if (!owner || !repo || !token) {
+    toast('املي الـ Owner و Repo و Token.', 'error'); return;
+  }
+  window.GitHubAPI.saveConfig({ owner, repo, branch, token, commitName, commitEmail });
+  const btn = document.getElementById('ghSaveBtn');
+  btn.disabled = true; btn.textContent = '⏳ جاري الاختبار...';
+  try {
+    const { repo: r, user } = await window.GitHubAPI.validateAuth();
+    toast(`تم الاتصال: ${user ? '@' + user.login + ' → ' : ''}${r.full_name}`, 'success');
+    closeGhModal();
+  } catch (e) {
+    toast('فشل: ' + e.message + ' — راجع الـ token والصلاحيات.', 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = '💾 حفظ واختبار';
+    syncGhButtons();
+  }
+});
+
+document.getElementById('ghTestBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('ghTestBtn');
+  btn.disabled = true; btn.textContent = '⏳ ...';
+  try {
+    const { repo, user } = await window.GitHubAPI.validateAuth();
+    toast(`OK · ${user ? '@' + user.login + ' → ' : ''}${repo.full_name}`, 'success');
+  } catch (e) {
+    toast('فشل: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false; btn.textContent = '🔌 اختبار';
+  }
+});
+
+// "Save to GitHub" — commits content.json or projects.json directly to the repo.
+async function performSaveToGitHub(skipDiff) {
+  if (!window.GitHubAPI || !window.GitHubAPI.isConfigured()) { openGhModal(); return; }
+  const btn = document.getElementById('saveGhBtn');
+  // Build outgoing payloads first so we can show a diff.
+  let path, json, msg, summary;
+  if (activePanel === 'videos') {
+    persistVideosDraft();
+    path = 'projects.json';
+    const out = { ar: videos.ar, en: videos.en };
+    json = JSON.stringify(out, null, 2);
+    summary = `📼 ${videos.ar.length} فيديو`;
+    msg = `Update portfolio videos (${videos.ar.length} item${videos.ar.length===1?'':'s'}) via dashboard`;
+  } else {
+    persistDraft();
+    const out = { ar: {}, en: {} };
+    for (const lang of ['ar','en']) {
+      for (const k of Object.keys(draft[lang] || {})) {
+        if ((draft[lang][k] ?? '') !== (defaults[lang][k] ?? '')) {
+          out[lang][k] = draft[lang][k];
+        }
+      }
+    }
+    const fields = Object.keys(out.ar).length + Object.keys(out.en).length;
+    if (fields === 0) { toast('مفيش تعديلات للحفظ.', 'error'); return; }
+    path = 'content.json';
+    json = JSON.stringify(out, null, 2);
+    summary = `📝 ${fields} حقل`;
+    msg = `Update site copy (${fields} field${fields===1?'':'s'}) via dashboard`;
+  }
+
+  // Show diff modal first (unless explicitly skipping).
+  if (!skipDiff) {
+    const ok = await showDiffModal(path, json, summary);
+    if (!ok) return;
+  }
+
+  btn.disabled = true; btn.textContent = '⏳ جاري الحفظ...';
+  try {
+    await window.GitHubAPI.commitText(path, json, msg);
+    toast(`تم — ${summary} منشور على GitHub.`, 'success');
+    // Start polling Pages deployment.
+    startDeployIndicator(path);
+  } catch (e) {
+    toast('فشل: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 حفظ على GitHub';
+  }
+}
+
+document.getElementById('saveGhBtn').addEventListener('click', () => performSaveToGitHub(false));
+
+// ============================================================
+// ===== v2: Diff viewer modal ================================
+// ============================================================
+async function showDiffModal(path, newJson, summary) {
+  // Read remote file to compute diff.
+  let remoteJson = null;
+  try {
+    const remote = await window.GitHubAPI.getFile(path);
+    remoteJson = remote ? remote.contentText : null;
+  } catch { /* not present yet */ }
+
+  const newObj = JSON.parse(newJson);
+  let rows = [];
+  if (path === 'content.json') {
+    const oldObj = remoteJson ? safeJSON(remoteJson) : { ar: {}, en: {} };
+    for (const lang of ['ar','en']) {
+      const o = oldObj[lang] || {}, n = newObj[lang] || {};
+      const keys = new Set([...Object.keys(o), ...Object.keys(n)]);
+      for (const k of keys) {
+        const a = o[k] ?? '', b = n[k] ?? '';
+        if (a !== b) rows.push({ lang, key: k, before: a, after: b });
+      }
+    }
+  } else {
+    const oldArr = remoteJson ? safeJSON(remoteJson) : { ar: [], en: [] };
+    rows.push({
+      lang: '—', key: 'projects.json',
+      before: `${(oldArr.ar||[]).length} فيديو سابقًا`,
+      after: `${(newObj.ar||[]).length} فيديو جديد`
+    });
+  }
+  return await openDiffDialog(summary, path, rows, newJson);
+}
+
+function safeJSON(s) { try { return JSON.parse(s); } catch { return {}; } }
+
+function openDiffDialog(summary, path, rows, newJson) {
+  return new Promise((resolve) => {
+    // Build dialog using the existing modal-bg system.
+    const bg = document.createElement('div');
+    bg.className = 'modal-bg open';
+    bg.innerHTML = `
+      <div class="modal diff-modal" role="dialog" aria-modal="true">
+        <h3>📋 معاينة التغييرات قبل النشر</h3>
+        <p style="color:var(--muted);font-size:.88rem;margin-top:-6px;">
+          هتُحفَظ في <code style="color:var(--accent)">${path}</code> — ${summary} — ${rows.length} تغيير.
+        </p>
+        <div class="diff-list">${rows.length ? rows.map(r => `
+          <div class="diff-row">
+            <div class="key"><span class="lang-tag">${r.lang}</span>${escapeHtml(r.key)}</div>
+            ${r.before ? `<div class="old">${escapeHtml(r.before)}</div>` : ''}
+            <div class="new">${escapeHtml(r.after)}</div>
+          </div>
+        `).join('') : '<div class="empty">مفيش فروقات.</div>'}</div>
+        <div class="modal-actions">
+          <button class="btn" data-act="cancel">إلغاء</button>
+          <button class="btn primary" data-act="ok">✓ نشر التغييرات</button>
+        </div>
+      </div>`;
+    document.body.appendChild(bg);
+    const close = (val) => { bg.remove(); resolve(val); };
+    bg.addEventListener('click', e => { if (e.target === bg) close(false); });
+    bg.querySelector('[data-act="cancel"]').addEventListener('click', () => close(false));
+    bg.querySelector('[data-act="ok"]').addEventListener('click', () => close(true));
+  });
+}
+
+// (escapeHtml is defined earlier in the script)
+
+// ============================================================
+// ===== v2: Pages deployment indicator =======================
+// ============================================================
+let _deployPollTimer = null;
+async function startDeployIndicator(path) {
+  const t = document.getElementById('deployToast');
+  const bar = document.getElementById('deployBar');
+  const stage = document.getElementById('deployStage');
+  const title = document.getElementById('deployTitle');
+  const link = document.getElementById('deployLink');
+  const ico = document.getElementById('deployIcon');
+  t.classList.remove('done','error'); t.classList.add('show');
+  ico.textContent = '🚀'; title.textContent = 'جاري النشر…';
+  stage.textContent = 'كوميت تم. بنستنى GitHub Pages يبني…';
+  link.hidden = true; bar.style.width = '15%';
+  if (_deployPollTimer) clearInterval(_deployPollTimer);
+  let tries = 0;
+  const cfg = window.GitHubAPI.loadConfig();
+  const pagesUrl = `https://${cfg.owner}.github.io/${cfg.repo}/`;
+  _deployPollTimer = setInterval(async () => {
+    tries++;
+    bar.style.width = Math.min(90, 15 + tries * 7) + '%';
+    try {
+      const res = await fetch(`https://api.github.com/repos/${cfg.owner}/${cfg.repo}/pages/builds/latest`, {
+        headers: { 'Authorization': 'Bearer ' + window.GitHubAPI._tokenForFetch(), 'Accept': 'application/vnd.github+json' }
+      });
+      if (res.ok) {
+        const d = await res.json();
+        if (d.status === 'built') {
+          clearInterval(_deployPollTimer); _deployPollTimer = null;
+          t.classList.add('done'); ico.textContent = '✅';
+          title.textContent = 'تم النشر بنجاح';
+          stage.textContent = 'الموقع متحدّث الآن.';
+          link.href = pagesUrl; link.textContent = '↗ ' + pagesUrl; link.hidden = false;
+          setTimeout(() => t.classList.remove('show'), 6000);
+          return;
+        }
+        if (d.status === 'errored') {
+          clearInterval(_deployPollTimer); _deployPollTimer = null;
+          t.classList.add('error'); ico.textContent = '⚠️';
+          title.textContent = 'فشل النشر'; stage.textContent = (d.error && d.error.message) || 'حدث خطأ من GitHub Pages.';
+          return;
+        }
+        stage.textContent = `حالة GitHub: ${d.status}…`;
+      } else if (res.status === 404) {
+        stage.textContent = 'GitHub Pages مش مفعّل بعد. روح Settings → Pages وفعّله.';
+      }
+    } catch (e) { /* ignore transient */ }
+    if (tries > 25) { // ~2 min
+      clearInterval(_deployPollTimer); _deployPollTimer = null;
+      stage.textContent = 'العملية بتاخد وقت أطول من المعتاد. افتح الموقع يدويًا.';
+      link.href = pagesUrl; link.textContent = '↗ ' + pagesUrl; link.hidden = false;
+      bar.style.width = '100%';
+    }
+  }, 5000);
+}
+
+// ============================================================
+// ===== Images panel =========================================
+// ============================================================
+
+const IMAGE_EXT = /\.(png|jpe?g|webp|gif|svg)$/i;
+
+async function renderImagesPanel() {
+  const root = document.getElementById('imagesRoot');
+  if (!window.GitHubAPI || !window.GitHubAPI.isConfigured()) {
+    root.innerHTML = `<div class="empty"><div class="em">🔒</div>اعمل إعدادات GitHub الأول من الزر الأخضر فوق.</div>`;
+    return;
+  }
+  root.innerHTML = `<div class="empty"><div class="em">⏳</div>بنحمّل الصور من الريبو...</div>`;
+  try {
+    const items = await window.GitHubAPI.listDir('');
+    const imgs = items.filter(it => it.type === 'file' && IMAGE_EXT.test(it.name));
+    if (imgs.length === 0) {
+      root.innerHTML = `<div class="empty"><div class="em">🖼️</div>مفيش صور في الريبو لسه — اسحب صور فوق عشان ترفع.</div>`;
+      return;
+    }
+    root.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'images-grid';
+    for (const it of imgs) {
+      const card = document.createElement('div');
+      card.className = 'image-card';
+      const sizeKb = it.size ? Math.round(it.size / 1024) : 0;
+      card.innerHTML = `
+        <div class="thumb"><img src="${escapeAttr(it.download_url)}" alt="" loading="lazy" /></div>
+        <div class="meta">
+          <div class="name">${escapeHtml(it.name)}</div>
+          <div class="size">${sizeKb} KB</div>
+        </div>
+        <div class="row-actions">
+          <button class="btn" data-act="copy" data-path="${escapeAttr(it.path)}">📋 نسخ المسار</button>
+          <button class="btn danger" data-act="del" data-path="${escapeAttr(it.path)}">🗑️ حذف</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+    root.appendChild(grid);
+    grid.addEventListener('click', onImageAction);
+  } catch (e) {
+    root.innerHTML = `<div class="empty"><div class="em">⚠️</div>فشل تحميل الصور: ${escapeHtml(e.message)}</div>`;
+  }
+}
+
+async function onImageAction(ev) {
+  const btn = ev.target.closest('button[data-act]');
+  if (!btn) return;
+  const path = btn.dataset.path;
+  if (btn.dataset.act === 'copy') {
+    try {
+      await navigator.clipboard.writeText(path);
+      toast(`تم نسخ "${path}" — استخدمه في أي مكان في الموقع.`, 'success');
+    } catch { toast('فشل النسخ.', 'error'); }
+  } else if (btn.dataset.act === 'del') {
+    if (!confirm(`تحذف "${path}" نهائي من الريبو؟`)) return;
+    btn.disabled = true; btn.textContent = '⏳ ...';
+    try {
+      await window.GitHubAPI.deleteFile(path, `Delete image ${path} via dashboard`);
+      toast(`تم الحذف.`, 'success');
+      renderImagesPanel();
+    } catch (e) {
+      toast('فشل الحذف: ' + e.message, 'error');
+      btn.disabled = false; btn.textContent = '🗑️ حذف';
+    }
+  }
+}
+
+(function setupDropzone() {
+  const dz = document.getElementById('imgDropzone');
+  if (!dz) return;
+  const input = document.getElementById('imgFileInput');
+  input.addEventListener('change', () => uploadImages(input.files));
+  ['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => {
+    e.preventDefault(); e.stopPropagation();
+    dz.classList.add('over');
+  }));
+  ['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => {
+    e.preventDefault(); e.stopPropagation();
+    dz.classList.remove('over');
+  }));
+  dz.addEventListener('drop', e => {
+    if (!e.dataTransfer || !e.dataTransfer.files) return;
+    uploadImages(e.dataTransfer.files);
+  });
+})();
+
+async function uploadImages(files) {
+  if (!files || !files.length) return;
+  if (!window.GitHubAPI || !window.GitHubAPI.isConfigured()) {
+    toast('عدّ إعدادات GitHub الأول.', 'error');
+    openGhModal(); return;
+  }
+  let ok = 0, fail = 0;
+  for (const file of Array.from(files)) {
+    if (!IMAGE_EXT.test(file.name)) { toast(`تم تخطي "${file.name}" — مش صورة.`, 'error'); fail++; continue; }
+    const safeName = file.name.replace(/[^\w.\-]/g, '_');
+    try {
+      toast(`جاري رفع ${safeName}...`);
+      await window.GitHubAPI.commitBinary(safeName, file, `Upload ${safeName} via dashboard`);
+      ok++;
+    } catch (e) {
+      toast(`فشل رفع ${safeName}: ${e.message}`, 'error');
+      fail++;
+    }
+  }
+  if (ok > 0) toast(`تم رفع ${ok} صورة.`, 'success');
+  renderImagesPanel();
+}
+
+// ============================================================
+// ===== v2: Ripple effect on every button click ==============
+// ============================================================
+document.addEventListener('click', (ev) => {
+  const btn = ev.target.closest('button, .btn');
+  if (!btn) return;
+  const rect = btn.getBoundingClientRect();
+  const sz = Math.max(rect.width, rect.height);
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  r.style.width = r.style.height = sz + 'px';
+  r.style.left = (ev.clientX - rect.left - sz / 2) + 'px';
+  r.style.top  = (ev.clientY - rect.top  - sz / 2) + 'px';
+  btn.appendChild(r);
+  setTimeout(() => r.remove(), 600);
+}, true);
+
+// ============================================================
+// ===== v2: Live preview side pane ===========================
+// ============================================================
+const previewPane = document.getElementById('previewPane');
+const ppFrame = document.getElementById('ppFrame');
+const ppOverlay = document.getElementById('ppOverlay');
+let ppDebounce = null;
+let ppIsOpen = false;
+
+function openLivePreview() {
+  ppIsOpen = true;
+  document.body.classList.add('preview-open');
+  previewPane.classList.add('open');
+  if (!ppFrame.src || ppFrame.src === 'about:blank') {
+    const lang = document.getElementById('ppLang').value || 'ar';
+    ppFrame.src = `index.html?preview=1&lang=${lang}&t=${Date.now()}`;
+  }
+}
+function closeLivePreview() {
+  ppIsOpen = false;
+  document.body.classList.remove('preview-open');
+  previewPane.classList.remove('open');
+}
+function reloadPreview(soft) {
+  if (!ppIsOpen) return;
+  // Try a soft refresh via postMessage first (no full reload — preserves scroll).
+  // If the iframe doesn't acknowledge within 200ms, fall back to a full reload.
+  if (soft) {
+    let ack = false;
+    const onMsg = (ev) => { if (ev.data && ev.data.type === 'kha-refresh-ack') ack = true; };
+    window.addEventListener('message', onMsg, { once: true });
+    try { ppFrame.contentWindow.postMessage({ type: 'kha-refresh' }, '*'); } catch {}
+    setTimeout(() => {
+      window.removeEventListener('message', onMsg);
+      if (!ack) {
+        try { ppFrame.contentWindow.location.reload(); } catch {}
+      }
+    }, 220);
+  } else {
+    const lang = document.getElementById('ppLang').value || 'ar';
+    ppFrame.src = `index.html?preview=1&lang=${lang}&t=${Date.now()}`;
+  }
+  ppOverlay.classList.add('show');
+  setTimeout(() => ppOverlay.classList.remove('show'), 900);
+}
+function schedulePreviewReload() {
+  if (!ppIsOpen) return;
+  clearTimeout(ppDebounce);
+  ppDebounce = setTimeout(() => reloadPreview(true), 350);
+}
+
+document.getElementById('livePreviewBtn').addEventListener('click', () => {
+  if (ppIsOpen) closeLivePreview(); else openLivePreview();
+});
+document.getElementById('ppCloseBtn').addEventListener('click', closeLivePreview);
+document.getElementById('ppReloadBtn').addEventListener('click', () => reloadPreview(false));
+document.getElementById('ppLang').addEventListener('change', () => reloadPreview(false));
+
+// Hook into draft persistence: every input/change triggers a debounced preview reload.
+document.addEventListener('input', (ev) => {
+  if (ev.target.matches('textarea, input[type="text"], input[type="number"], input[type="url"]')) {
+    schedulePreviewReload();
+  }
+}, true);
+
+// ============================================================
+// ===== v2: Command Palette (Ctrl+K / ⌘K) ====================
+// ============================================================
+const cpBg = document.getElementById('cmdPaletteBg');
+const cpInput = document.getElementById('cmdPaletteInput');
+const cpResults = document.getElementById('cmdPaletteResults');
+let cpItems = [];
+let cpFiltered = [];
+let cpIdx = 0;
+
+function openCmdPalette() {
+  buildCmdItems();
+  cpInput.value = '';
+  renderCmdResults('');
+  cpBg.classList.add('open');
+  setTimeout(() => cpInput.focus(), 60);
+}
+function closeCmdPalette() { cpBg.classList.remove('open'); }
+
+function buildCmdItems() {
+  cpItems = [];
+  // Actions
+  cpItems.push({ ico:'💾', title:'حفظ على GitHub', sub:'كوميت التغييرات الحالية', key:'save', run:() => performSaveToGitHub(false) });
+  cpItems.push({ ico:'🔐', title:'إعدادات GitHub', sub:'PAT و owner و repo', key:'gh', run:() => openGhModal() });
+  cpItems.push({ ico:'👁️', title:'معاينة لايف', sub:'فتح/إغلاق الـ iframe الجانبي', key:'preview', run:() => { if (ppIsOpen) closeLivePreview(); else openLivePreview(); } });
+  cpItems.push({ ico:'↗', title:'فتح الموقع', sub:'في تبويب جديد', key:'open', run:() => window.open('index.html', '_blank') });
+  cpItems.push({ ico:'✏️', title:'وضع التعديل المباشر', sub:'index.html?edit=1', key:'edit', run:() => window.open('index.html?edit=1', '_blank') });
+  cpItems.push({ ico:'⬇️', title:'تنزيل JSON', sub:'حفظ يدوي', key:'download', run:() => document.getElementById('downloadBtn').click() });
+  cpItems.push({ ico:'↺', title:'إعادة تعيين', sub:'كل القيم للافتراضي', key:'reset', run:() => document.getElementById('resetBtn').click() });
+  cpItems.push({ ico:'+', title:'فيديو جديد', sub:'إضافة فيديو للأعمال', key:'addvideo', run:() => { setActivePanel('videos'); openVideoEditor(-1); } });
+  // Panels
+  cpItems.push({ ico:'📝', title:'تبويب: النصوص والأسعار', sub:'كل الترجمات والباقات', key:'tab:texts', run:() => setActivePanel('texts') });
+  cpItems.push({ ico:'🎬', title:'تبويب: الفيديوهات', sub:'بودكاست/ريلز/يوتيوب', key:'tab:videos', run:() => setActivePanel('videos') });
+  cpItems.push({ ico:'🖼️', title:'تبويب: الصور', sub:'رفع وإدارة صور الموقع', key:'tab:images', run:() => setActivePanel('images') });
+  // All editable text fields (one per i18n key, ar+en)
+  if (window.__i18n_defaults) {
+    for (const lang of ['ar','en']) {
+      const def = window.__i18n_defaults[lang] || {};
+      for (const k of Object.keys(def)) {
+        const v = (draft[lang] && draft[lang][k]) ?? def[k];
+        const preview = String(v || '').replace(/<[^>]+>/g,'').slice(0, 60);
+        cpItems.push({ ico:'¶', title:k, sub:`[${lang}] ${preview}`, key:`field:${lang}:${k}`, run:() => focusField(lang, k) });
+      }
+    }
+  }
+  // Videos
+  if (Array.isArray(videos.ar)) {
+    videos.ar.forEach((v, i) => {
+      cpItems.push({ ico:'🎬', title: v.title || '(بدون عنوان)', sub: `${v.cat || '—'} · ${v.url || 'لا يوجد رابط'}`, key:`video:${i}`, run:() => { setActivePanel('videos'); setTimeout(() => openVideoEditor(i), 80); } });
+    });
+  }
+}
+
+function focusField(lang, key) {
+  setActivePanel('texts');
+  setTimeout(() => {
+    // Make sure language toggle is set
+    const root = document.getElementById('sectionsRoot');
+    const sel = root.querySelector(`[data-lang="${lang}"][data-key="${CSS.escape(key)}"]`);
+    if (sel) {
+      sel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      sel.focus();
+      sel.classList.add('field-flash');
+      setTimeout(() => sel.classList.remove('field-flash'), 1400);
+    } else {
+      // Fallback: search by key
+      document.getElementById('searchInput').value = key;
+      document.getElementById('searchInput').dispatchEvent(new Event('input'));
+    }
+  }, 100);
+}
+
+function renderCmdResults(query) {
+  const q = (query || '').trim().toLowerCase();
+  cpFiltered = !q ? cpItems.slice(0, 100) : cpItems.filter(it => {
+    return it.title.toLowerCase().includes(q) || (it.sub || '').toLowerCase().includes(q) || (it.key || '').toLowerCase().includes(q);
+  }).slice(0, 100);
+  cpIdx = 0;
+  cpResults.innerHTML = cpFiltered.length ? cpFiltered.map((it, i) => `
+    <div class="cmd-result${i === cpIdx ? ' active' : ''}" data-i="${i}">
+      <span class="ico">${it.ico}</span>
+      <div class="text"><div class="title">${escapeHtml(it.title)}</div><div class="sub">${escapeHtml(it.sub || '')}</div></div>
+      <span class="key">${escapeHtml(it.key)}</span>
+    </div>`).join('') : '<div class="cmd-result"><div class="text"><div class="title">مفيش نتائج</div></div></div>';
+}
+
+cpInput.addEventListener('input', (e) => renderCmdResults(e.target.value));
+cpInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { e.preventDefault(); closeCmdPalette(); return; }
+  if (e.key === 'ArrowDown') { e.preventDefault(); cpIdx = Math.min(cpFiltered.length - 1, cpIdx + 1); applyCpActive(); }
+  if (e.key === 'ArrowUp')   { e.preventDefault(); cpIdx = Math.max(0, cpIdx - 1); applyCpActive(); }
+  if (e.key === 'Enter')     { e.preventDefault(); if (cpFiltered[cpIdx]) { closeCmdPalette(); cpFiltered[cpIdx].run(); } }
+});
+cpResults.addEventListener('click', (e) => {
+  const r = e.target.closest('.cmd-result'); if (!r) return;
+  const i = +r.dataset.i; if (cpFiltered[i]) { closeCmdPalette(); cpFiltered[i].run(); }
+});
+function applyCpActive() {
+  cpResults.querySelectorAll('.cmd-result').forEach((el, i) => el.classList.toggle('active', i === cpIdx));
+  const cur = cpResults.querySelector('.cmd-result.active');
+  if (cur) cur.scrollIntoView({ block: 'nearest' });
+}
+cpBg.addEventListener('click', (e) => { if (e.target === cpBg) closeCmdPalette(); });
+
+document.getElementById('cmdkBtn').addEventListener('click', openCmdPalette);
+document.addEventListener('keydown', (e) => {
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'k' || e.key === 'K')) {
+    e.preventDefault(); openCmdPalette();
+  }
+});
+
+// ============================================================
+// ===== v2: Drag-and-drop reorder for video rows =============
+// ============================================================
+function attachVideosDragDrop() {
+  const root = document.getElementById('videosRoot');
+  if (!root) return;
+  let dragSrc = null;
+  root.addEventListener('dragstart', (e) => {
+    const row = e.target.closest('.videos-row'); if (!row) return;
+    dragSrc = row;
+    row.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    try { e.dataTransfer.setData('text/plain', row.dataset.idx); } catch {}
+  });
+  root.addEventListener('dragend', (e) => {
+    root.querySelectorAll('.dragging,.drop-target').forEach(el => el.classList.remove('dragging','drop-target'));
+    dragSrc = null;
+  });
+  root.addEventListener('dragover', (e) => {
+    const row = e.target.closest('.videos-row'); if (!row || row === dragSrc) return;
+    e.preventDefault();
+    root.querySelectorAll('.drop-target').forEach(el => el.classList.remove('drop-target'));
+    row.classList.add('drop-target');
+  });
+  root.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const target = e.target.closest('.videos-row');
+    if (!target || !dragSrc || target === dragSrc) return;
+    const fromIdx = +dragSrc.dataset.idx;
+    const toIdx = +target.dataset.idx;
+    moveVideo(fromIdx, toIdx);
+  });
+}
+function moveVideo(from, to) {
+  if (!Array.isArray(videos.ar) || from === to) return;
+  for (const lang of ['ar','en']) {
+    const arr = videos[lang]; if (!Array.isArray(arr)) continue;
+    if (from < 0 || from >= arr.length || to < 0 || to >= arr.length) continue;
+    const item = arr.splice(from, 1)[0];
+    arr.splice(to, 0, item);
+  }
+  persistVideosDraft();
+  renderVideosPanel();
+  toast('تم الترتيب — متنساش تحفظ.', 'success');
+  schedulePreviewReload();
+}
+// Watch #videosRoot for any DOM rebuilds and decorate rows with drag handles.
+(function watchVideosRoot() {
+  const root = document.getElementById('videosRoot');
+  if (!root) return;
+  const decorate = () => {
+    const rows = root.querySelectorAll('.videos-row');
+    rows.forEach((row, i) => {
+      row.setAttribute('draggable', 'true');
+      row.dataset.idx = String(i);
+      if (!row.querySelector('.drag-handle')) {
+        const h = document.createElement('span');
+        h.className = 'drag-handle';
+        h.title = 'اسحب للترتيب';
+        h.innerHTML = '⋮⋮';
+        row.insertBefore(h, row.firstChild);
+      }
+    });
+    attachVideosDragDrop();
+  };
+  const mo = new MutationObserver(() => { decorate(); });
+  mo.observe(root, { childList: true, subtree: false });
+  decorate();
+})();
 
 // ===== Boot =====
 if (!window.__i18n_defaults) {
@@ -1147,6 +2163,16 @@ if (!window.__i18n_defaults) {
 } else {
   render();
 }
+syncGhButtons();
+
+// (drag-drop decoration is handled by the MutationObserver above)
+
+// Listen for postMessage from preview iframe (e.g. for soft reloads)
+window.addEventListener('message', (ev) => {
+  if (ev.data && ev.data.type === 'kha-preview-ready') {
+    // First load done — nothing to do, iframe will reload from drafts on its own.
+  }
+});
 </script>
 
 </body>
