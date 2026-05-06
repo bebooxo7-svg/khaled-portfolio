@@ -282,6 +282,85 @@ button.danger { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0
   color: #0a0e1a; font-weight: 700; cursor: pointer;
 }
 
+/* ===== v3: Theme + Designs panel UI ===== */
+.theme-color {
+  display: grid; grid-template-columns: 1fr auto auto; gap: 10px;
+  align-items: center; padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+}
+.theme-color:last-child { border-bottom: 0; }
+.theme-color > span { color: var(--text); font-size: 0.88rem; }
+.theme-color input[type="color"] {
+  width: 44px; height: 30px; border-radius: 8px; cursor: pointer;
+  border: 1px solid var(--border-2); background: transparent; padding: 2px;
+}
+.theme-color code {
+  font-size: 0.75rem; color: var(--muted);
+  font-family: monospace; min-width: 64px; text-align: center;
+  padding: 4px 6px; background: var(--surface-2); border-radius: 6px;
+}
+.opt-row {
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  border: 1px solid var(--border); border-radius: 10px;
+  cursor: pointer; transition: background .15s ease, border-color .15s ease;
+}
+.opt-row:hover { background: var(--surface-2); border-color: var(--accent); }
+.opt-row input { accent-color: var(--accent); width: 16px; height: 16px; }
+.theme-preset { font-size: 0.78rem; padding: 6px 10px; }
+.theme-card select {
+  width: 100%; padding: 8px 10px; border-radius: 10px;
+  background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--border-2); font: inherit; cursor: pointer;
+}
+
+/* Designs panel cards */
+.design-list {
+  display: grid; gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  margin-top: 14px;
+}
+.design-list-card {
+  position: relative;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+  transition: transform .2s ease, border-color .2s ease, box-shadow .25s ease;
+  display: flex; flex-direction: column;
+}
+.design-list-card:hover { transform: translateY(-2px); border-color: var(--accent); box-shadow: 0 12px 30px -10px rgba(34,197,94,0.4); }
+.design-list-card .thumb {
+  aspect-ratio: 4/5; background: var(--surface-2);
+  background-size: cover; background-position: center;
+}
+.design-list-card .body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; }
+.design-list-card input[type="text"] {
+  width: 100%; padding: 6px 8px; border-radius: 8px;
+  background: rgba(0,0,0,0.25); border: 1px solid var(--border);
+  color: var(--text); font: inherit; font-size: 0.85rem;
+}
+.design-list-card input[type="text"]:focus { border-color: var(--accent); outline: none; }
+.design-list-card .meta { display: flex; gap: 4px; }
+.design-list-card .meta input { flex: 1; }
+.design-list-card .meta input.tag { flex: 0 0 70px; }
+.design-list-card .row-actions { display: flex; gap: 4px; padding: 0 12px 10px; }
+.design-list-card .row-actions button { flex: 1; padding: 5px 8px; font-size: 0.75rem; }
+.design-list-card.dragging { opacity: 0.4; transform: rotate(-1deg); }
+
+/* v3: Sticky save bar at the bottom */
+.sticky-save {
+  position: sticky; bottom: 0;
+  background: linear-gradient(to top, rgba(10,14,26,0.97) 60%, transparent);
+  margin-top: 14px;
+  padding: 10px 4px 6px;
+  display: none;
+  align-items: center; gap: 10px;
+  backdrop-filter: blur(6px);
+  border-top: 1px solid var(--border);
+  z-index: 90;
+}
+.sticky-save.visible { display: flex; }
+.sticky-save .changed-info { color: var(--muted); font-size: 0.86rem; }
+.sticky-save .btn { padding: 9px 14px; }
+
 /* Subtle stagger animation for newly rendered sections */
 .section { animation: secIn .35s ease both; }
 @keyframes secIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -546,8 +625,10 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
 
   <div class="panel-tabs" role="tablist" aria-label="لوحات التحكم">
     <button data-panel="texts" class="active">📝 النصوص والأسعار</button>
-    <button data-panel="videos">🎬 فيديوهات الأعمال</button>
+    <button data-panel="videos">🎬 الفيديوهات</button>
+    <button data-panel="designs">🎨 ديزاينات</button>
     <button data-panel="images">🖼️ الصور</button>
+    <button data-panel="theme">🎛️ الشكل والألوان</button>
   </div>
 
   <div id="textsPanel">
@@ -588,6 +669,124 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
       </div>
     </label>
     <div id="imagesRoot"></div>
+  </div>
+
+  <!-- v3: Designs panel -->
+  <div id="designsPanel" hidden>
+    <div class="design-intro" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center;">
+      <span style="font-size: 26px;">🎨</span>
+      <div style="flex:1">
+        <div style="font-weight: 700; margin-bottom: 4px;">ديزاينات الأعمال</div>
+        <div style="color: var(--muted); font-size: 0.86rem;">ارفع صور ديزايناتك (بوسترات، إعلانات، ثامبنيلز…) — هتظهر على الموقع في قسم "التصاميم" بشكل جريد متجاوب مع animation.</div>
+      </div>
+      <button class="btn primary" id="addDesignBtn">+ ديزاين جديد</button>
+    </div>
+
+    <label class="dropzone" id="designDropzone" style="margin-bottom: 14px;">
+      <div class="em">📤</div>
+      <div>اسحب صور هنا، أو</div>
+      <span class="pick">اختار صور من جهازك</span>
+      <input type="file" id="designFileInput" accept="image/*" multiple />
+      <div style="margin-top:10px; font-size:0.76rem; color: var(--muted);">
+        كل صورة بتترفع لمجلد <code style="color:var(--accent)">designs/</code> على GitHub، وبيتضاف entry جديد في designs.json تلقائيًا.
+      </div>
+    </label>
+
+    <div id="designsRoot"></div>
+  </div>
+
+  <!-- v3: Theme / Look-and-feel panel -->
+  <div id="themePanel" hidden>
+    <div class="theme-grid" style="display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 8px;">
+
+      <div class="theme-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px;">
+        <h3 style="margin: 0 0 12px; font-size: 1.0rem;">🎨 الألوان الأساسية</h3>
+        <div class="theme-row">
+          <label class="theme-color">
+            <span>اللون الرئيسي (أخضر/نيون)</span>
+            <input type="color" id="themeAccent" value="#22c55e" />
+            <code id="themeAccentTxt">#22c55e</code>
+          </label>
+          <label class="theme-color">
+            <span>اللون الثانوي (أزرق)</span>
+            <input type="color" id="themeAccent2" value="#3b82f6" />
+            <code id="themeAccent2Txt">#3b82f6</code>
+          </label>
+          <label class="theme-color">
+            <span>الخلفية (الغامقة)</span>
+            <input type="color" id="themeBg" value="#0a0e1a" />
+            <code id="themeBgTxt">#0a0e1a</code>
+          </label>
+          <label class="theme-color">
+            <span>الخلفية الثانوية</span>
+            <input type="color" id="themeBg2" value="#0f172a" />
+            <code id="themeBg2Txt">#0f172a</code>
+          </label>
+          <label class="theme-color">
+            <span>لون النص الأساسي</span>
+            <input type="color" id="themeText" value="#e6edf6" />
+            <code id="themeTextTxt">#e6edf6</code>
+          </label>
+        </div>
+        <div class="theme-presets" style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+          <span style="color: var(--muted); font-size: 0.82rem; margin-inline-end: 6px;">جربلك تيمات جاهزة:</span>
+          <button class="btn theme-preset" data-preset="green-blue" title="أخضر + أزرق (الأصلي)">🟢 الأصلي</button>
+          <button class="btn theme-preset" data-preset="purple">💜 بنفسجي</button>
+          <button class="btn theme-preset" data-preset="orange">🧡 برتقالي</button>
+          <button class="btn theme-preset" data-preset="cyan">🩵 سماوي</button>
+          <button class="btn theme-preset" data-preset="rose">🌹 وردي</button>
+          <button class="btn theme-preset" data-preset="mono">⚪ أبيض/أسود</button>
+        </div>
+      </div>
+
+      <div class="theme-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px;">
+        <h3 style="margin: 0 0 12px; font-size: 1.0rem;">✨ قوة الأنيميشن</h3>
+        <div class="theme-row">
+          <div class="anim-options" style="display: grid; gap: 8px;">
+            <label class="opt-row"><input type="radio" name="animLevel" value="off" /> <strong>مقفول</strong> — مفيش أي حركة (مفيد للأجهزة الضعيفة).</label>
+            <label class="opt-row"><input type="radio" name="animLevel" value="subtle" /> <strong>هادي</strong> — fades بسيطة بس.</label>
+            <label class="opt-row"><input type="radio" name="animLevel" value="med" checked /> <strong>متوسط</strong> — الإعدادات الافتراضية.</label>
+            <label class="opt-row"><input type="radio" name="animLevel" value="strong" /> <strong>قوي 🔥</strong> — حركة كاملة + خلفية متحركة + أنيميشن أقوى للوجو.</label>
+          </div>
+          <label class="opt-row" style="margin-top: 10px;">
+            <input type="checkbox" id="themeShapes" checked />
+            <strong>أشكال متحركة في الخلفية</strong> (لو مقفول، الخلفية بتبقى نقية).
+          </label>
+        </div>
+      </div>
+
+      <div class="theme-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px;">
+        <h3 style="margin: 0 0 12px; font-size: 1.0rem;">🅰️ الخطوط</h3>
+        <div class="theme-row">
+          <label style="display: block; margin-bottom: 10px;">
+            <span style="display: block; color: var(--muted); margin-bottom: 4px; font-size: 0.86rem;">خط عربي:</span>
+            <select id="themeFontAr" class="ar">
+              <option>Cairo</option>
+              <option>IBM Plex Sans Arabic</option>
+              <option>Tajawal</option>
+              <option>Almarai</option>
+            </select>
+          </label>
+          <label style="display: block;">
+            <span style="display: block; color: var(--muted); margin-bottom: 4px; font-size: 0.86rem;">خط إنجليزي:</span>
+            <select id="themeFontEn" class="en">
+              <option>Inter</option>
+              <option>Manrope</option>
+              <option>Plus Jakarta Sans</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="theme-card" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px;">
+        <h3 style="margin: 0 0 12px; font-size: 1.0rem;">🚀 الإجراءات</h3>
+        <div class="theme-row">
+          <p style="color: var(--muted); font-size: 0.86rem; margin: 0 0 12px;">جرّب التغييرات حية في "معاينة لايف" قبل ما تحفظ. كل تغيير بيتطبّق على الموقع كله.</p>
+          <button class="btn primary" id="saveThemeBtn" style="width: 100%; padding: 12px;">💾 حفظ الـ Theme على GitHub</button>
+          <button class="btn" id="resetThemeBtn" style="width: 100%; margin-top: 8px;">↻ رجوع للقيم الأصلية</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -748,7 +947,7 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
 
 <script src="content-defaults.js?v=27"></script>
 <script src="projects-defaults.js?v=27"></script>
-<script src="github-api.js?v=27"></script>
+<script src="github-api.js?v=30"></script>
 <script>
 'use strict';
 
@@ -1207,6 +1406,11 @@ function setActivePanel(name) {
   document.getElementById('textsPanel').hidden  = name !== 'texts';
   document.getElementById('videosPanel').hidden = name !== 'videos';
   document.getElementById('imagesPanel').hidden = name !== 'images';
+  const designsPanel = document.getElementById('designsPanel');
+  const themePanel = document.getElementById('themePanel');
+  if (designsPanel) designsPanel.hidden = name !== 'designs';
+  if (themePanel) themePanel.hidden = name !== 'theme';
+
   // Update download/save buttons label
   const dlBtn = document.getElementById('downloadBtn');
   const saveBtn = document.getElementById('saveGhBtn');
@@ -1216,7 +1420,7 @@ function setActivePanel(name) {
     dlBtn.textContent = '⬇️ تنزيل projects.json';
     if (saveBtn) saveBtn.textContent = '💾 حفظ على GitHub';
     if (resetBtn) resetBtn.hidden = false;
-  } else if (name === 'images') {
+  } else if (name === 'images' || name === 'designs' || name === 'theme') {
     dlBtn.hidden = true;
     if (resetBtn) resetBtn.hidden = true;
     if (saveBtn) saveBtn.hidden = true;
@@ -1226,12 +1430,14 @@ function setActivePanel(name) {
     if (saveBtn) saveBtn.textContent = '💾 حفظ على GitHub';
     if (resetBtn) resetBtn.hidden = false;
   }
-  if (name !== 'images') {
+  if (name !== 'images' && name !== 'designs' && name !== 'theme') {
     dlBtn.hidden = false;
     syncGhButtons();
   }
   if (name === 'videos') renderVideos();
   if (name === 'images') renderImagesPanel();
+  if (name === 'designs' && typeof renderDesignsPanel === 'function') renderDesignsPanel();
+  if (name === 'theme' && typeof initThemePanel === 'function') initThemePanel();
 }
 
 document.querySelectorAll('.panel-tabs button').forEach(b => {
@@ -2009,7 +2215,10 @@ function buildCmdItems() {
   // Panels
   cpItems.push({ ico:'📝', title:'تبويب: النصوص والأسعار', sub:'كل الترجمات والباقات', key:'tab:texts', run:() => setActivePanel('texts') });
   cpItems.push({ ico:'🎬', title:'تبويب: الفيديوهات', sub:'بودكاست/ريلز/يوتيوب', key:'tab:videos', run:() => setActivePanel('videos') });
+  cpItems.push({ ico:'🎨', title:'تبويب: ديزاينات', sub:'رفع بوسترات وإعلانات', key:'tab:designs', run:() => setActivePanel('designs') });
   cpItems.push({ ico:'🖼️', title:'تبويب: الصور', sub:'رفع وإدارة صور الموقع', key:'tab:images', run:() => setActivePanel('images') });
+  cpItems.push({ ico:'🎛️', title:'تبويب: الشكل والألوان', sub:'تخصيص ألوان وأنيميشن وخطوط', key:'tab:theme', run:() => setActivePanel('theme') });
+  cpItems.push({ ico:'🎨', title:'إجراء: تيمة الأصلي', sub:'استرجاع الألوان الافتراضية', key:'theme:reset', run:() => { setActivePanel('theme'); setTimeout(() => document.getElementById('resetThemeBtn').click(), 80); } });
   // All editable text fields (one per i18n key, ar+en)
   if (window.__i18n_defaults) {
     for (const lang of ['ar','en']) {
@@ -2173,6 +2382,307 @@ window.addEventListener('message', (ev) => {
     // First load done — nothing to do, iframe will reload from drafts on its own.
   }
 });
+
+/* =========================================================================
+   v3 — THEME EDITOR
+   ========================================================================= */
+const THEME_DEFAULT = {
+  accent: '#22c55e', accent2: '#3b82f6',
+  bg: '#0a0e1a',     bg2: '#0f172a',
+  text: '#e6edf6',   muted: '#8d96a8',
+  fontAr: 'Cairo', fontEn: 'Inter',
+  animLevel: 'med', shapesBg: true,
+};
+const THEME_PRESETS = {
+  'green-blue': { accent: '#22c55e', accent2: '#3b82f6' },
+  'purple':     { accent: '#a855f7', accent2: '#ec4899' },
+  'orange':     { accent: '#f59e0b', accent2: '#ef4444' },
+  'cyan':       { accent: '#06b6d4', accent2: '#3b82f6' },
+  'rose':       { accent: '#f43f5e', accent2: '#a855f7' },
+  'mono':       { accent: '#f5f5f5', accent2: '#a3a3a3', bg: '#0c0c0c', bg2: '#171717' },
+};
+let themeDraft = Object.assign({}, THEME_DEFAULT);
+let themeSavedRemote = null;
+let themeInited = false;
+
+async function loadThemeFromRepo() {
+  try {
+    const r = await fetch('theme.json?ts=' + Date.now(), { cache: 'no-store' });
+    if (r.ok) {
+      const j = await r.json();
+      themeSavedRemote = j;
+      themeDraft = Object.assign({}, THEME_DEFAULT, j);
+    }
+  } catch {}
+}
+function syncThemeToInputs() {
+  const ids = ['Accent','Accent2','Bg','Bg2','Text'];
+  const keys = ['accent','accent2','bg','bg2','text'];
+  ids.forEach((id, i) => {
+    const inp = document.getElementById('theme' + id);
+    const txt = document.getElementById('theme' + id + 'Txt');
+    if (inp) inp.value = themeDraft[keys[i]] || '#000000';
+    if (txt) txt.textContent = (themeDraft[keys[i]] || '').toUpperCase();
+  });
+  document.querySelectorAll('input[name="animLevel"]').forEach(r => {
+    r.checked = (r.value === (themeDraft.animLevel || 'med'));
+  });
+  const sh = document.getElementById('themeShapes');
+  if (sh) sh.checked = themeDraft.shapesBg !== false;
+  const fAr = document.getElementById('themeFontAr');
+  const fEn = document.getElementById('themeFontEn');
+  if (fAr) fAr.value = themeDraft.fontAr || 'Cairo';
+  if (fEn) fEn.value = themeDraft.fontEn || 'Inter';
+}
+function applyThemeLive() {
+  // Apply to admin doc itself for instant feedback (limited subset)
+  const r = document.documentElement;
+  r.style.setProperty('--accent', themeDraft.accent);
+  r.style.setProperty('--accent-2', themeDraft.accent2);
+  // Push to preview iframe via postMessage
+  try {
+    const fr = document.getElementById('ppFrame');
+    if (fr && fr.contentWindow) {
+      fr.contentWindow.postMessage({ type: 'kha-theme', theme: themeDraft }, '*');
+    }
+  } catch {}
+}
+function bindThemeInputs() {
+  document.querySelectorAll('input[type="color"][id^="theme"]').forEach(inp => {
+    inp.addEventListener('input', () => {
+      const map = { themeAccent:'accent', themeAccent2:'accent2', themeBg:'bg', themeBg2:'bg2', themeText:'text' };
+      const k = map[inp.id]; if (!k) return;
+      themeDraft[k] = inp.value;
+      const txt = document.getElementById(inp.id + 'Txt');
+      if (txt) txt.textContent = inp.value.toUpperCase();
+      applyThemeLive();
+    });
+  });
+  document.querySelectorAll('.theme-preset').forEach(b => {
+    b.addEventListener('click', () => {
+      const p = THEME_PRESETS[b.dataset.preset];
+      if (!p) return;
+      Object.assign(themeDraft, p);
+      syncThemeToInputs();
+      applyThemeLive();
+      toast('تم تطبيق التيم — جربها في المعاينة');
+    });
+  });
+  document.querySelectorAll('input[name="animLevel"]').forEach(rd => {
+    rd.addEventListener('change', () => {
+      themeDraft.animLevel = rd.value;
+      applyThemeLive();
+    });
+  });
+  const sh = document.getElementById('themeShapes');
+  if (sh) sh.addEventListener('change', () => { themeDraft.shapesBg = sh.checked; applyThemeLive(); });
+  const fAr = document.getElementById('themeFontAr');
+  if (fAr) fAr.addEventListener('change', () => { themeDraft.fontAr = fAr.value; applyThemeLive(); });
+  const fEn = document.getElementById('themeFontEn');
+  if (fEn) fEn.addEventListener('change', () => { themeDraft.fontEn = fEn.value; applyThemeLive(); });
+
+  document.getElementById('saveThemeBtn').addEventListener('click', async () => {
+    if (!window.GitHubAPI || !window.GitHubAPI.isConfigured()) { openGhModal(); return; }
+    try {
+      toast('بنحفظ الـ theme على GitHub…');
+      const json = JSON.stringify(themeDraft, null, 2);
+      await window.GitHubAPI.commitText('theme.json', json, 'Update theme');
+      themeSavedRemote = JSON.parse(JSON.stringify(themeDraft));
+      toast('✅ تم حفظ الـ theme');
+      startDeployIndicator('theme.json');
+    } catch (e) {
+      toast('فشل الحفظ: ' + (e.message || ''), 'error');
+    }
+  });
+  document.getElementById('resetThemeBtn').addEventListener('click', () => {
+    themeDraft = Object.assign({}, THEME_DEFAULT);
+    syncThemeToInputs();
+    applyThemeLive();
+    toast('رجعنا للتيمة الأصلية — اضغط حفظ لتثبيتها');
+  });
+}
+async function initThemePanel() {
+  if (themeInited) { syncThemeToInputs(); applyThemeLive(); return; }
+  themeInited = true;
+  await loadThemeFromRepo();
+  syncThemeToInputs();
+  bindThemeInputs();
+  applyThemeLive();
+}
+
+/* =========================================================================
+   v3 — DESIGNS PANEL
+   ========================================================================= */
+let designsState = { ar: [], en: [] };
+let designsInited = false;
+
+async function loadDesignsFromRepo() {
+  try {
+    const r = await fetch('designs.json?ts=' + Date.now(), { cache: 'no-store' });
+    if (r.ok) {
+      const j = await r.json();
+      designsState = j && (j.ar || j.en) ? j : { ar: [], en: [] };
+      if (!designsState.ar) designsState.ar = [];
+      if (!designsState.en) designsState.en = [];
+    }
+  } catch {}
+}
+async function saveDesignsJson() {
+  if (!window.GitHubAPI || !window.GitHubAPI.isConfigured()) { openGhModal(); throw new Error('not configured'); }
+  const json = JSON.stringify(designsState, null, 2);
+  await window.GitHubAPI.commitText('designs.json', json, 'Update designs.json');
+}
+function escapeAttr(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/'/g, '&#39;');
+}
+function renderDesignsPanel() {
+  const root = document.getElementById('designsRoot');
+  if (!root) return;
+  if (!designsInited) {
+    designsInited = true;
+    root.innerHTML = `<div class="empty"><div class="em">⏳</div>بنحمّل الديزاينات…</div>`;
+    loadDesignsFromRepo().then(() => renderDesignsPanel());
+    bindDesignsUploaders();
+    return;
+  }
+  // Render the Arabic list (designs are language-agnostic by default — same image, AR title)
+  const list = designsState.ar || [];
+  if (!list.length) {
+    root.innerHTML = `<div class="empty"><div class="em">🎨</div>مفيش ديزاينات لسه. ارفع صور من الـ dropzone فوق.</div>`;
+    return;
+  }
+  root.innerHTML = '<div class="design-list" id="designList">' + list.map((d, i) => `
+    <div class="design-list-card" draggable="true" data-idx="${i}">
+      <div class="thumb" style="background-image:url('${escapeAttr(d.src)}')"></div>
+      <div class="body">
+        <input type="text" class="title-in" placeholder="عنوان الديزاين" value="${escapeAttr(d.title || '')}" />
+        <div class="meta">
+          <input type="text" class="tag-in tag" placeholder="تاج" value="${escapeAttr(d.tag || '')}" />
+          <input type="text" class="link-in" placeholder="لينك (اختياري)" value="${escapeAttr(d.link || '')}" />
+        </div>
+      </div>
+      <div class="row-actions">
+        <button class="btn" data-act="up">↑</button>
+        <button class="btn" data-act="down">↓</button>
+        <button class="btn danger" data-act="del">🗑️</button>
+      </div>
+    </div>
+  `).join('') + '</div>';
+
+  // Wire inputs
+  root.querySelectorAll('.design-list-card').forEach(card => {
+    const idx = parseInt(card.dataset.idx, 10);
+    card.querySelector('.title-in').addEventListener('input', e => {
+      designsState.ar[idx].title = e.target.value;
+      // Mirror to en if not set
+      if (!designsState.en[idx] || !designsState.en[idx].title) designsState.en[idx] = Object.assign({}, designsState.ar[idx]);
+      else designsState.en[idx].title = e.target.value;
+      schedulePreviewRefresh();
+    });
+    card.querySelector('.tag-in').addEventListener('input', e => {
+      designsState.ar[idx].tag = e.target.value;
+      if (designsState.en[idx]) designsState.en[idx].tag = e.target.value;
+      schedulePreviewRefresh();
+    });
+    card.querySelector('.link-in').addEventListener('input', e => {
+      designsState.ar[idx].link = e.target.value;
+      if (designsState.en[idx]) designsState.en[idx].link = e.target.value;
+      schedulePreviewRefresh();
+    });
+    card.querySelectorAll('button[data-act]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const act = btn.dataset.act;
+        if (act === 'del') {
+          if (!confirm('احذف الديزاين دا؟')) return;
+          designsState.ar.splice(idx, 1);
+          designsState.en.splice(idx, 1);
+          renderDesignsPanel();
+          await persistDesignsAndRefresh('Delete design');
+        } else if (act === 'up' && idx > 0) {
+          [designsState.ar[idx - 1], designsState.ar[idx]] = [designsState.ar[idx], designsState.ar[idx - 1]];
+          [designsState.en[idx - 1], designsState.en[idx]] = [designsState.en[idx], designsState.en[idx - 1]];
+          renderDesignsPanel();
+          await persistDesignsAndRefresh('Reorder design');
+        } else if (act === 'down' && idx < designsState.ar.length - 1) {
+          [designsState.ar[idx + 1], designsState.ar[idx]] = [designsState.ar[idx], designsState.ar[idx + 1]];
+          [designsState.en[idx + 1], designsState.en[idx]] = [designsState.en[idx], designsState.en[idx + 1]];
+          renderDesignsPanel();
+          await persistDesignsAndRefresh('Reorder design');
+        }
+      });
+    });
+  });
+}
+
+let previewRefreshTimer = null;
+function schedulePreviewRefresh() {
+  clearTimeout(previewRefreshTimer);
+  previewRefreshTimer = setTimeout(async () => {
+    // Save designs.json (debounced) AND refresh preview
+    try {
+      await saveDesignsJson();
+      const fr = document.getElementById('ppFrame');
+      if (fr && fr.contentWindow) fr.contentWindow.postMessage({ type: 'kha-refresh-designs' }, '*');
+      toast('تم حفظ التعديل');
+    } catch (e) {
+      console.warn('designs save failed:', e);
+    }
+  }, 800);
+}
+async function persistDesignsAndRefresh(msg) {
+  try {
+    await saveDesignsJson();
+    const fr = document.getElementById('ppFrame');
+    if (fr && fr.contentWindow) fr.contentWindow.postMessage({ type: 'kha-refresh-designs' }, '*');
+    toast('✅ ' + msg);
+  } catch (e) {
+    toast('فشل الحفظ: ' + (e.message || ''), 'error');
+  }
+}
+
+function bindDesignsUploaders() {
+  const dz = document.getElementById('designDropzone');
+  const inp = document.getElementById('designFileInput');
+  const addBtn = document.getElementById('addDesignBtn');
+
+  if (addBtn) addBtn.addEventListener('click', () => inp.click());
+  if (inp) inp.addEventListener('change', () => handleDesignFiles(inp.files));
+  if (dz) {
+    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('over'); });
+    dz.addEventListener('dragleave', () => dz.classList.remove('over'));
+    dz.addEventListener('drop', e => {
+      e.preventDefault(); dz.classList.remove('over');
+      handleDesignFiles(e.dataTransfer.files);
+    });
+  }
+}
+async function handleDesignFiles(files) {
+  if (!files || !files.length) return;
+  if (!window.GitHubAPI || !window.GitHubAPI.isConfigured()) { openGhModal(); return; }
+  for (const file of Array.from(files)) {
+    try {
+      toast(`⬆️ بنرفع ${file.name}…`);
+      // Generate a safe slug
+      const ts = Date.now();
+      const ext = (file.name.match(/\.[a-z0-9]+$/i) || ['.jpg'])[0];
+      const safe = file.name.replace(/\.[^.]+$/, '').replace(/[^a-zA-Z0-9-]+/g, '-').toLowerCase().slice(0, 32) || 'design';
+      const path = `designs/${safe}-${ts}${ext}`;
+      await window.GitHubAPI.commitBinary(path, file, `Upload design: ${path}`);
+      const entry = { src: path, title: file.name.replace(/\.[^.]+$/, ''), tag: 'Design', link: '' };
+      designsState.ar.push(entry);
+      designsState.en.push(Object.assign({}, entry));
+      await saveDesignsJson();
+      renderDesignsPanel();
+      const fr = document.getElementById('ppFrame');
+      if (fr && fr.contentWindow) fr.contentWindow.postMessage({ type: 'kha-refresh-designs' }, '*');
+      toast(`✅ تم رفع ${file.name}`);
+    } catch (e) {
+      toast(`❌ فشل رفع ${file.name}: ${e.message || ''}`, 'error');
+    }
+  }
+}
+
 </script>
 
 </body>
