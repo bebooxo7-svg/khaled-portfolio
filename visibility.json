@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "home": true,
+    "bts": true,
+    "about": true,
+    "works": true,
+    "designs": true,
+    "services": true,
+    "pricing": true,
+    "process": true,
+    "testimonials": true,
+    "skills": true,
+    "contact": true
+  },
+  "_meta": {
+    "description": "Per-section visibility flags. true = shown, false = hidden. Edited from /admin.html (Visibility tab)."
+  }
+}

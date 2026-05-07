@@ -674,6 +674,43 @@ async function loadContentOverrides() {
   } catch (e) { /* no content.json — defaults stand */ }
 }
 
+// --- Section visibility (controlled from admin → "إظهار/إخفاء الأقسام") ---
+async function applyVisibility() {
+  let flags = null;
+  // 1) admin draft (live preview)
+  try {
+    const draft = localStorage.getItem('khaled_visibility_draft');
+    if (draft) flags = JSON.parse(draft);
+  } catch (e) { /* ignore */ }
+  // 2) committed visibility.json
+  if (!flags) {
+    try {
+      const res = await fetch('visibility.json?v=' + Date.now(), { cache: 'no-cache' });
+      if (res.ok) {
+        const data = await res.json();
+        flags = data && data.sections;
+      }
+    } catch (e) { /* no visibility.json — show all */ }
+  }
+  if (!flags || typeof flags !== 'object') return;
+  // Apply: any explicitly-false section is hidden; nav anchors to it are also hidden.
+  Object.keys(flags).forEach(secId => {
+    const sec = document.getElementById(secId);
+    if (!sec) return;
+    if (flags[secId] === false) {
+      sec.setAttribute('data-kha-hidden', '1');
+      sec.style.display = 'none';
+    } else {
+      sec.removeAttribute('data-kha-hidden');
+      sec.style.display = '';
+    }
+    // Also hide / show nav links pointing to this section
+    document.querySelectorAll('.nav-links a[href="#' + secId + '"], a.nav-link[href="#' + secId + '"]').forEach(a => {
+      a.style.display = (flags[secId] === false) ? 'none' : '';
+    });
+  });
+}
+
 async function loadProjectsOverrides() {
   // 1) localStorage draft (admin live preview — only this browser)
   try {
@@ -701,11 +738,12 @@ async function loadProjectsOverrides() {
 }
 
 (async () => {
-  await Promise.all([loadContentOverrides(), loadProjectsOverrides()]);
+  await Promise.all([loadContentOverrides(), loadProjectsOverrides(), applyVisibility()]);
   applyLanguage(currentLang);
   // Tell parent (admin live preview iframe) we're ready.
   try { window.parent && window.parent !== window && window.parent.postMessage({ type: 'kha-preview-ready' }, '*'); } catch {}
 })();
+window.__applyVisibility = applyVisibility;
 
 // Live preview hook: when admin posts 'kha-refresh', re-read drafts and re-apply.
 window.addEventListener('message', async (ev) => {
@@ -716,7 +754,7 @@ window.addEventListener('message', async (ev) => {
     Object.assign(i18n, JSON.parse(JSON.stringify((window && window.__i18n_defaults) || { ar: {}, en: {} })));
     Object.keys(projects).forEach(k => delete projects[k]);
     Object.assign(projects, JSON.parse(JSON.stringify((window && window.__projects_defaults) || { ar: [], en: [] })));
-    await Promise.all([loadContentOverrides(), loadProjectsOverrides()]);
+    await Promise.all([loadContentOverrides(), loadProjectsOverrides(), applyVisibility()]);
     applyLanguage(currentLang);
     // Also refresh theme + designs from disk if their loaders are present.
     try { window.__reloadTheme && window.__reloadTheme(); } catch {}
