@@ -47,6 +47,18 @@ function applyLanguage(lang) {
 
   document.querySelector('.lang-current').textContent = lang === 'ar' ? 'EN' : 'AR';
 
+  // Swap logo image based on language (AR = Arabic mark, EN = English mark)
+  const logoImg = document.getElementById('logoImg');
+  if (logoImg) {
+    const next = lang === 'en'
+      ? (logoImg.getAttribute('data-src-en') || 'khaled-logo-en.png')
+      : (logoImg.getAttribute('data-src-ar') || 'logo-256.png');
+    if (logoImg.getAttribute('src') !== next) {
+      logoImg.setAttribute('src', next);
+      logoImg.removeAttribute('srcset');
+    }
+  }
+
   document.title = i18n[lang]['meta.title']
     || (lang === 'ar' ? 'خالد علي — مونتاج فيديو · تسويق رقمي · تصميم'
                       : 'Khaled Ali — Video Editing · Digital Marketing · Design');
