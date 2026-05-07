@@ -2417,61 +2417,197 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
 }
 
 /* ============================================================
-   v3.1 — Simple opacity-based logo motion (no rings / no sparks)
+   v3.2 — Dramatic logo motion (rotating halo + aura + float + shine)
+   No orbit dots, no spark dashes — just rich, smooth motion.
    ============================================================ */
-.logo-mark { isolation: isolate; }
+.logo-mark { isolation: isolate; overflow: visible; }
+
+/* Outer rotating halo — soft conic-gradient ring (no dashes/dots) */
+.logo-halo {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(34,197,94,0.0) 0%,
+    rgba(34,197,94,0.85) 18%,
+    rgba(59,130,246,0.95) 38%,
+    rgba(34,197,94,0.65) 58%,
+    rgba(59,130,246,0.85) 78%,
+    rgba(34,197,94,0.0) 100%
+  );
+  filter: blur(7px);
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 0;
+  animation: logoHaloSpin 6s linear infinite, logoHaloPulse 3.2s ease-in-out infinite;
+  will-change: transform, opacity, filter;
+}
+@keyframes logoHaloSpin { to { transform: rotate(360deg); } }
+@keyframes logoHaloPulse {
+  0%, 100% { opacity: 0.6; filter: blur(7px); }
+  50%      { opacity: 1.0; filter: blur(11px); }
+}
+
+/* Inner color-shifting aura — counter-rotating, blends with halo */
+.logo-aura {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 180deg,
+    rgba(34,197,94,0.0) 0%,
+    rgba(34,197,94,0.55) 30%,
+    rgba(59,130,246,0.55) 70%,
+    rgba(34,197,94,0.0) 100%
+  );
+  filter: blur(4px);
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 0;
+  animation: logoAuraSpin 4.5s linear infinite reverse, logoAuraPulse 2.4s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+@keyframes logoAuraSpin { to { transform: rotate(-360deg); } }
+@keyframes logoAuraPulse {
+  0%, 100% { opacity: 0.45; }
+  50%      { opacity: 0.85; }
+}
+
+/* Static soft glow behind everything (gives a warm bed of light) */
+.logo-glow {
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,197,94,0.45) 0%, rgba(59,130,246,0.22) 40%, transparent 70%);
+  opacity: 0.55;
+  filter: blur(8px);
+  pointer-events: none;
+  z-index: 0;
+  animation: logoGlowPulse 4.5s ease-in-out infinite;
+  will-change: opacity, transform;
+}
+@keyframes logoGlowPulse {
+  0%, 100% { opacity: 0.4;  transform: scale(0.96); }
+  50%      { opacity: 0.85; transform: scale(1.10); }
+}
+
+/* The logo image itself — float + scale breathe + glow shadow */
 .logo-mark img {
   position: relative;
   z-index: 2;
   display: block;
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
-  transition: transform .5s cubic-bezier(.2,.7,.3,1.3), opacity .5s ease, filter .5s ease;
+  filter:
+    drop-shadow(0 4px 14px rgba(34,197,94,0.55))
+    drop-shadow(0 2px 6px rgba(59,130,246,0.35));
+  transition: transform .5s cubic-bezier(.2,.7,.3,1.3), filter .5s ease;
+  animation:
+    logoFloat 3.6s ease-in-out infinite,
+    logoBreathe 2.6s ease-in-out infinite,
+    logoColorPulse 5s ease-in-out infinite;
+  will-change: transform, filter;
+}
+@keyframes logoFloat {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -3px; }
+}
+@keyframes logoBreathe {
+  0%, 100% { scale: 1.0; }
+  50%      { scale: 1.06; }
+}
+@keyframes logoColorPulse {
+  0%, 100% {
+    filter:
+      drop-shadow(0 4px 14px rgba(34,197,94,0.55))
+      drop-shadow(0 2px 6px rgba(59,130,246,0.35));
+  }
+  50% {
+    filter:
+      drop-shadow(0 6px 22px rgba(59,130,246,0.85))
+      drop-shadow(0 3px 10px rgba(34,197,94,0.65))
+      brightness(1.18);
+  }
 }
 
-/* Soft glow behind logo — gentle pulse, no harsh shapes */
-.logo-glow {
-  position: absolute; inset: -6px;
+/* Periodic shine sweep across the logo (every 4.5s a bright streak) */
+.logo-shine {
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(34,197,94,0.30) 0%, rgba(59,130,246,0.15) 45%, transparent 75%);
-  opacity: 0.45; filter: blur(6px);
   pointer-events: none;
-  z-index: 1;
-  animation: logoGlowPulse 4.5s ease-in-out infinite;
+  z-index: 3;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  opacity: 0.95;
 }
-@keyframes logoGlowPulse {
-  0%, 100% { opacity: 0.35; transform: scale(0.98); }
-  50%      { opacity: 0.65; transform: scale(1.05); }
+.logo-shine::before {
+  content: "";
+  position: absolute;
+  top: -150%;
+  left: -50%;
+  width: 60%;
+  height: 400%;
+  background: linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255,255,255,0.0) 45%,
+    rgba(255,255,255,0.55) 50%,
+    rgba(255,255,255,0.0) 55%,
+    transparent 65%
+  );
+  filter: blur(2px);
+  transform: translateX(0%) rotate(0deg);
+  animation: logoShineSweep 4.5s ease-in-out infinite;
+}
+@keyframes logoShineSweep {
+  0%, 65%  { transform: translateX(-110%); opacity: 0; }
+  72%      { opacity: 1; }
+  100%     { transform: translateX(420%); opacity: 0; }
 }
 
-/* Logo image: quiet opacity breathing */
-.logo-mark img {
-  animation: logoOpacity 3.6s ease-in-out infinite;
-}
-@keyframes logoOpacity {
-  0%, 100% { opacity: 0.78; }
-  50%      { opacity: 1; }
-}
-
-/* Hover: gentle lift + full opacity (no orbit, no burst) */
+/* Hover / focus: amplify everything */
 .logo:hover .logo-mark img,
 .logo:focus-visible .logo-mark img {
+  transform: translateY(-3px) scale(1.10);
+  filter:
+    drop-shadow(0 10px 28px rgba(34,197,94,0.95))
+    drop-shadow(0 4px 12px rgba(59,130,246,0.65))
+    brightness(1.22);
+}
+.logo:hover .logo-halo,
+.logo:focus-visible .logo-halo {
   opacity: 1;
-  transform: translateY(-2px) scale(1.05);
-  animation-play-state: paused;
+  animation-duration: 2.4s, 1.6s;
+}
+.logo:hover .logo-aura,
+.logo:focus-visible .logo-aura {
+  opacity: 0.95;
+  animation-duration: 2s, 1.2s;
 }
 .logo:hover .logo-glow,
 .logo:focus-visible .logo-glow {
-  opacity: 0.85;
-  transform: scale(1.12);
-  animation-play-state: paused;
+  opacity: 1;
+  transform: scale(1.18);
 }
 
-/* respect reduce-motion */
+/* Respect reduce-motion */
 @media (prefers-reduced-motion: reduce) {
-  .logo-mark img, .logo-glow { animation: none !important; transition: none !important; }
-  .logo-mark img { opacity: 1; }
-  .logo-glow { opacity: 0.4; }
+  .logo-mark img,
+  .logo-halo,
+  .logo-aura,
+  .logo-glow,
+  .logo-shine::before {
+    animation: none !important;
+    transition: none !important;
+  }
+  .logo-mark img { opacity: 1; transform: none; }
+  .logo-halo { opacity: 0.5; }
+  .logo-aura { opacity: 0.4; }
+  .logo-glow { opacity: 0.5; }
+  .logo-shine { opacity: 0; }
 }
 
 /* ============================================================
@@ -2559,7 +2695,12 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
   transition-duration: 0.001s !important;
 }
 .kha-anim-off .logo-mark img,
-.kha-anim-off .logo-glow { animation: none !important; opacity: 1; }
+.kha-anim-off .logo-halo,
+.kha-anim-off .logo-aura,
+.kha-anim-off .logo-glow,
+.kha-anim-off .logo-shine::before { animation: none !important; }
+.kha-anim-off .logo-mark img { opacity: 1; transform: none; }
+.kha-anim-off .logo-shine { display: none; }
 
 /* Floating shapes background (added when --anim-mult >= 1) */
 .kha-shapes {
