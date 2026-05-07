@@ -2602,6 +2602,12 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
   .kha-rich-anim .hero-name .gradient-text {
     background: linear-gradient(135deg, var(--neon) 0%, var(--blue) 25%, var(--neon) 50%, var(--blue) 75%, var(--neon) 100%);
     background-size: 300% 100%;
+    /* IMPORTANT: background shorthand above resets background-clip to border-box,
+       so we must re-declare clip:text + transparent fill here. */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--neon); /* visible fallback if clip-text fails */
     animation: shineText 6s linear infinite, heroNameIn 1.0s cubic-bezier(.2,.7,.2,1) both;
   }
   /* No filter:blur here — iOS Safari hides text glyphs when filters are applied
