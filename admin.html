@@ -629,6 +629,7 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
     <button data-panel="designs">🎨 ديزاينات</button>
     <button data-panel="images">🖼️ الصور</button>
     <button data-panel="theme">🎛️ الشكل والألوان</button>
+    <button data-panel="visibility">🙈 إظهار / إخفاء</button>
   </div>
 
   <div id="textsPanel">
@@ -786,6 +787,21 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
           <button class="btn" id="resetThemeBtn" style="width: 100%; margin-top: 8px;">↻ رجوع للقيم الأصلية</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- v3.2: Visibility panel — show/hide whole sections of the site -->
+  <div id="visibilityPanel" hidden>
+    <div class="design-intro" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center;">
+      <span style="font-size: 26px;">🙈</span>
+      <div style="flex:1">
+        <div style="font-weight: 700; margin-bottom: 4px;">إظهار / إخفاء أقسام الموقع</div>
+        <div style="color: var(--muted); font-size: 0.86rem;">قفل أي قسم بزرار واحد — هيختفي من الموقع نهائي ومن قائمة التنقل. شغّله تاني وقت ما تحب.</div>
+      </div>
+      <button class="btn primary" id="saveVisibilityBtn">💾 حفظ على GitHub</button>
+    </div>
+    <div id="visibilityRoot" style="display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <!-- toggles injected by JS -->
     </div>
   </div>
 </div>
@@ -1408,8 +1424,13 @@ function setActivePanel(name) {
   document.getElementById('imagesPanel').hidden = name !== 'images';
   const designsPanel = document.getElementById('designsPanel');
   const themePanel = document.getElementById('themePanel');
+  const visPanel = document.getElementById('visibilityPanel');
   if (designsPanel) designsPanel.hidden = name !== 'designs';
   if (themePanel) themePanel.hidden = name !== 'theme';
+  if (visPanel) visPanel.hidden = name !== 'visibility';
+  if (name === 'visibility') {
+    try { window.__renderVisibility && window.__renderVisibility(); } catch (e) {}
+  }
 
   // Update download/save buttons label
   const dlBtn = document.getElementById('downloadBtn');
@@ -2682,6 +2703,137 @@ async function handleDesignFiles(files) {
     }
   }
 }
+
+/* ============================================================
+   v3.2 — Visibility panel: hide/show whole sections of the site
+   ============================================================ */
+const VISIBILITY_SECTIONS = [
+  { id: 'home',         label: 'الصفحة الرئيسية / الهيرو' },
+  { id: 'bts',          label: 'صورة Behind the scenes' },
+  { id: 'about',        label: 'عني' },
+  { id: 'works',        label: 'الأعمال (الفيديوهات)' },
+  { id: 'designs',      label: 'الديزاينات' },
+  { id: 'services',     label: 'الخدمات' },
+  { id: 'pricing',      label: 'الباقات والأسعار' },
+  { id: 'process',      label: 'مراحل العمل' },
+  { id: 'testimonials', label: 'آراء العملاء' },
+  { id: 'skills',       label: 'المهارات' },
+  { id: 'contact',      label: 'تواصل معي' },
+];
+let visibilityState = null;
+async function loadVisibilityFromRepo() {
+  // localStorage draft first (so admin sees what they're previewing)
+  try {
+    const draft = localStorage.getItem('khaled_visibility_draft');
+    if (draft) { visibilityState = JSON.parse(draft); return; }
+  } catch {}
+  try {
+    const r = await fetch('visibility.json?v=' + Date.now(), { cache: 'no-cache' });
+    if (r.ok) {
+      const data = await r.json();
+      visibilityState = (data && data.sections) ? data : { sections: {} };
+    }
+  } catch {}
+  if (!visibilityState) visibilityState = { sections: {} };
+  // Default any missing key to true (visible)
+  VISIBILITY_SECTIONS.forEach(s => {
+    if (typeof visibilityState.sections[s.id] !== 'boolean') visibilityState.sections[s.id] = true;
+  });
+}
+function renderVisibilityPanel() {
+  const root = document.getElementById('visibilityRoot');
+  if (!root) return;
+  if (!visibilityState) {
+    root.innerHTML = '<div class="empty">⏳ بنحمّل…</div>';
+    loadVisibilityFromRepo().then(renderVisibilityPanel);
+    return;
+  }
+  root.innerHTML = VISIBILITY_SECTIONS.map(s => {
+    const on = visibilityState.sections[s.id] !== false;
+    return `
+      <label class="vis-row" data-sec="${s.id}" style="
+        display:flex; align-items:center; gap:14px;
+        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+        padding: 14px 16px; cursor: pointer;
+        transition: transform .2s ease, border-color .2s ease, background .2s ease;
+      ">
+        <span style="flex:1;">
+          <span style="display:block; font-weight:700; font-size:0.98rem;">${s.label}</span>
+          <span style="display:block; color: var(--muted); font-size:0.78rem; margin-top:2px;">#${s.id}</span>
+        </span>
+        <span class="vis-badge" style="
+          font-size:0.72rem; padding: 4px 10px; border-radius: 999px;
+          background: ${on ? 'rgba(34,197,94,0.18)' : 'rgba(239,68,68,0.18)'};
+          color: ${on ? '#22c55e' : '#ef4444'};
+          border: 1px solid ${on ? 'rgba(34,197,94,0.4)' : 'rgba(239,68,68,0.4)'};
+        ">${on ? '✓ ظاهر' : '✕ مخفي'}</span>
+        <input type="checkbox" ${on ? 'checked' : ''} class="vis-check" style="
+          appearance:none; -webkit-appearance:none; width: 50px; height: 28px;
+          background: ${on ? 'linear-gradient(135deg, #22c55e, #3b82f6)' : '#374151'};
+          border-radius: 999px; position: relative; cursor: pointer;
+          transition: background .25s ease;
+        " />
+      </label>`;
+  }).join('');
+  // bind toggles
+  root.querySelectorAll('.vis-row').forEach(row => {
+    const id = row.dataset.sec;
+    const cb = row.querySelector('.vis-check');
+    cb.addEventListener('change', () => {
+      visibilityState.sections[id] = cb.checked;
+      try { localStorage.setItem('khaled_visibility_draft', JSON.stringify(visibilityState)); } catch {}
+      renderVisibilityPanel();
+      // Live-preview iframe refresh
+      const fr = document.getElementById('ppFrame');
+      if (fr && fr.contentWindow) fr.contentWindow.postMessage({ type: 'kha-refresh' }, '*');
+    });
+  });
+  // Custom switch knob via ::before (small visual flair)
+  if (!document.getElementById('visStyle')) {
+    const st = document.createElement('style');
+    st.id = 'visStyle';
+    st.textContent = `
+      .vis-row .vis-check::before {
+        content: ""; position: absolute; top: 3px; left: 3px;
+        width: 22px; height: 22px; border-radius: 50%; background: #fff;
+        transition: transform .25s cubic-bezier(.2,.7,.3,1.3), left .25s ease;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      }
+      .vis-row .vis-check:checked::before { transform: translateX(22px); }
+      .vis-row:hover { transform: translateY(-1px); border-color: var(--accent) !important; }
+      [dir="rtl"] .vis-row .vis-check::before { left: auto; right: 3px; }
+      [dir="rtl"] .vis-row .vis-check:checked::before { transform: translateX(-22px); }
+    `;
+    document.head.appendChild(st);
+  }
+}
+window.__renderVisibility = renderVisibilityPanel;
+
+async function saveVisibilityJson() {
+  if (!window.GitHubAPI || !window.GitHubAPI.isConfigured()) {
+    if (typeof openGhModal === 'function') openGhModal();
+    toast('⚠️ اعمل إعداد GitHub أول مرة', 'error');
+    return;
+  }
+  const payload = {
+    sections: visibilityState.sections,
+    _meta: { description: 'Per-section visibility flags. Edited from /admin.html (Visibility tab).' }
+  };
+  try {
+    const json = JSON.stringify(payload, null, 2) + '\n';
+    await window.GitHubAPI.commitText('visibility.json', json, 'Update section visibility');
+    try { localStorage.removeItem('khaled_visibility_draft'); } catch {}
+    toast('✅ اتحفظ على GitHub — هيظهر على الموقع خلال دقيقة');
+  } catch (e) {
+    toast('❌ فشل الحفظ: ' + (e.message || ''), 'error');
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const sb = document.getElementById('saveVisibilityBtn');
+  if (sb) sb.addEventListener('click', saveVisibilityJson);
+  // Pre-load so opening the tab is instant
+  loadVisibilityFromRepo();
+});
 
 </script>
 
