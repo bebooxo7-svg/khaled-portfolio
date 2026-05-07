@@ -610,6 +610,7 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
       <button class="btn primary" id="saveGhBtn" title="حفظ مباشر على GitHub" hidden>💾 حفظ على GitHub</button>
       <button class="btn" id="downloadBtn" title="تنزيل ملف JSON">⬇️ تنزيل JSON</button>
       <button class="btn danger" id="resetBtn" title="إعادة كل الحقول للقيم الأصلية">↺ إعادة تعيين</button>
+      <button class="btn" id="logoutBtn" title="خروج من الحساب">🚪 خروج</button>
     </div>
   </header>
 
@@ -964,6 +965,30 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
 <script src="content-defaults.js?v=27"></script>
 <script src="projects-defaults.js?v=27"></script>
 <script src="github-api.js?v=30"></script>
+<script src="auth.js?v=32"></script>
+<script>
+// v3.2 — gate the dashboard behind username/password before anything else runs.
+(async function () {
+  function hideLegacyGhUi() {
+    const ghBar = document.getElementById('ghBar');
+    if (ghBar) ghBar.style.display = 'none';
+  }
+  try { window.GitHubAPI && window.GitHubAPI.loadConfig(); } catch {}
+  const sessionActive = window.KhaledAuth && window.KhaledAuth.isSessionActive();
+  if (!sessionActive) {
+    try { await window.KhaledAuth.ensure(); } catch (e) { console.warn('[auth] ensure failed:', e); }
+  }
+  // The legacy "GitHub غير مهيّأ" yellow banner + "🔐 إعداد GitHub" button are
+  // owned by auth.js now — remove them entirely.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hideLegacyGhUi);
+  } else {
+    hideLegacyGhUi();
+  }
+  // Re-sync any UI that depends on GitHubAPI.isConfigured() now that we have a token.
+  setTimeout(() => { try { window.syncGhButtons && window.syncGhButtons(); } catch {} }, 100);
+})();
+</script>
 <script>
 'use strict';
 
@@ -1334,6 +1359,22 @@ function downloadProjectsJson() {
   document.body.appendChild(a); a.click();
   setTimeout(() => { document.body.removeChild(a); URL.revokeObjectURL(url); }, 100);
   toast(`تم تنزيل projects.json (${videos.ar.length} فيديو) — حطّه في نفس مجلد الموقع وارفعه على جيت هب.`, 'success');
+}
+
+// Logout button — wipes the encrypted credential blob & session, then reloads
+const logoutBtn = document.getElementById('logoutBtn');
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', () => {
+    showModal({
+      title: 'خروج من لوحة التحكم',
+      body: 'هتطلع من الحساب — لما ترجع هتدخل اليوزر والباسورد تاني. الـ PAT المشفّر هيفضل محفوظ على الجهاز ده.',
+      confirmText: 'خروج',
+      onConfirm: () => {
+        try { sessionStorage.removeItem('khaled_auth_session_v1'); } catch {}
+        location.reload();
+      },
+    });
+  });
 }
 
 document.getElementById('resetBtn').addEventListener('click', () => {
@@ -1734,7 +1775,7 @@ document.addEventListener('keydown', (e) => {
 // ===== GitHub bar + setup modal =============================
 // ============================================================
 
-function syncGhButtons() {
+window.syncGhButtons = function syncGhButtons() {
   const bar = document.getElementById('ghBar');
   const statusText = document.getElementById('ghStatusText');
   const info = document.getElementById('ghInfo');

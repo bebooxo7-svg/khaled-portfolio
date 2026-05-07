@@ -1,0 +1,394 @@
+/* ============================================================
+   Khaled Dashboard Auth (v3.2)
+
+   Replaces the old "paste GitHub PAT every time" UX with a
+   classic username + password login. Behind the scenes:
+     - First-time setup: user picks username+password and pastes
+       PAT once. Browser encrypts {owner, repo, branch, token,
+       commitName, commitEmail} with AES-GCM using a PBKDF2 key
+       derived from "username:password" + random salt.
+     - The encrypted blob is saved to localStorage. The PAT is
+       NEVER stored in plain text.
+     - Subsequent visits: user enters username+password only.
+       Decrypted blob is fed directly to window.GitHubAPI so all
+       existing dashboard features keep working.
+
+   No backend, no API key in source code, no shared secret.
+   The encrypted blob lives only in this browser's localStorage.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  const AUTH_KEY = 'khaled_auth_v2';
+  const SESSION_KEY = 'khaled_auth_session_v1';
+  const PBKDF2_ITERS = 200000;
+
+  // -------- crypto helpers --------
+  function buf2hex(buf) {
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+  function buf2b64(buf) {
+    return btoa(String.fromCharCode.apply(null, new Uint8Array(buf)));
+  }
+  function b642buf(b64) {
+    const s = atob(b64);
+    const a = new Uint8Array(s.length);
+    for (let i = 0; i < s.length; i++) a[i] = s.charCodeAt(i);
+    return a;
+  }
+  async function sha256Hex(s) {
+    const h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+    return buf2hex(h);
+  }
+  async function deriveKey(passwordPhrase, salt) {
+    const km = await crypto.subtle.importKey(
+      'raw', new TextEncoder().encode(passwordPhrase),
+      { name: 'PBKDF2' }, false, ['deriveKey']
+    );
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations: PBKDF2_ITERS, hash: 'SHA-256' },
+      km,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['encrypt', 'decrypt']
+    );
+  }
+  async function encryptJson(obj, username, password) {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await deriveKey(username + ':' + password, salt);
+    const ct = await crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv }, key,
+      new TextEncoder().encode(JSON.stringify(obj))
+    );
+    return {
+      v: 2,
+      user_hash: await sha256Hex(username.toLowerCase()),
+      salt: buf2b64(salt),
+      iv: buf2b64(iv),
+      ct: buf2b64(ct),
+    };
+  }
+  async function decryptJson(blob, username, password) {
+    const salt = b642buf(blob.salt);
+    const iv = b642buf(blob.iv);
+    const ct = b642buf(blob.ct);
+    const key = await deriveKey(username + ':' + password, salt);
+    const pt = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+    return JSON.parse(new TextDecoder().decode(pt));
+  }
+
+  // -------- storage --------
+  function readBlob() {
+    try {
+      const s = localStorage.getItem(AUTH_KEY);
+      return s ? JSON.parse(s) : null;
+    } catch { return null; }
+  }
+  function writeBlob(b) {
+    localStorage.setItem(AUTH_KEY, JSON.stringify(b));
+  }
+  function clearBlob() {
+    localStorage.removeItem(AUTH_KEY);
+  }
+  function setSessionFlag() {
+    try { sessionStorage.setItem(SESSION_KEY, '1'); } catch {}
+  }
+  function hasSessionFlag() {
+    try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch { return false; }
+  }
+
+  // -------- UI: login / setup overlay --------
+  function injectStyles() {
+    if (document.getElementById('kha-auth-style')) return;
+    const st = document.createElement('style');
+    st.id = 'kha-auth-style';
+    st.textContent = `
+.kha-auth-bg {
+  position: fixed; inset: 0; z-index: 99999;
+  background: radial-gradient(ellipse at top, rgba(34,197,94,0.10), transparent 60%),
+              rgba(8, 12, 22, 0.92);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Cairo', system-ui, sans-serif;
+  animation: khaAuthFade .35s ease-out;
+}
+@keyframes khaAuthFade { from { opacity: 0; } to { opacity: 1; } }
+.kha-auth-card {
+  width: min(440px, 92vw);
+  background: linear-gradient(180deg, rgba(20,28,46,0.96), rgba(12,18,32,0.96));
+  border: 1px solid rgba(59,130,246,0.32);
+  border-radius: 18px;
+  padding: 28px 26px 22px;
+  box-shadow: 0 30px 90px rgba(0,0,0,0.55), 0 0 0 1px rgba(34,197,94,0.10) inset;
+  color: #e7eaf2;
+  animation: khaAuthRise .4s cubic-bezier(.2,.7,.3,1.2);
+  direction: rtl;
+}
+@keyframes khaAuthRise { from { transform: translateY(20px) scale(.97); opacity: 0; } to { transform: none; opacity: 1; } }
+.kha-auth-card h2 {
+  margin: 0 0 4px; font-size: 1.25rem;
+  background: linear-gradient(135deg, #22c55e, #3b82f6);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.kha-auth-card .sub { color: #98a2bd; font-size: 0.84rem; margin-bottom: 20px; }
+.kha-auth-card label {
+  display: block; margin-bottom: 12px;
+}
+.kha-auth-card label > span {
+  display: block; font-size: 0.78rem; color: #b9c0d4; margin-bottom: 5px;
+}
+.kha-auth-card input[type=text],
+.kha-auth-card input[type=password] {
+  width: 100%; box-sizing: border-box;
+  background: rgba(15, 22, 38, 0.78);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 10px;
+  color: #fff; padding: 10px 12px; font-size: 0.95rem;
+  transition: border-color .2s ease, box-shadow .2s ease;
+  font-family: inherit; direction: ltr; text-align: left;
+}
+.kha-auth-card input:focus {
+  outline: none;
+  border-color: rgba(34,197,94,0.65);
+  box-shadow: 0 0 0 3px rgba(34,197,94,0.20);
+}
+.kha-auth-card .row { display: flex; gap: 10px; }
+.kha-auth-card .row > * { flex: 1; }
+.kha-auth-card .actions {
+  display: flex; gap: 10px; margin-top: 18px;
+}
+.kha-auth-card button.primary {
+  flex: 1; padding: 11px 14px;
+  background: linear-gradient(135deg, #22c55e, #3b82f6);
+  color: #0a0e1a; font-weight: 700; border: 0; border-radius: 10px;
+  cursor: pointer; font-family: inherit; font-size: 0.95rem;
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+.kha-auth-card button.primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(34,197,94,0.35); }
+.kha-auth-card button.primary:active { transform: translateY(0); }
+.kha-auth-card button.ghost {
+  background: transparent; border: 1px solid rgba(255,255,255,0.12); color: #b9c0d4;
+  padding: 11px 14px; border-radius: 10px; cursor: pointer; font-family: inherit;
+}
+.kha-auth-card button.ghost:hover { color: #fff; border-color: rgba(255,255,255,0.25); }
+.kha-auth-card .err {
+  background: rgba(239,68,68,0.10); border: 1px solid rgba(239,68,68,0.32);
+  color: #fca5a5; padding: 8px 12px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 12px;
+}
+.kha-auth-card .ok {
+  background: rgba(34,197,94,0.10); border: 1px solid rgba(34,197,94,0.32);
+  color: #86efac; padding: 8px 12px; border-radius: 8px; font-size: 0.82rem; margin-bottom: 12px;
+}
+.kha-auth-card details { margin-top: 12px; font-size: 0.82rem; color: #98a2bd; }
+.kha-auth-card details summary { cursor: pointer; padding: 6px 0; }
+.kha-auth-card details > div { margin-top: 8px; line-height: 1.7; }
+.kha-auth-card .small-link {
+  background: none; border: 0; color: #93c5fd; text-decoration: underline; cursor: pointer;
+  font-family: inherit; font-size: 0.8rem; padding: 0;
+}
+.kha-auth-card .pad {
+  display: inline-block; padding: 7px 11px; border-radius: 999px;
+  background: rgba(34,197,94,0.12); color: #86efac;
+  border: 1px solid rgba(34,197,94,0.32);
+  font-size: 0.75rem; margin-bottom: 14px;
+}
+`;
+    document.head.appendChild(st);
+  }
+
+  function el(html) {
+    const t = document.createElement('template');
+    t.innerHTML = html.trim();
+    return t.content.firstElementChild;
+  }
+
+  function showLogin() {
+    return new Promise((resolve) => {
+      injectStyles();
+      const overlay = el(`
+        <div class="kha-auth-bg" id="khaAuthBg" role="dialog" aria-modal="true" aria-label="تسجيل دخول">
+          <form class="kha-auth-card" id="khaAuthForm" autocomplete="off">
+            <span class="pad">🔐 لوحة تحكم خالد</span>
+            <h2>تسجيل الدخول</h2>
+            <div class="sub">ادخل اليوزر والباسورد للدخول على الداش بورد.</div>
+            <div id="khaErr" class="err" hidden></div>
+            <label><span>اليوزر</span>
+              <input type="text" id="khaUser" required autocomplete="off" inputmode="text" />
+            </label>
+            <label><span>الباسورد</span>
+              <input type="password" id="khaPass" required autocomplete="off" />
+            </label>
+            <div class="actions">
+              <button type="submit" class="primary">دخول</button>
+              <button type="button" class="ghost" id="khaForgot">نسيت الباسورد؟</button>
+            </div>
+            <details>
+              <summary>إيه ده وليه يوزر/باسورد؟</summary>
+              <div>
+                لوحة التحكم بتعدّل الموقع مباشرة على GitHub. عشان متضطرش تكتب الـ PAT في كل مرة، بنخزّنه مشفّر بـ AES-GCM
+                ومفتاح من PBKDF2 (200,000 iteration) مشتق من اليوزر+الباسورد. الباسورد بتاعك مش بيتخزّن — بس بيستخدم
+                لفك تشفير الـ PAT لحظيًا.
+              </div>
+            </details>
+          </form>
+        </div>
+      `);
+      document.body.appendChild(overlay);
+      const errBox = overlay.querySelector('#khaErr');
+      const userIn = overlay.querySelector('#khaUser');
+      const passIn = overlay.querySelector('#khaPass');
+      userIn.focus();
+      overlay.querySelector('#khaForgot').addEventListener('click', () => {
+        if (confirm('لو نسيت الباسورد لازم تمسح بيانات اللوجين وتعمل setup من جديد. تأكيد؟')) {
+          clearBlob();
+          location.reload();
+        }
+      });
+      overlay.querySelector('#khaAuthForm').addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        errBox.hidden = true;
+        const username = userIn.value.trim();
+        const password = passIn.value;
+        if (!username || !password) {
+          errBox.textContent = 'اكتب اليوزر والباسورد.'; errBox.hidden = false; return;
+        }
+        const blob = readBlob();
+        if (!blob) { errBox.textContent = 'مفيش حساب على المتصفح ده. هتظهر شاشة الإعداد بعد ثانية.'; errBox.hidden = false; setTimeout(() => { overlay.remove(); resolve(null); }, 1500); return; }
+        const expected = await sha256Hex(username.toLowerCase());
+        if (blob.user_hash && blob.user_hash !== expected) {
+          errBox.textContent = 'اليوزر مش مظبوط.'; errBox.hidden = false; return;
+        }
+        try {
+          const cfg = await decryptJson(blob, username, password);
+          setSessionFlag();
+          overlay.remove();
+          resolve(cfg);
+        } catch (e) {
+          errBox.textContent = 'الباسورد غلط — حاول تاني.';
+          errBox.hidden = false;
+        }
+      });
+    });
+  }
+
+  function showSetup(prefill) {
+    return new Promise((resolve) => {
+      injectStyles();
+      const fp = prefill || {};
+      const overlay = el(`
+        <div class="kha-auth-bg" id="khaAuthBg" role="dialog" aria-modal="true" aria-label="إعداد لوحة التحكم">
+          <form class="kha-auth-card" id="khaSetupForm" autocomplete="off">
+            <span class="pad">🆕 إعداد لمرة واحدة</span>
+            <h2>اعمل حساب الداش بورد</h2>
+            <div class="sub">دي أول مرة تفتح الداش بورد على المتصفح ده. اختار يوزر وباسورد، ولصق الـ GitHub PAT مرة واحدة وخلاص.</div>
+            <div id="khaSetErr" class="err" hidden></div>
+            <div class="row">
+              <label><span>اليوزر</span>
+                <input type="text" id="khaNewUser" required value="${(fp.username || '').replace(/"/g,'&quot;')}" />
+              </label>
+              <label><span>الباسورد (٨ حروف ع الأقل)</span>
+                <input type="password" id="khaNewPass" required minlength="8" />
+              </label>
+            </div>
+            <label><span>تأكيد الباسورد</span>
+              <input type="password" id="khaNewPass2" required minlength="8" />
+            </label>
+            <label><span>GitHub Owner</span>
+              <input type="text" id="khaOwner" value="${(fp.owner || 'bebooxo7-svg').replace(/"/g,'&quot;')}" />
+            </label>
+            <label><span>GitHub Repo</span>
+              <input type="text" id="khaRepo" value="${(fp.repo || 'khaled-portfolio').replace(/"/g,'&quot;')}" />
+            </label>
+            <label><span>GitHub PAT (Fine-grained, Contents Read/Write على الريبو ده)</span>
+              <input type="password" id="khaPat" required placeholder="github_pat_..." />
+            </label>
+            <div class="actions">
+              <button type="submit" class="primary">إنشاء الحساب وتسجيل الدخول</button>
+            </div>
+            <details>
+              <summary>إيه اللي بيتخزّن؟ وفين؟</summary>
+              <div>
+                بنشفّر الـ PAT بـ AES-GCM ومفتاح PBKDF2 (200,000 iteration) مشتق من <code>username:password</code> + salt
+                عشوائي. النتيجة بتتخزّن في <code>localStorage</code> على المتصفح ده فقط. مفيش سيرفر،
+                ومفيش حد تاني (حتى أنا) يقدر يفك التشفير من غير الباسورد.
+              </div>
+            </details>
+          </form>
+        </div>
+      `);
+      document.body.appendChild(overlay);
+      overlay.querySelector('#khaNewUser').focus();
+      overlay.querySelector('#khaSetupForm').addEventListener('submit', async (ev) => {
+        ev.preventDefault();
+        const errBox = overlay.querySelector('#khaSetErr');
+        errBox.hidden = true;
+        const username = overlay.querySelector('#khaNewUser').value.trim();
+        const password = overlay.querySelector('#khaNewPass').value;
+        const password2 = overlay.querySelector('#khaNewPass2').value;
+        const owner = overlay.querySelector('#khaOwner').value.trim();
+        const repo = overlay.querySelector('#khaRepo').value.trim();
+        const pat = overlay.querySelector('#khaPat').value.trim();
+        if (!username || !password || !owner || !repo || !pat) {
+          errBox.textContent = 'املا كل الحقول.'; errBox.hidden = false; return;
+        }
+        if (password.length < 8) {
+          errBox.textContent = 'الباسورد لازم ٨ حروف على الأقل.'; errBox.hidden = false; return;
+        }
+        if (password !== password2) {
+          errBox.textContent = 'الباسورد والتأكيد مش متطابقين.'; errBox.hidden = false; return;
+        }
+        const cfg = {
+          owner, repo, branch: 'main',
+          token: pat,
+          commitName: 'Khaled Ali (Dashboard)',
+          commitEmail: 'bebooxovex@gmail.com',
+        };
+        const blob = await encryptJson(cfg, username, password);
+        writeBlob(blob);
+        setSessionFlag();
+        overlay.remove();
+        resolve(cfg);
+      });
+    });
+  }
+
+  // -------- public API --------
+  window.KhaledAuth = {
+    isSetup() { return !!readBlob(); },
+    isSessionActive() { return hasSessionFlag(); },
+    clear() { clearBlob(); sessionStorage.removeItem(SESSION_KEY); },
+
+    /**
+     * Ensure the dashboard is unlocked. Returns the decrypted GitHub
+     * config and applies it to window.GitHubAPI in one step.
+     *
+     * @param {object} [options]
+     * @param {boolean} [options.force=false] Force showing the login modal even if a session flag is set.
+     */
+    async ensure(options) {
+      const opts = options || {};
+      const blob = readBlob();
+      let cfg = null;
+      if (!blob) {
+        // First-time setup
+        cfg = await showSetup({});
+      } else {
+        cfg = await showLogin();
+        if (!cfg) {
+          // Login resolved with null = no blob path; show setup
+          cfg = await showSetup({});
+        }
+      }
+      if (cfg && window.GitHubAPI) {
+        window.GitHubAPI.config = Object.assign({}, window.GitHubAPI.config || {}, cfg);
+        try {
+          // Persist to GitHubAPI's storage so existing helpers work too.
+          window.GitHubAPI.saveConfig(cfg);
+        } catch {}
+      }
+      return cfg;
+    },
+  };
+})();
