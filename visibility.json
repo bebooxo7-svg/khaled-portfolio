@@ -3,7 +3,7 @@
     "home": true,
     "bts": true,
     "about": true,
-    "works": false,
+    "works": true,
     "designs": true,
     "services": true,
     "pricing": false,
