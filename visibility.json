@@ -6,13 +6,13 @@
     "works": true,
     "designs": true,
     "services": true,
-    "pricing": true,
+    "pricing": false,
     "process": true,
     "testimonials": true,
     "skills": true,
     "contact": true
   },
   "_meta": {
-    "description": "Per-section visibility flags. true = shown, false = hidden. Edited from /admin.html (Visibility tab)."
+    "description": "Per-section visibility flags. Edited from /admin.html (Visibility tab)."
   }
 }
