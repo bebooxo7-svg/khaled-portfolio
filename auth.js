@@ -31,10 +31,10 @@
   // and replace this constant, then commit + push.
   const BOOTSTRAP_BLOB = {
     v: 2,
-    user_hash: "6df95ad0a252c668a60791c4747a38010aae58d60ca2bac205551b482c6982c9",
-    salt: "7G2waezCrc1cvBl5yF9FOA==",
-    iv: "xJwd4gqpmwILtgKJ",
-    ct: "tgts91If0+IMzUPc1ZrRuhTyp1QURjAOJ7pPkd5XAmWq/iZlHYb9f92ETn00kVHx0Qr5zgsVzrQJyWqcLijCXLh3+X7YD8RTK3P967tAMJgE1qfCwuT4Um7bt8WAImV48RWRtTYldDGlTYKEOFVJHP2E3wmS8ZyHggLon2oWP7PtQrGlbSd9UrbapahbAT1Z10i94iOm3lruViP9UXVF0w0r8DMI1fZYMlqUvGw70UUunuT7gP+t+1kh8BgJylXa276Twen4EqmXUfBzmilkDPN7N9pQvCSsOw6awMhONHgIbNhNGgMRx1/Xo+nRzpBoEvAhAp4ehvT8"
+    user_hash: "22a653852473421c3aba3be30b0faa7910d51ccf317cbb2ec80c2e6fcca1e60c",
+    salt: "ynNqy44ZGUMmV/yElPj/Cw==",
+    iv: "jau3Dre0vy7mWs8w",
+    ct: "pVlREXWrK5o/OxRdMVacCXVX8S5mjhFQNUmBrBp8uoz51MdvrDxYht3H9wRzSl/UUWU9AdEr2NQ2DX7p7eEa7+1qvPsrBr/2jvoXMnRaCDJmfZGPW/YPEKDw0bTR+BEzahcLqhdHiEx1A2eps5+ytMv7a/7kMsQutrn7aCLiPga/alHZxKcPdPY+6YDcvbfD/w2Fwyln5sxGy2W6dDnT4Ere14XZnPey"
   };
 
   // -------- crypto helpers --------
