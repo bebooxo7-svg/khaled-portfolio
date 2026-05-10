@@ -2,5 +2,7 @@
   "ar": {
     "works.title": "آخر الأعمال "
   },
-  "en": {}
+  "en": {
+    "works.title": "Latest Work "
+  }
 }
