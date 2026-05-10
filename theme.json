@@ -1,0 +1,12 @@
+{
+  "accent": "#22c55e",
+  "accent2": "#3b82f6",
+  "bg": "#0a0e1a",
+  "bg2": "#0f172a",
+  "text": "#e6edf6",
+  "muted": "#8d96a8",
+  "fontAr": "Cairo",
+  "fontEn": "Inter",
+  "animLevel": "strong",
+  "shapesBg": true
+}
