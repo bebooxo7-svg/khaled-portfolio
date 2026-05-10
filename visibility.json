@@ -5,7 +5,7 @@
     "about": true,
     "works": true,
     "designs": true,
-    "services": false,
+    "services": true,
     "pricing": false,
     "process": true,
     "testimonials": true,
