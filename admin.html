@@ -895,8 +895,14 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
       <label class="full">رابط الفيديو
         <input id="vUrl" placeholder="https://www.youtube.com/watch?v=... أو https://vimeo.com/..." />
       </label>
-      <label class="full">صورة المعاينة (Poster) — اختياري
-        <input id="vPoster" placeholder="رابط مباشر للصورة (لو فاضي هيظهر تدرّج لوني افتراضي)" />
+      <label class="full">صورة المعاينة (Poster) — يتجلب تلقائي
+        <div style="display:flex; gap:8px; align-items:stretch;">
+          <input id="vPoster" placeholder="هيتعمر تلقائي من Vimeo / YouTube لما تحط الرابط فوق" style="flex:1;" />
+          <button type="button" class="btn" id="vPosterFetchBtn" title="جلب الثمبنيل من المنصة">🖼️ جلب</button>
+        </div>
+        <small id="vPosterHint" style="display:block; margin-top:6px; color:var(--muted); font-size:0.78rem;">
+          هيتعبّى تلقائي لما تكتب رابط Vimeo أو YouTube. لو عاوز صورة مخصصة، اكتبها هنا وهتتقدم على التلقائي.
+        </small>
       </label>
       <fieldset>
         <legend>العربي</legend>
@@ -965,7 +971,7 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
 <script src="content-defaults.js?v=27"></script>
 <script src="projects-defaults.js?v=27"></script>
 <script src="github-api.js?v=30"></script>
-<script src="auth.js?v=33"></script>
+<script src="auth.js?v=35"></script>
 <script>
 // v3.2 — gate the dashboard behind username/password before anything else runs.
 (async function () {
@@ -1649,7 +1655,10 @@ function openVideoEditor(i) {
   document.getElementById('vOrient').value = ar.orient || 'horizontal';
   document.getElementById('vBadge').value = ar.badge || '';
   document.getElementById('vUrl').value = ar.url || '';
-  document.getElementById('vPoster').value = ar.poster || '';
+  const _vPosterEl = document.getElementById('vPoster');
+  _vPosterEl.value = ar.poster || '';
+  // Existing posters are treated as user-set; don't overwrite on platform changes.
+  delete _vPosterEl.dataset.autoFilled;
   document.getElementById('vTitleAr').value = ar.title || '';
   document.getElementById('vDescAr').value = ar.desc || '';
   document.getElementById('vTagAr').value = ar.tag || '';
@@ -1667,6 +1676,125 @@ function updateSubCatVisibility() {
 document.getElementById('vCat').addEventListener('change', updateSubCatVisibility);
 document.getElementById('vCancel').addEventListener('click', closeVideoModal);
 videoModalBg.addEventListener('click', (e) => { if (e.target === videoModalBg) closeVideoModal(); });
+
+// ===== Auto-thumbnail fetcher (Vimeo + YouTube) =====
+// Extracts a poster image automatically from the video URL so the user doesn't
+// have to paste a thumbnail link manually. Picks the right size for the chosen
+// orientation (vertical reels ⇒ 720×1280, horizontal ⇒ 1280×720).
+function detectVideoPlatform(url) {
+  if (!url) return null;
+  if (/vimeo\.com\//i.test(url)) return 'vimeo';
+  if (/(?:youtube\.com\/(?:watch|shorts|embed|v)|youtu\.be\/)/i.test(url)) return 'youtube';
+  return null;
+}
+function extractYouTubeId(url) {
+  const m = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|v\/)|youtu\.be\/)([\w-]{11})/);
+  return m ? m[1] : '';
+}
+async function fetchYouTubeThumbnail(url) {
+  const id = extractYouTubeId(url);
+  if (!id) return '';
+  // YouTube CDN serves multiple sizes. maxresdefault is the original upload size
+  // when available; fall back to hqdefault otherwise (always exists, 480×360).
+  const candidates = [
+    `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`,
+    `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
+  ];
+  for (const u of candidates) {
+    try {
+      const r = await fetch(u, { method: 'GET', mode: 'no-cors' });
+      // no-cors gives an opaque response — we can't inspect status, so just
+      // assume the first one works and let the <img> tag handle 404 fallback.
+      return u;
+    } catch (e) { /* try next */ }
+  }
+  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+}
+async function fetchVimeoThumbnail(url, orient) {
+  // Vimeo's oEmbed endpoint is CORS-enabled and returns JSON.
+  // Pass `width=` so Vimeo returns a higher-res thumbnail than the default 295px.
+  const isVertical = orient === 'vertical';
+  const targetW = isVertical ? 720 : 1280;
+  const targetH = isVertical ? 1280 : 720;
+  try {
+    const oembed = `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(url)}&width=${targetW}`;
+    const res = await fetch(oembed);
+    if (!res.ok) return '';
+    const data = await res.json();
+    let thumb = data.thumbnail_url || '';
+    if (!thumb) return '';
+    // The thumbnail URL pattern is .../video/<id>-<hash>-d_WxH.<ext>?region=us
+    // Replace the "d_WxH" segment with our preferred size to maximise quality.
+    if (/-d_\d+x\d+/.test(thumb)) {
+      thumb = thumb.replace(/-d_\d+x\d+/, `-d_${targetW}x${targetH}`);
+    } else if (/_\d+x\d+(?=\.[a-z]+(\?|$))/i.test(thumb)) {
+      thumb = thumb.replace(/_\d+x\d+(?=\.[a-z]+(\?|$))/i, `_${targetW}x${targetH}`);
+    }
+    return thumb;
+  } catch (e) {
+    return '';
+  }
+}
+async function autoFillPosterFromUrl({ force = false, silent = false } = {}) {
+  const urlEl = document.getElementById('vUrl');
+  const posterEl = document.getElementById('vPoster');
+  const fetchBtn = document.getElementById('vPosterFetchBtn');
+  const url = (urlEl.value || '').trim();
+  if (!url) {
+    if (!silent) toast('اكتب رابط الفيديو الأول', 'error');
+    return;
+  }
+  // Don't overwrite an existing custom poster unless the user explicitly clicks "Fetch".
+  if (!force && posterEl.value.trim() && !posterEl.dataset.autoFilled) return;
+  const platform = detectVideoPlatform(url);
+  if (!platform) {
+    if (!silent) toast('الرابط ده مش من Vimeo أو YouTube — دور على صورة يدوي.', 'error');
+    return;
+  }
+  const orient = document.getElementById('vOrient').value;
+  if (fetchBtn) { fetchBtn.disabled = true; fetchBtn.textContent = '⏳'; }
+  let thumb = '';
+  try {
+    if (platform === 'vimeo') thumb = await fetchVimeoThumbnail(url, orient);
+    else if (platform === 'youtube') thumb = await fetchYouTubeThumbnail(url);
+  } catch (e) { /* swallow */ }
+  if (fetchBtn) { fetchBtn.disabled = false; fetchBtn.textContent = '🖼️ جلب'; }
+  if (thumb) {
+    posterEl.value = thumb;
+    posterEl.dataset.autoFilled = '1';
+    // Auto-fill the badge too if it's empty.
+    const badgeEl = document.getElementById('vBadge');
+    if (badgeEl && !badgeEl.value.trim()) {
+      badgeEl.value = platform === 'vimeo' ? 'Vimeo' : 'YouTube';
+    }
+    if (!silent) toast(`✓ اتجلب الثمبنيل من ${platform === 'vimeo' ? 'Vimeo' : 'YouTube'}`, 'success');
+  } else {
+    if (!silent) toast(`ماقدرناش نجلب الثمبنيل تلقائي — ممكن تحطه يدوي.`, 'error');
+  }
+}
+// Trigger auto-fill when the URL field changes (paste / blur).
+let _vUrlDebounce = null;
+document.getElementById('vUrl').addEventListener('input', () => {
+  clearTimeout(_vUrlDebounce);
+  _vUrlDebounce = setTimeout(() => autoFillPosterFromUrl({ silent: true }), 600);
+});
+document.getElementById('vUrl').addEventListener('blur', () => {
+  autoFillPosterFromUrl({ silent: true });
+});
+document.getElementById('vOrient').addEventListener('change', () => {
+  // Re-fetch with new size if the poster came from auto-fill.
+  if (document.getElementById('vPoster').dataset.autoFilled) {
+    autoFillPosterFromUrl({ force: true, silent: true });
+  }
+});
+// Manual re-fetch button.
+document.getElementById('vPosterFetchBtn').addEventListener('click', () => {
+  autoFillPosterFromUrl({ force: true, silent: false });
+});
+// Clear the auto-fill marker if the user types into the poster field manually.
+document.getElementById('vPoster').addEventListener('input', (e) => {
+  if (e.isTrusted) delete e.target.dataset.autoFilled;
+});
 
 document.getElementById('vSave').addEventListener('click', () => {
   const cat = document.getElementById('vCat').value;

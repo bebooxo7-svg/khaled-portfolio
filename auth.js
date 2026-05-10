@@ -32,9 +32,9 @@
   const BOOTSTRAP_BLOB = {
     v: 2,
     user_hash: "22a653852473421c3aba3be30b0faa7910d51ccf317cbb2ec80c2e6fcca1e60c",
-    salt: "ynNqy44ZGUMmV/yElPj/Cw==",
-    iv: "jau3Dre0vy7mWs8w",
-    ct: "pVlREXWrK5o/OxRdMVacCXVX8S5mjhFQNUmBrBp8uoz51MdvrDxYht3H9wRzSl/UUWU9AdEr2NQ2DX7p7eEa7+1qvPsrBr/2jvoXMnRaCDJmfZGPW/YPEKDw0bTR+BEzahcLqhdHiEx1A2eps5+ytMv7a/7kMsQutrn7aCLiPga/alHZxKcPdPY+6YDcvbfD/w2Fwyln5sxGy2W6dDnT4Ere14XZnPey"
+    salt: "qQtwvII6yJNLKzNGV9sZIA==",
+    iv: "FSlydddXom0nG8z8",
+    ct: "I7AGI6Ru8Egv5tJDKvBIu84s4dWnYFwRQSgoQV7rOlJ+YQNVWGjK+BmRs3cfwcv5e0cZJlrd7LadFXS9l8L/Cu5YZ054bA8Sud/6uJt67EhOFysb3X/q899EC3/kQOSg4DkAufE4jC6K4hNquEdNVBanNei+QK5zSljXRazeF/NO/MlSPj1OEJoeXFi/5eIklSVQK+p6KHa8xEZb0bfJUHP5MtgCBeZOm/x6SXtYj1Dc3JEsRujoSzqIKaR2cEe2tTL4l/GTRGMJZLsgB4whxQ=="
   };
 
   // -------- crypto helpers --------
@@ -111,6 +111,35 @@
   function hasSessionFlag() {
     try { return sessionStorage.getItem(SESSION_KEY) === '1'; } catch { return false; }
   }
+
+  // Seed localStorage from BOOTSTRAP_BLOB on every page load. Two cases:
+  //   1. First time on this browser (no blob in localStorage) — write the
+  //      baked-in blob so the user sees the LOGIN form, not the SETUP form.
+  //   2. Rotation: a blob already exists locally but BOOTSTRAP_BLOB has been
+  //      refreshed (PAT rotated, credentials updated, etc). We replace the
+  //      stored blob so the new credentials/PAT take effect on every device
+  //      automatically — no need for the user to manually clear localStorage.
+  //      Only fires when user_hash matches; otherwise we'd clobber a custom
+  //      account that the user set up themselves via the setup form.
+  // Runs unconditionally at script load, including when the session flag is
+  // already set, so a returning user with an active session immediately
+  // benefits from the rotated PAT.
+  (function seedFromBootstrap() {
+    if (!BOOTSTRAP_BLOB || !BOOTSTRAP_BLOB.ct) return;
+    const blob = readBlob();
+    const sameUser = blob && blob.user_hash === BOOTSTRAP_BLOB.user_hash;
+    const stale = sameUser && blob.ct !== BOOTSTRAP_BLOB.ct;
+    if (!blob || stale) {
+      try { writeBlob(BOOTSTRAP_BLOB); } catch {}
+      if (stale) {
+        // Old session flag and any cached GitHubAPI config become invalid.
+        // Forcing the user to re-login decrypts the new blob and applies the
+        // refreshed PAT.
+        try { sessionStorage.removeItem(SESSION_KEY); } catch {}
+        try { localStorage.removeItem('khaled_gh_config_v1'); } catch {}
+      }
+    }
+  })();
 
   // -------- UI: login / setup overlay --------
   function injectStyles() {
@@ -384,13 +413,6 @@
     async ensure(options) {
       const opts = options || {};
       let blob = readBlob();
-      // First time on this browser? Seed localStorage with the baked-in
-      // bootstrap blob so the user only ever sees the LOGIN form, not the
-      // setup form. Decrypting still requires entering the right
-      // username + password.
-      if (!blob && BOOTSTRAP_BLOB && BOOTSTRAP_BLOB.ct) {
-        try { writeBlob(BOOTSTRAP_BLOB); blob = BOOTSTRAP_BLOB; } catch {}
-      }
       let cfg = null;
       if (!blob) {
         // No bootstrap available either — fall back to first-time setup.
