@@ -99,9 +99,37 @@ button.danger { background: rgba(239,68,68,0.10); border-color: rgba(239,68,68,0
   padding: 4px 10px; border-radius: 999px;
   font-size: 0.78rem; font-weight: 600;
   background: rgba(34,197,94,0.12); color: var(--accent); border: 1px solid rgba(34,197,94,0.3);
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
 }
 .status-pill.dirty { background: rgba(245,158,11,0.12); color: var(--warn); border-color: rgba(245,158,11,0.3); }
+.status-pill[data-sync="pending"] { background: rgba(245,158,11,0.16); color: var(--warn); border-color: rgba(245,158,11,0.4); }
+.status-pill[data-sync="saving"] { background: rgba(59,130,246,0.16); color: #60a5fa; border-color: rgba(59,130,246,0.4); }
+.status-pill[data-sync="synced"] { background: rgba(34,197,94,0.16); color: var(--accent); border-color: rgba(34,197,94,0.4); }
+.status-pill[data-sync="error"] { background: rgba(239,68,68,0.16); color: #f87171; border-color: rgba(239,68,68,0.4); cursor: pointer; }
+.status-pill[data-sync="offline"] { background: rgba(148,163,184,0.16); color: var(--muted); border-color: rgba(148,163,184,0.3); }
+.status-pill[data-sync="saving"] .dot,
+.status-pill[data-sync="pending"] .dot { animation: ghPulse 1.4s ease-in-out infinite; }
 .status-pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+/* Persistent sync banner — shows under the GH bar when there are uncommitted drafts */
+.sync-banner {
+  display: none; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 10px 16px; margin: 10px 0 14px;
+  background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.35);
+  border-radius: var(--radius); color: var(--warn); font-size: 0.88rem;
+}
+.sync-banner.visible { display: flex; }
+.sync-banner.error { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.4); color: #f87171; }
+.sync-banner b { color: var(--text); }
+.sync-banner button {
+  margin-inline-start: auto;
+  padding: 6px 14px; border-radius: 8px; border: 0;
+  background: var(--accent); color: #0b1020; font-weight: 700; cursor: pointer;
+  font-size: 0.85rem;
+}
+.sync-banner button.ghost {
+  background: transparent; color: var(--text); border: 1px solid var(--border);
+}
 
 /* ===== Section accordion ===== */
 .section {
@@ -624,6 +652,19 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
     </div>
   </div>
 
+  <!-- v3.3: Sync banner — appears whenever local drafts diverge from GitHub.
+       Auto-commit handles 99% of cases; this is the manual-fallback guarantee. -->
+  <div class="sync-banner" id="syncBanner">
+    <span style="font-size: 18px;">⚠️</span>
+    <div style="flex:1; min-width: 220px;">
+      <b id="syncBannerTitle">فيه تعديلات لسه مش متحفوظة على GitHub.</b><br>
+      <span id="syncBannerSubtitle" style="color: var(--muted); font-size: 0.82rem;">
+        التعديلات بتتحفظ تلقائي بعد ثانيتين — أو اضغط "احفظ الكل دلوقتي".
+      </span>
+    </div>
+    <button id="syncBannerSaveBtn">💾 احفظ الكل دلوقتي</button>
+  </div>
+
   <div class="panel-tabs" role="tablist" aria-label="لوحات التحكم">
     <button data-panel="texts" class="active">📝 النصوص والأسعار</button>
     <button data-panel="videos">🎬 الفيديوهات</button>
@@ -998,6 +1039,217 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
 <script>
 'use strict';
 
+// =============================================================
+// === v3.3 — kha_autosync ====================================
+// === Auto-commits dashboard drafts to GitHub so changes
+// === propagate to all devices instantly (the mobile bug fix).
+// === Without this, local drafts would only live on the device
+// === that made them — explaining why edits made on desktop
+// === did not appear on mobile.
+// =============================================================
+const kha_autosync = (function () {
+  const DEBOUNCE_MS = {
+    visibility: 800,    // single-toggle, fast
+    content:    2200,   // typing — wait for pause
+    projects:   1500,   // discrete actions
+    theme:      1500,
+    designs:    1500,
+  };
+
+  const TIMERS = {};                    // pending debounce timers per channel
+  const PENDING = new Set();            // channels with pending changes
+  const STATE = { saving: 0, lastError: null };
+  const LAST_COMMITTED = {};            // payload.json per channel for dedupe
+
+  // Channel registrations: { channel: { build: () => {path, json, msg}, postCommit: () => void } }
+  const CHANNELS = {};
+
+  function register(channel, build, postCommit) {
+    CHANNELS[channel] = { build, postCommit: postCommit || (() => {}) };
+  }
+
+  function isConfigured() {
+    return !!(window.GitHubAPI && window.GitHubAPI.isConfigured());
+  }
+
+  function setStatus(syncState, text) {
+    const pill = document.getElementById('statusPill');
+    const txt  = document.getElementById('statusText');
+    if (pill && txt) {
+      pill.dataset.sync = syncState;
+      pill.classList.remove('dirty');
+      txt.textContent = text;
+    }
+  }
+
+  function refreshBanner() {
+    const banner   = document.getElementById('syncBanner');
+    const title    = document.getElementById('syncBannerTitle');
+    const subtitle = document.getElementById('syncBannerSubtitle');
+    if (!banner) return;
+    if (!isConfigured()) {
+      // GitHub not connected — show clear warning so the user knows nothing is syncing.
+      const dirty = hasAnyDraft();
+      if (dirty) {
+        banner.classList.add('visible', 'error');
+        title.textContent    = 'GitHub مش متصل — التعديلات بتاعتك مش بتتحفظ في أي مكان.';
+        subtitle.textContent = 'سجّل دخول من شاشة الباسورد عشان الحفظ التلقائي يشتغل، أو اعمل إعداد GitHub يدوي.';
+      } else {
+        banner.classList.remove('visible', 'error');
+      }
+      return;
+    }
+    if (STATE.lastError) {
+      banner.classList.add('visible', 'error');
+      title.textContent    = 'فشل الحفظ على GitHub: ' + (STATE.lastError.message || 'شيء غامض');
+      subtitle.textContent = 'الانترنت أو التوكن. اضغط "احفظ الكل دلوقتي" للمحاولة من جديد.';
+      return;
+    }
+    if (PENDING.size > 0 || STATE.saving > 0) {
+      banner.classList.add('visible');
+      banner.classList.remove('error');
+      title.textContent    = STATE.saving > 0 ? 'جاري حفظ التعديلات على GitHub...' : 'فيه تعديلات لسه مش متحفوظة.';
+      subtitle.textContent = STATE.saving > 0 ? 'دقيقة واحدة بس.' : 'بتتحفظ تلقائي بعد ثوانٍ — أو اضغط الزر دلوقتي.';
+      return;
+    }
+    banner.classList.remove('visible', 'error');
+  }
+
+  function refreshStatus() {
+    if (!isConfigured()) {
+      setStatus('offline', 'مش متصل بـ GitHub');
+    } else if (STATE.lastError) {
+      setStatus('error', 'فشل الحفظ — اضغط لإعادة');
+    } else if (STATE.saving > 0) {
+      setStatus('saving', 'جاري الحفظ...');
+    } else if (PENDING.size > 0) {
+      setStatus('pending', 'بيتحفظ تلقائي...');
+    } else {
+      setStatus('synced', '✓ متزامن مع GitHub');
+    }
+    refreshBanner();
+  }
+
+  function hasAnyDraft() {
+    try {
+      return !!(localStorage.getItem('khaled_content_draft')
+        || localStorage.getItem('khaled_projects_draft')
+        || localStorage.getItem('khaled_visibility_draft')
+        || localStorage.getItem('khaled_theme_draft')
+        || localStorage.getItem('khaled_designs_draft'));
+    } catch { return false; }
+  }
+
+  async function commitChannel(channel) {
+    const reg = CHANNELS[channel];
+    if (!reg) return false;
+    if (!isConfigured()) {
+      refreshStatus();
+      return false;
+    }
+    let payload;
+    try { payload = reg.build(); } catch (e) { console.warn('[autosync]', channel, 'build failed', e); return false; }
+    if (!payload) {
+      // Nothing to commit (e.g. no diff vs defaults).
+      PENDING.delete(channel);
+      refreshStatus();
+      return true;
+    }
+    // Dedupe: skip if payload identical to last successful commit. Avoids
+    // duplicate commits when the user manually clicks save during the debounce window.
+    if (LAST_COMMITTED[channel] === payload.json) {
+      PENDING.delete(channel);
+      refreshStatus();
+      return true;
+    }
+    STATE.saving++;
+    refreshStatus();
+    try {
+      await window.GitHubAPI.commitText(payload.path, payload.json, payload.msg);
+      LAST_COMMITTED[channel] = payload.json;
+      STATE.lastError = null;
+      try { reg.postCommit(); } catch (e) { console.warn('[autosync] postCommit', e); }
+      PENDING.delete(channel);
+      return true;
+    } catch (e) {
+      STATE.lastError = e;
+      console.error('[autosync] commit failed:', channel, e);
+      return false;
+    } finally {
+      STATE.saving--;
+      refreshStatus();
+    }
+  }
+
+  function schedule(channel) {
+    PENDING.add(channel);
+    refreshStatus();
+    if (!isConfigured()) return;          // banner will warn the user
+    clearTimeout(TIMERS[channel]);
+    const delay = DEBOUNCE_MS[channel] ?? 1500;
+    TIMERS[channel] = setTimeout(() => commitChannel(channel), delay);
+  }
+
+  async function flushAll() {
+    // User explicitly asked to commit everything now.
+    const channels = Array.from(PENDING);
+    if (channels.length === 0) {
+      // Nothing pending — but maybe earlier error left state stuck. Try again.
+      STATE.lastError = null;
+      refreshStatus();
+      return;
+    }
+    channels.forEach(c => clearTimeout(TIMERS[c]));
+    for (const c of channels) {
+      // Sequential to avoid hammering the API + getting concurrent SHA conflicts.
+      await commitChannel(c);
+    }
+  }
+
+  // Warn user if they try to leave with unsaved changes. iOS Safari ignores this
+  // but desktop Safari + Chrome respect it.
+  window.addEventListener('beforeunload', (ev) => {
+    if (PENDING.size > 0 || STATE.saving > 0) {
+      ev.preventDefault();
+      ev.returnValue = '';
+    }
+  });
+
+  // Wire the manual "save all now" button.
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('syncBannerSaveBtn');
+    if (btn) btn.addEventListener('click', flushAll);
+    const pill = document.getElementById('statusPill');
+    if (pill) pill.addEventListener('click', () => {
+      if (STATE.lastError) flushAll();
+    });
+    // v3.3 boot scan — if there are leftover drafts from sessions before this
+    // fix, schedule them to commit to GitHub. This is critical for users whose
+    // desktop dashboards have built up unsynced changes that were never reaching
+    // mobile because the manual "save" button was never pressed.
+    setTimeout(() => {
+      try {
+        if (localStorage.getItem('khaled_visibility_draft')) schedule('visibility');
+        if (localStorage.getItem('khaled_content_draft'))    schedule('content');
+        if (localStorage.getItem('khaled_projects_draft'))   schedule('projects');
+      } catch {}
+      refreshStatus();
+    }, 1500); // wait until auth.js has populated GitHubAPI config
+  });
+
+  // Mark a channel as freshly committed so a pending debounce doesn't fire a
+  // duplicate commit. Called by manual save handlers.
+  function markCommitted(channel, jsonStr) {
+    LAST_COMMITTED[channel] = jsonStr;
+    PENDING.delete(channel);
+    clearTimeout(TIMERS[channel]);
+    refreshStatus();
+  }
+
+  return { register, schedule, flushAll, refreshStatus, markCommitted };
+})();
+window.kha_autosync = kha_autosync;
+
 // ===== Config: section metadata (icon, title, description, hint per key) =====
 const SECTION_META = {
   meta:         { icon: '🌐', title: 'بيانات الموقع (SEO)', desc: 'العنوان والوصف اللي يظهر في جوجل وفيس بوك.' },
@@ -1061,25 +1313,40 @@ function persistDraft() {
       }
     }
   }
-  if (Object.keys(out.ar).length === 0 && Object.keys(out.en).length === 0) {
+  const empty = Object.keys(out.ar).length === 0 && Object.keys(out.en).length === 0;
+  if (empty) {
     localStorage.removeItem('khaled_content_draft');
   } else {
     localStorage.setItem('khaled_content_draft', JSON.stringify(out));
   }
   updateStatus();
+  // v3.3: schedule auto-commit so the change reaches GitHub (and therefore mobile).
+  if (window.kha_autosync && !empty) window.kha_autosync.schedule('content');
 }
 
-function updateStatus() {
-  const dirty = isDirty();
-  const pill = document.getElementById('statusPill');
-  const text = document.getElementById('statusText');
-  if (dirty) {
-    pill.classList.add('dirty');
-    text.textContent = 'فيه تعديلات غير مُنزَّلة';
-  } else {
-    pill.classList.remove('dirty');
-    text.textContent = 'لا توجد تعديلات';
+// v3.3: register the "content" channel for auto-commit.
+if (typeof kha_autosync !== 'undefined') kha_autosync.register('content', () => {
+  const out = { ar: {}, en: {} };
+  for (const lang of ['ar', 'en']) {
+    for (const k of Object.keys(draft[lang] || {})) {
+      if ((draft[lang][k] ?? '') !== (defaults[lang][k] ?? '')) {
+        out[lang][k] = draft[lang][k];
+      }
+    }
   }
+  const fields = Object.keys(out.ar).length + Object.keys(out.en).length;
+  if (fields === 0) return null; // nothing to commit
+  return {
+    path: 'content.json',
+    json: JSON.stringify(out, null, 2) + '\n',
+    msg:  `Update site copy (${fields} field${fields === 1 ? '' : 's'}) [auto]`,
+  };
+});
+
+function updateStatus() {
+  // v3.3: kha_autosync now owns the status pill — it shows granular sync state
+  // (offline / pending / saving / synced / error). Defer to it.
+  if (window.kha_autosync) window.kha_autosync.refreshStatus();
 }
 
 function isDirty() {
@@ -1444,7 +1711,19 @@ function persistVideosDraft() {
   } else {
     localStorage.removeItem('khaled_projects_draft');
   }
+  // v3.3: schedule auto-commit so video edits reach GitHub (and mobile).
+  if (window.kha_autosync && diff) window.kha_autosync.schedule('projects');
 }
+
+// v3.3: register the "projects" channel for auto-commit.
+if (typeof kha_autosync !== 'undefined') kha_autosync.register('projects', () => {
+  const out = { ar: videos.ar, en: videos.en };
+  return {
+    path: 'projects.json',
+    json: JSON.stringify(out, null, 2) + '\n',
+    msg:  `Update portfolio videos (${(videos.ar || []).length} item${(videos.ar || []).length === 1 ? '' : 's'}) [auto]`,
+  };
+});
 
 const CAT_LABEL = {
   podcast: 'بودكاست',
@@ -2009,7 +2288,7 @@ async function performSaveToGitHub(skipDiff) {
     persistVideosDraft();
     path = 'projects.json';
     const out = { ar: videos.ar, en: videos.en };
-    json = JSON.stringify(out, null, 2);
+    json = JSON.stringify(out, null, 2) + '\n';
     summary = `📼 ${videos.ar.length} فيديو`;
     msg = `Update portfolio videos (${videos.ar.length} item${videos.ar.length===1?'':'s'}) via dashboard`;
   } else {
@@ -2025,7 +2304,7 @@ async function performSaveToGitHub(skipDiff) {
     const fields = Object.keys(out.ar).length + Object.keys(out.en).length;
     if (fields === 0) { toast('مفيش تعديلات للحفظ.', 'error'); return; }
     path = 'content.json';
-    json = JSON.stringify(out, null, 2);
+    json = JSON.stringify(out, null, 2) + '\n';
     summary = `📝 ${fields} حقل`;
     msg = `Update site copy (${fields} field${fields===1?'':'s'}) via dashboard`;
   }
@@ -2039,6 +2318,12 @@ async function performSaveToGitHub(skipDiff) {
   btn.disabled = true; btn.textContent = '⏳ جاري الحفظ...';
   try {
     await window.GitHubAPI.commitText(path, json, msg);
+    // v3.3: tell autosync this channel is now fresh on GitHub so a pending
+    // debounce timer doesn't fire a duplicate commit.
+    if (window.kha_autosync) {
+      const ch = (path === 'projects.json') ? 'projects' : 'content';
+      window.kha_autosync.markCommitted(ch, json);
+    }
     toast(`تم — ${summary} منشور على GitHub.`, 'success');
     // Start polling Pages deployment.
     startDeployIndicator(path);
@@ -2952,6 +3237,8 @@ function renderVisibilityPanel() {
       visibilityState.sections[id] = cb.checked;
       try { localStorage.setItem('khaled_visibility_draft', JSON.stringify(visibilityState)); } catch {}
       renderVisibilityPanel();
+      // v3.3: schedule auto-commit so the change reaches GitHub (and therefore mobile).
+      if (window.kha_autosync) window.kha_autosync.schedule('visibility');
       // Live-preview iframe refresh
       const fr = document.getElementById('ppFrame');
       if (fr && fr.contentWindow) fr.contentWindow.postMessage({ type: 'kha-refresh' }, '*');
@@ -2978,19 +3265,41 @@ function renderVisibilityPanel() {
 }
 window.__renderVisibility = renderVisibilityPanel;
 
+// v3.3: register the "visibility" channel for auto-commit. Single-toggle UX so
+// fast debounce (800ms) is fine.
+if (typeof kha_autosync !== 'undefined') kha_autosync.register('visibility', () => {
+  if (!visibilityState || !visibilityState.sections) return null;
+  const payload = {
+    sections: visibilityState.sections,
+    _meta: { description: 'Per-section visibility flags. Auto-saved from /admin.html.' }
+  };
+  return {
+    path: 'visibility.json',
+    json: JSON.stringify(payload, null, 2) + '\n',
+    msg:  'Update section visibility [auto]',
+  };
+}, () => {
+  // Once GitHub has the change, the local draft is no longer needed.
+  try { localStorage.removeItem('khaled_visibility_draft'); } catch {}
+});
+
 async function saveVisibilityJson() {
   if (!window.GitHubAPI || !window.GitHubAPI.isConfigured()) {
     if (typeof openGhModal === 'function') openGhModal();
     toast('⚠️ اعمل إعداد GitHub أول مرة', 'error');
     return;
   }
+  // v3.3: visibility uses the auto-save format (with _meta + trailing newline) and
+  // the autosync subsystem is the canonical commit path. Use it directly so the
+  // "save now" button benefits from the same dedupe + status-pill logic.
   const payload = {
     sections: visibilityState.sections,
-    _meta: { description: 'Per-section visibility flags. Edited from /admin.html (Visibility tab).' }
+    _meta: { description: 'Per-section visibility flags. Auto-saved from /admin.html.' }
   };
+  const json = JSON.stringify(payload, null, 2) + '\n';
   try {
-    const json = JSON.stringify(payload, null, 2) + '\n';
     await window.GitHubAPI.commitText('visibility.json', json, 'Update section visibility');
+    if (window.kha_autosync) window.kha_autosync.markCommitted('visibility', json);
     try { localStorage.removeItem('khaled_visibility_draft'); } catch {}
     toast('✅ اتحفظ على GitHub — هيظهر على الموقع خلال دقيقة');
   } catch (e) {
