@@ -98,16 +98,21 @@ function getYouTubeThumbnail(url) {
 // older entries where the dashboard fetched a horizontal thumbnail (1280×720)
 // for a vertical reel before the orient auto-detect existed.
 function fixVimeoPosterAspect(poster, orient) {
-  if (!poster || !/(?:^|\.)vimeocdn\.com\//.test(poster)) return poster;
+  if (!poster) return poster;
   const isVertical = orient === 'vertical';
   const w = isVertical ? 720 : 1280;
   const h = isVertical ? 1280 : 720;
-  // Rewrite the "d_WxH" or "_WxH" segment to match the card aspect.
-  if (/-d_\d+x\d+/.test(poster)) {
-    return poster.replace(/-d_\d+x\d+/, `-d_${w}x${h}`);
-  }
-  if (/_\d+x\d+(?=\.[a-z]+(\?|$))/i.test(poster)) {
-    return poster.replace(/_\d+x\d+(?=\.[a-z]+(\?|$))/i, `_${w}x${h}`);
+  // i.vimeocdn.com — rewrite "d_WxH" / "d_W" / "_WxH" segments
+  if (/(?:^|\.)vimeocdn\.com\//.test(poster)) {
+    if (/-d_\d+x\d+/.test(poster)) {
+      return poster.replace(/-d_\d+x\d+/, `-d_${w}x${h}`);
+    }
+    if (/-d_\d+(?=\?|$)/.test(poster)) {
+      return poster.replace(/-d_\d+(?=\?|$)/, `-d_${w}x${h}`);
+    }
+    if (/_\d+x\d+(?=\.[a-z]+(\?|$))/i.test(poster)) {
+      return poster.replace(/_\d+x\d+(?=\.[a-z]+(\?|$))/i, `_${w}x${h}`);
+    }
   }
   return poster;
 }
