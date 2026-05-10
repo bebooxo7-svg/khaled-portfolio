@@ -1012,7 +1012,7 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
 <script src="content-defaults.js?v=27"></script>
 <script src="projects-defaults.js?v=27"></script>
 <script src="github-api.js?v=30"></script>
-<script src="auth.js?v=35"></script>
+<script src="auth.js?v=36"></script>
 <script>
 // v3.2 — gate the dashboard behind username/password before anything else runs.
 (async function () {
@@ -1992,16 +1992,24 @@ async function fetchYouTubeThumbnail(url) {
 async function fetchVimeoThumbnail(url, orient) {
   // Vimeo's oEmbed endpoint is CORS-enabled and returns JSON.
   // Pass `width=` so Vimeo returns a higher-res thumbnail than the default 295px.
-  const isVertical = orient === 'vertical';
-  const targetW = isVertical ? 720 : 1280;
-  const targetH = isVertical ? 1280 : 720;
+  // We make ONE call to read the actual video dimensions, then derive the right
+  // thumbnail size from those (so a vertical reel never gets a 1280×720 thumb,
+  // even if the user forgot to flip the orientation dropdown).
+  let initialW = orient === 'vertical' ? 720 : 1280;
   try {
-    const oembed = `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(url)}&width=${targetW}`;
+    const oembed = `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(url)}&width=${initialW}`;
     const res = await fetch(oembed);
-    if (!res.ok) return '';
+    if (!res.ok) return { thumb: '', detectedOrient: orient };
     const data = await res.json();
     let thumb = data.thumbnail_url || '';
-    if (!thumb) return '';
+    if (!thumb) return { thumb: '', detectedOrient: orient };
+    // Trust the video's real aspect ratio over the dropdown.
+    const videoW = Number(data.width)  || 0;
+    const videoH = Number(data.height) || 0;
+    const detectedOrient = (videoW && videoH && videoH > videoW) ? 'vertical' : 'horizontal';
+    const isVertical = detectedOrient === 'vertical';
+    const targetW = isVertical ? 720 : 1280;
+    const targetH = isVertical ? 1280 : 720;
     // The thumbnail URL pattern is .../video/<id>-<hash>-d_WxH.<ext>?region=us
     // Replace the "d_WxH" segment with our preferred size to maximise quality.
     if (/-d_\d+x\d+/.test(thumb)) {
@@ -2009,9 +2017,9 @@ async function fetchVimeoThumbnail(url, orient) {
     } else if (/_\d+x\d+(?=\.[a-z]+(\?|$))/i.test(thumb)) {
       thumb = thumb.replace(/_\d+x\d+(?=\.[a-z]+(\?|$))/i, `_${targetW}x${targetH}`);
     }
-    return thumb;
+    return { thumb, detectedOrient };
   } catch (e) {
-    return '';
+    return { thumb: '', detectedOrient: orient };
   }
 }
 async function autoFillPosterFromUrl({ force = false, silent = false } = {}) {
@@ -2030,14 +2038,27 @@ async function autoFillPosterFromUrl({ force = false, silent = false } = {}) {
     if (!silent) toast('الرابط ده مش من Vimeo أو YouTube — دور على صورة يدوي.', 'error');
     return;
   }
-  const orient = document.getElementById('vOrient').value;
+  const orientEl = document.getElementById('vOrient');
+  const orient = orientEl.value;
   if (fetchBtn) { fetchBtn.disabled = true; fetchBtn.textContent = '⏳'; }
   let thumb = '';
+  let detectedOrient = orient;
   try {
-    if (platform === 'vimeo') thumb = await fetchVimeoThumbnail(url, orient);
-    else if (platform === 'youtube') thumb = await fetchYouTubeThumbnail(url);
+    if (platform === 'vimeo') {
+      const r = await fetchVimeoThumbnail(url, orient);
+      thumb = r.thumb;
+      detectedOrient = r.detectedOrient;
+    } else if (platform === 'youtube') {
+      thumb = await fetchYouTubeThumbnail(url);
+    }
   } catch (e) { /* swallow */ }
   if (fetchBtn) { fetchBtn.disabled = false; fetchBtn.textContent = '🖼️ جلب'; }
+  // For Vimeo: auto-correct the orient dropdown from the actual video aspect
+  // ratio so the user never gets a 1280×720 thumbnail glued onto a vertical
+  // reel card. (YouTube has no oEmbed dimensions, so leave its orient alone.)
+  if (platform === 'vimeo' && detectedOrient && detectedOrient !== orient) {
+    orientEl.value = detectedOrient;
+  }
   if (thumb) {
     posterEl.value = thumb;
     posterEl.dataset.autoFilled = '1';

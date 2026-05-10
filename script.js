@@ -93,10 +93,30 @@ function getYouTubeThumbnail(url) {
   return ytMatch ? `https://i.ytimg.com/vi/${ytMatch[1]}/hqdefault.jpg` : null;
 }
 
+// Vimeo's CDN serves the same source image at any requested dimensions, so we
+// can ask for the right aspect ratio at render time. This protects against
+// older entries where the dashboard fetched a horizontal thumbnail (1280×720)
+// for a vertical reel before the orient auto-detect existed.
+function fixVimeoPosterAspect(poster, orient) {
+  if (!poster || !/(?:^|\.)vimeocdn\.com\//.test(poster)) return poster;
+  const isVertical = orient === 'vertical';
+  const w = isVertical ? 720 : 1280;
+  const h = isVertical ? 1280 : 720;
+  // Rewrite the "d_WxH" or "_WxH" segment to match the card aspect.
+  if (/-d_\d+x\d+/.test(poster)) {
+    return poster.replace(/-d_\d+x\d+/, `-d_${w}x${h}`);
+  }
+  if (/_\d+x\d+(?=\.[a-z]+(\?|$))/i.test(poster)) {
+    return poster.replace(/_\d+x\d+(?=\.[a-z]+(\?|$))/i, `_${w}x${h}`);
+  }
+  return poster;
+}
+
 // Build the HTML for a single card from a project object
 function projectCardHTML(p) {
   const ytThumb = getYouTubeThumbnail(p.url);
-  const poster = p.poster || ytThumb;
+  let poster = p.poster || ytThumb;
+  poster = fixVimeoPosterAspect(poster, p.orient);
   const thumbStyle = poster ? `style="background-image: url('${poster}'); background-size: cover; background-position: center;"` : '';
   const playable = isPlayable(p.url);
   const orientCls = p.orient === 'vertical' ? ' card-vertical' : '';
