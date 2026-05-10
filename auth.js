@@ -32,9 +32,9 @@
   const BOOTSTRAP_BLOB = {
     v: 2,
     user_hash: "22a653852473421c3aba3be30b0faa7910d51ccf317cbb2ec80c2e6fcca1e60c",
-    salt: "g34LdbXyyF7PiDIi2BBTmg==",
-    iv: "VrpEYN18RXcGPlem",
-    ct: "wm+/XohAxhFKMpU7PpS57GsefskofcZfAnJ4CRbc+tuMvYMgyHOzj83pZqt/bVXyYGfib9pu7yL/kcvliapJrskSL+MoXxPOzWapjUof/Zhnibk6TSiX5IBbU8kcYFjLVmQUB8cf+5bgZXTyGKjaEUCMRqn2V0gtryPeyKMMYdYcp8ezots0pS+ldWUHRi7loJCdvHlrUd1aNbDGvvEacGQTDib6sNcOhBNC8lWemQyIlvZtjR/siYILmjZF5TSewhagWkCt6bKnSsgo1qHbd+xjMC7XybITJAKiejmnwxqNS9whx9V1vdIMJXSVDNXGQMkQRasDWADaRJ7yB60lks6R6D1c"
+    salt: "xjFTJgi14I/cyuvkBA9z8A==",
+    iv: "5M/bAfnLbn8y8/A0",
+    ct: "LNTKqj7K0QyD/I1rufBXFcoxQ03K2RrtV+8R5roGl29SM2RaFmCTT2dYcJ6bvB4lA9usM/eXoh7M7v07pAMlpnuS5zLFtMgHDHLx38w0OGX177hMsF6CJvd65RZ7/Fd3B4ANC74sw3hBpPCcoIuBHFdWbJRlWQZpJPXkmm6zXRc5+EZz8ZYym7gLHEJ6p6aotyd37qgdJ+jHi9pjWYetVF3w0xcEca54gCHr75yWs9Kot7pn77wptTXlxSWh+9ffhh6pEoqxTOjUQHNeZ08q/Q=="
   };
 
   // -------- crypto helpers --------
