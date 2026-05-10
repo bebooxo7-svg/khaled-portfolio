@@ -5,7 +5,7 @@
     "about": true,
     "works": true,
     "designs": true,
-    "services": true,
+    "services": false,
     "pricing": false,
     "process": true,
     "testimonials": true,
@@ -13,6 +13,6 @@
     "contact": true
   },
   "_meta": {
-    "description": "Per-section visibility flags. Edited from /admin.html (Visibility tab)."
+    "description": "Per-section visibility flags. Auto-saved from /admin.html."
   }
 }
