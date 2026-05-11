@@ -42,7 +42,7 @@
   <!-- Preload hero image (LCP, WebP with JPG fallback) -->
   <link rel="preload" as="image" href="khaled-hero.webp" type="image/webp" fetchpriority="high" />
 
-  <link rel="stylesheet" href="styles.css?v=31" />
+  <link rel="stylesheet" href="styles.css?v=33" />
 
   <!-- Structured data: Person + ProfessionalService -->
   <script type="application/ld+json">
@@ -326,6 +326,24 @@
           </div>
           <h3 data-i18n="about.card4.t">تصميم صوتي</h3>
           <p data-i18n="about.card4.d">ميكس نظيف، موسيقى، ومؤثرات بتكمّل الصورة.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Software / tools logos — marquee with motion -->
+  <section class="section software-section" id="software" aria-labelledby="softwareTitle">
+    <div class="container">
+      <div class="section-head section-head-tight">
+        <span class="section-tag" data-i18n="software.tag">عدة الشغل</span>
+        <h2 id="softwareTitle" data-i18n="software.title">البرامج اللي بشتغل بيها يوميًا</h2>
+        <p class="lead" data-i18n="software.lead">من المونتاج للموشن للتصميم — كل أداة في حتّتها الصح.</p>
+      </div>
+      <div class="software-strip" id="softwareStrip">
+        <div class="software-viewport">
+          <div class="software-track" id="softwareTrack" role="list" aria-label="Editing software"></div>
+          <div class="software-fade software-fade-start" aria-hidden="true"></div>
+          <div class="software-fade software-fade-end" aria-hidden="true"></div>
         </div>
       </div>
     </div>
@@ -895,41 +913,15 @@
     </div>
   </section>
 
-  <!-- Testimonials -->
-  <!-- TODO (khaled): replace the 3 testimonial cards below with real client quotes + names. -->
+  <!-- Testimonials — WhatsApp-style chat bubbles -->
   <section class="section testimonials" id="testimonials">
     <div class="container">
       <div class="section-head">
         <span class="section-tag" data-i18n="testimonials.tag">آراء العملاء</span>
         <h2 data-i18n="testimonials.title">ناس اشتغلت معاهم بتقول إيه؟</h2>
-        <p class="lead" data-i18n="testimonials.lead">كل مشروع علاقة طويلة. ودي بعض الكلمات اللي وصلتني من شركاء الشغل.</p>
+        <p class="lead" data-i18n="testimonials.lead">رسايل وصلتني فعلاً من شركاء الشغل بعد ما اتسلّمت المشاريع.</p>
       </div>
-      <div class="testimonial-grid">
-        <figure class="testimonial-card">
-          <svg class="quote-mark" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M7.17 4C4.32 4 2 6.32 2 9.17c0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C11.77 6.32 9.45 4 6.6 4h.57zm9.66 0c-2.85 0-5.17 2.32-5.17 5.17 0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C21.43 6.32 19.11 4 16.26 4h.57z"/></svg>
-          <blockquote data-i18n="testimonials.t1.q">"خالد رفع جودة المحتوى عندنا بشكل ملحوظ. الإيقاع، الألوان، والصوت بقت احترافية بجد، والريتنشن اتحسّن في أول شهرين."</blockquote>
-          <figcaption>
-            <span class="t-name" data-i18n="testimonials.t1.n">— م. أحمد ع</span>
-            <span class="t-role" data-i18n="testimonials.t1.r">صاحب قناة بودكاست</span>
-          </figcaption>
-        </figure>
-        <figure class="testimonial-card">
-          <svg class="quote-mark" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M7.17 4C4.32 4 2 6.32 2 9.17c0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C11.77 6.32 9.45 4 6.6 4h.57zm9.66 0c-2.85 0-5.17 2.32-5.17 5.17 0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C21.43 6.32 19.11 4 16.26 4h.57z"/></svg>
-          <blockquote data-i18n="testimonials.t2.q">"تعامل محترم والتزام بالمواعيد. الفريق بيفهم البريف من أول مرة، والريلز اللي بنطلعها بتشتغل صح على إنستجرام وتيك توك."</blockquote>
-          <figcaption>
-            <span class="t-name" data-i18n="testimonials.t2.n">— د. س. م</span>
-            <span class="t-role" data-i18n="testimonials.t2.r">صاحبة براند طبي</span>
-          </figcaption>
-        </figure>
-        <figure class="testimonial-card">
-          <svg class="quote-mark" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="currentColor" d="M7.17 4C4.32 4 2 6.32 2 9.17c0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C11.77 6.32 9.45 4 6.6 4h.57zm9.66 0c-2.85 0-5.17 2.32-5.17 5.17 0 1.86.99 3.5 2.5 4.39V20l4-3v-3.41c1.85-.32 3.27-1.93 3.27-3.92C21.43 6.32 19.11 4 16.26 4h.57z"/></svg>
-          <blockquote data-i18n="testimonials.t3.q">"الفريق بيعرف يحوّل الفكرة لمحتوى يبيع. كنا محتاجين هوية بصرية + إعلانات، وخرجنا بنتائج فعلية على Meta Ads."</blockquote>
-          <figcaption>
-            <span class="t-name" data-i18n="testimonials.t3.n">— أ. م. ح</span>
-            <span class="t-role" data-i18n="testimonials.t3.r">صاحب براند تجاري</span>
-          </figcaption>
-        </figure>
-      </div>
+      <div class="wa-chat-grid" id="waChatGrid" aria-label="آراء العملاء"></div>
     </div>
   </section>
 
@@ -1066,11 +1058,11 @@
     <span class="wa-pulse"></span>
   </a>
 
-  <script src="content-defaults.js?v=28"></script>
+  <script src="content-defaults.js?v=29"></script>
   <script src="projects-defaults.js?v=27"></script>
   <script src="theme.js?v=30"></script>
   <script src="designs.js?v=30"></script>
-  <script src="script.js?v=37"></script>
+  <script src="script.js?v=39"></script>
   <!-- Inline edit overlay (only activates when ?edit=1 is in URL) -->
   <script src="github-api.js?v=30"></script>
   <script src="inline-edit.js?v=30"></script>

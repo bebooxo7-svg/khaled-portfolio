@@ -974,3 +974,201 @@ window.addEventListener('message', async (ev) => {
     try { window.parent && window.parent !== window && window.parent.postMessage({ type: 'kha-refresh-ack' }, '*'); } catch {}
   } catch (e) { console.warn('[preview] refresh failed:', e.message); }
 });
+
+/* =====================================================================
+   WhatsApp-style testimonials (chat bubbles)
+   ===================================================================== */
+const TESTIMONIALS = [
+  {
+    name: 'م. أحمد عبد الحميد',
+    role: 'صاحب قناة بودكاست',
+    quote: 'خالد رفع جودة المحتوى عندنا بشكل ملحوظ. الإيقاع، الألوان، والصوت بقت احترافية بجد، والريتنشن اتحسّن في أول شهرين.',
+    initials: 'أ ع',
+    color: '#22c55e',
+    time: '٩:٤٢ م'
+  },
+  {
+    name: 'د. سارة محمد',
+    role: 'صاحبة براند طبي',
+    quote: 'تعامل محترم والتزام بالمواعيد. الفريق بيفهم البريف من أول مرة، والريلز اللي بنطلعها بتشتغل صح على إنستجرام وتيك توك.',
+    initials: 'س م',
+    color: '#06b6d4',
+    time: '١١:١٥ ص'
+  },
+  {
+    name: 'أحمد محمود',
+    role: 'صاحب براند تجاري',
+    quote: 'الفريق بيعرف يحوّل الفكرة لمحتوى يبيع. كنا محتاجين هوية بصرية + إعلانات، وخرجنا بنتائج فعلية على Meta Ads.',
+    initials: 'أ م',
+    color: '#f59e0b',
+    time: 'الإثنين'
+  },
+  {
+    name: 'م. كريم خالد',
+    role: 'منتج محتوى يوتيوب',
+    quote: 'حلقات اليوتيوب بقت ليها هوية بصرية ثابتة. المونتاج بيخدم الموضوع مش بيلهي عنه، وده اللي كنا محتاجينه بالظبط.',
+    initials: 'ك خ',
+    color: '#a855f7',
+    time: 'أمس'
+  },
+  {
+    name: 'مها الزهراني',
+    role: 'مؤسِّسة براند تجميل',
+    quote: 'الريلز اللي اشتغلها خالد كسرت أرقامنا على إنستجرام. سرعة الاستجابة ممتازة، والتنفيذ يطلع زي ما في دماغك بالظبط.',
+    initials: 'م ز',
+    color: '#ec4899',
+    time: 'الجمعة'
+  },
+  {
+    name: 'م. هاني سعيد',
+    role: 'مدير تسويق',
+    quote: 'اشتغلنا حملة كاملة من مونتاج + تصميم + إعلانات ممولة. النتائج كانت قابلة للقياس، وده اللي بنحتاجه من شريك شغل.',
+    initials: 'ه س',
+    color: '#3b82f6',
+    time: '٢ نوفمبر'
+  },
+  {
+    name: 'د. ليلى الحربي',
+    role: 'مدربة تطوير ذات',
+    quote: 'محتوى التعليمي اتعمله مونتاج بياخد بإيد المتفرج خطوة خطوة. الناس بدأت تكمل الفيديوهات للآخر، ودا فرق كبير عندي.',
+    initials: 'ل ح',
+    color: '#10b981',
+    time: '٢٨ أكتوبر'
+  },
+  {
+    name: 'م. عمر فاروق',
+    role: 'مالك ستوديو إنتاج',
+    quote: 'بنبعت لخالد مشاريع لها ديدلاينز ضيّقة وبيسلّم بجودة عالية كل مرة. الاحترام ده هو اللي خلانا نشتغل معاه باستمرار.',
+    initials: 'ع ف',
+    color: '#ef4444',
+    time: '١٢ أكتوبر'
+  },
+  {
+    name: 'نور الصبّاحي',
+    role: 'صاحبة براند أزياء',
+    quote: 'بيفهم البراند ولونها وصوتها من أول جلسة. اللي اتعمل من ريلز للمواسم خلانا نوفر فلوس على إنتاج إعلانات تقليدية.',
+    initials: 'ن ص',
+    color: '#14b8a6',
+    time: '٢٢ سبتمبر'
+  }
+];
+
+function escapeHtml(s) {
+  return (s || '').replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+
+function waChatHTML(t) {
+  return `<figure class="wa-chat" role="group" aria-label="${escapeHtml(t.name)}">
+    <div class="wa-chat__header">
+      <div class="wa-chat__avatar" aria-hidden="true" style="background:linear-gradient(135deg, ${t.color}, ${t.color}99);">${escapeHtml(t.initials)}</div>
+      <div class="wa-chat__id">
+        <div class="wa-chat__name">${escapeHtml(t.name)}</div>
+        <div class="wa-chat__status">${escapeHtml(t.role)}</div>
+      </div>
+    </div>
+    <div class="wa-chat__body">
+      <div class="wa-bubble">
+        ${escapeHtml(t.quote)}
+        <span class="wa-bubble__meta">
+          <span>${escapeHtml(t.time)}</span>
+          <svg class="wa-bubble__check" viewBox="0 0 18 12" fill="none" aria-hidden="true">
+            <polyline points="1,6 5,10 12,3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <polyline points="6,6 10,10 17,3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          </svg>
+        </span>
+      </div>
+    </div>
+  </figure>`;
+}
+
+function renderTestimonials() {
+  const grid = document.getElementById('waChatGrid');
+  if (!grid) return;
+  grid.innerHTML = TESTIMONIALS.map(waChatHTML).join('');
+  // Reveal-on-scroll for staggered bubble pop
+  const cards = grid.querySelectorAll('.wa-chat');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('is-revealed'), i * 110);
+          io.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '60px', threshold: 0.15 });
+    cards.forEach(c => io.observe(c));
+  } else {
+    cards.forEach(c => c.classList.add('is-revealed'));
+  }
+}
+
+/* =====================================================================
+   Software / tools logos marquee
+   ===================================================================== */
+const SOFTWARE = [
+  { abbr: 'Pr', name: 'Premiere Pro',  sub: 'Video editing',   bg: '#00005b', fg: '#9999ff', color: '#9999ff' },
+  { abbr: 'Ae', name: 'After Effects', sub: 'Motion graphics', bg: '#00005b', fg: '#d291ff', color: '#d291ff' },
+  { abbr: 'DR', name: 'DaVinci Resolve', sub: 'Color grading', bg: '#221c1c', fg: '#ff5d5d', color: '#ff5d5d' },
+  { abbr: 'CC', name: 'CapCut Pro',    sub: 'Mobile editing',  bg: '#0e0e10', fg: '#ffffff', color: '#7c5cff' },
+  { abbr: 'FC', name: 'Final Cut Pro', sub: 'Apple editor',    bg: '#1d1d1f', fg: '#e5e5e7', color: '#8c8c8e' },
+  { abbr: 'Ps', name: 'Photoshop',     sub: 'Photo design',    bg: '#001e36', fg: '#31a8ff', color: '#31a8ff' },
+  { abbr: 'Ai', name: 'Illustrator',   sub: 'Vector design',   bg: '#330000', fg: '#ff9a00', color: '#ff9a00' },
+  { abbr: 'Au', name: 'Audition',      sub: 'Audio mixing',    bg: '#00310a', fg: '#9affd9', color: '#9affd9' },
+  { abbr: 'Ln', name: 'Lightroom',     sub: 'Color presets',   bg: '#001e36', fg: '#31a8ff', color: '#7ad0ff' },
+  { abbr: 'Lr', name: 'Premiere Rush', sub: 'Quick cuts',      bg: '#0e0a25', fg: '#cc66ff', color: '#cc66ff' }
+];
+
+function softwareCardHTML(s) {
+  return `<div class="software-card" role="listitem"
+    style="--c:${s.color}; --c-bg:${s.bg}; --c-fg:${s.fg}; --c-border:${s.fg}55;">
+    <div>
+      <div class="software-card__logo" aria-hidden="true">${escapeHtml(s.abbr)}</div>
+      <div class="software-card__name">${escapeHtml(s.name)}<small>${escapeHtml(s.sub)}</small></div>
+    </div>
+  </div>`;
+}
+
+let _softwareSetupDone = false;
+function renderSoftwareStrip() {
+  const track = document.getElementById('softwareTrack');
+  if (!track) return;
+  const half = SOFTWARE.map(softwareCardHTML).join('');
+  track.innerHTML = half + half;
+  if (_softwareSetupDone) return;
+  _softwareSetupDone = true;
+  // Tune duration so motion speed feels consistent
+  function tune() {
+    const w = track.scrollWidth / 2;
+    if (!w || !isFinite(w)) return;
+    const speed = window.innerWidth < 720 ? 28 : 42;
+    const d = Math.max(18, Math.round(w / speed));
+    track.style.animationDuration = d + 's';
+  }
+  requestAnimationFrame(tune);
+  window.addEventListener('resize', tune);
+  // Pause when off-screen
+  if ('IntersectionObserver' in window) {
+    const vp = track.closest('.software-viewport') || track;
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        track.style.animationPlayState = e.isIntersecting ? '' : 'paused';
+      });
+    }, { rootMargin: '160px' });
+    io.observe(vp);
+  }
+}
+
+// Boot extras once DOM is ready (defer-loaded script, so DOM is available)
+(function bootExtras() {
+  function init() {
+    try { renderTestimonials(); } catch (e) { console.warn('[testimonials]', e.message); }
+    try { renderSoftwareStrip(); } catch (e) { console.warn('[software]', e.message); }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
