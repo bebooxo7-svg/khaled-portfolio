@@ -3070,6 +3070,10 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
   transition: opacity .25s ease;
 }
 .kha-rich-anim .designs-cta-band .btn-primary:hover::before { opacity: 0.85; }
+/* Hide the global .btn-primary shimmer here: overflow:visible (needed for the
+   glow ::before above) lets it escape and render as a dark ellipse next to
+   the button. The glow effect is enough on its own. */
+.kha-rich-anim .designs-cta-band .btn-primary::after { display: none; }
 @keyframes ctaGlow {
   0%, 100% { background-position: 0% 50%; }
   50%      { background-position: 100% 50%; }
