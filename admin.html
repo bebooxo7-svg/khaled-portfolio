@@ -1009,7 +1009,7 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
   </div>
 </div>
 
-<script src="content-defaults.js?v=27"></script>
+<script src="content-defaults.js?v=28"></script>
 <script src="projects-defaults.js?v=27"></script>
 <script src="github-api.js?v=30"></script>
 <script src="auth.js?v=37"></script>
@@ -2113,6 +2113,14 @@ document.getElementById('vSave').addEventListener('click', () => {
   if (!titleAr && !titleEn) { toast('أدخل عنوان عربي أو إنجليزي على الأقل.', 'error'); return; }
   if (!cat) { toast('اختار القسم.', 'error'); return; }
 
+  // Preserve original addedAt when editing so its position in the list is
+  // stable. For new entries, stamp with Date.now() so the slider + grid
+  // sort it to the top (newest first).
+  const prevAddedAt = (editingIndex >= 0 && videos.ar[editingIndex] && typeof videos.ar[editingIndex].addedAt === 'number')
+    ? videos.ar[editingIndex].addedAt
+    : null;
+  const addedAt = prevAddedAt != null ? prevAddedAt : Date.now();
+
   const arItem = {
     cat, ...(subCat ? { subCat } : {}),
     title: titleAr || titleEn,
@@ -2123,6 +2131,7 @@ document.getElementById('vSave').addEventListener('click', () => {
     ...(poster ? { poster } : {}),
     ...(url ? { url } : { placeholder: true }),
     orient,
+    addedAt,
   };
   const enItem = {
     cat, ...(subCat ? { subCat } : {}),
@@ -2134,6 +2143,7 @@ document.getElementById('vSave').addEventListener('click', () => {
     ...(poster ? { poster } : {}),
     ...(url ? { url } : { placeholder: true }),
     orient,
+    addedAt,
   };
 
   if (editingIndex < 0) {

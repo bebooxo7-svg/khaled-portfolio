@@ -42,7 +42,7 @@
   <!-- Preload hero image (LCP, WebP with JPG fallback) -->
   <link rel="preload" as="image" href="khaled-hero.webp" type="image/webp" fetchpriority="high" />
 
-  <link rel="stylesheet" href="styles.css?v=28" />
+  <link rel="stylesheet" href="styles.css?v=30" />
 
   <!-- Structured data: Person + ProfessionalService -->
   <script type="application/ld+json">
@@ -309,6 +309,26 @@
           <h3 data-i18n="about.card4.t">تصميم صوتي</h3>
           <p data-i18n="about.card4.d">ميكس نظيف، موسيقى، ومؤثرات بتكمّل الصورة.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Work — auto-scrolling reel strip -->
+  <section class="section latest-section" id="latest" aria-labelledby="latestTitle">
+    <div class="container">
+      <div class="section-head section-head-tight">
+        <span class="section-tag" data-i18n="latest.tag">مقتطفات</span>
+        <h2 id="latestTitle" data-i18n="latest.title">أحدث الأعمال</h2>
+        <p class="lead" data-i18n="latest.lead">آخر اللي اشتغلت عليه — اضغط على أي لقطة عشان تشوف الشغل كامل تحت.</p>
+      </div>
+      <div class="latest-strip" id="latestStrip">
+        <button class="latest-arrow latest-prev" type="button" aria-label="prev">‹</button>
+        <div class="latest-viewport">
+          <div class="latest-track" id="latestTrack" role="list" aria-label="Latest work"></div>
+          <div class="latest-fade latest-fade-start" aria-hidden="true"></div>
+          <div class="latest-fade latest-fade-end" aria-hidden="true"></div>
+        </div>
+        <button class="latest-arrow latest-next" type="button" aria-label="next">›</button>
       </div>
     </div>
   </section>
@@ -1048,11 +1068,11 @@
     <span class="wa-pulse"></span>
   </a>
 
-  <script src="content-defaults.js?v=27"></script>
+  <script src="content-defaults.js?v=28"></script>
   <script src="projects-defaults.js?v=27"></script>
   <script src="theme.js?v=30"></script>
   <script src="designs.js?v=30"></script>
-  <script src="script.js?v=33"></script>
+  <script src="script.js?v=37"></script>
   <!-- Inline edit overlay (only activates when ?edit=1 is in URL) -->
   <script src="github-api.js?v=30"></script>
   <script src="inline-edit.js?v=30"></script>
