@@ -163,6 +163,23 @@ function staggerReveal(container) {
   });
 }
 
+// ====== Sort projects: newest first ======
+// Items without addedAt fall back to their original array index, so the array
+// order (oldest → newest) is preserved as a secondary key. This keeps the
+// display deterministic and never random.
+function sortByDateDesc(list) {
+  return list.slice()
+    .map((p, i) => ({ p, i }))
+    .sort((a, b) => {
+      const ta = (a.p && typeof a.p.addedAt === 'number') ? a.p.addedAt : 0;
+      const tb = (b.p && typeof b.p.addedAt === 'number') ? b.p.addedAt : 0;
+      if (tb !== ta) return tb - ta;
+      // Tie-break: later array position = newer
+      return b.i - a.i;
+    })
+    .map(o => o.p);
+}
+
 // ====== Render Works gallery (handles all cats + reels subfilter) ======
 function renderGallery(filter = 'all', subFilter = 'all') {
   currentFilter = filter;
@@ -178,10 +195,179 @@ function renderGallery(filter = 'all', subFilter = 'all') {
   } else {
     filtered = list.filter(p => p.cat === filter);
   }
+  // Newest first
+  filtered = sortByDateDesc(filtered);
   gallery.innerHTML = filtered.length ? filtered.map(projectCardHTML).join('') : emptyStateHTML();
   staggerReveal(gallery);
   attachInteractiveCursorTargets();
+  renderLatestStrip();
 }
+
+// ====== "Latest Work" auto-scrolling strip (slider) ======
+function getLatestProjects(limit = 10) {
+  const list = projects[currentLang] || [];
+  // Pick only items with a playable url so each card is useful when tapped
+  const playable = list.filter(p => isPlayable(p.url));
+  const pool = playable.length >= limit ? playable : list;
+  return sortByDateDesc(pool).slice(0, limit);
+}
+
+function latestCardHTML(p) {
+  const ytThumb = getYouTubeThumbnail(p.url);
+  let poster = p.poster || ytThumb || '';
+  poster = fixVimeoPosterAspect(poster, p.orient);
+  const thumbStyle = poster
+    ? `style="background-image:url('${poster}');"`
+    : 'style="background:linear-gradient(135deg,#0f172a,#22c55e);"';
+  const isV = p.orient === 'vertical';
+  const playable = isPlayable(p.url);
+  const safeTitle = (p.title || '').replace(/"/g, '&quot;');
+  const safeBadge = `${p.tag || ''} · ${p.badge || ''}`.replace(/^· $/, '').replace(/^ · /, '').replace(/" /g, '&quot; ');
+  return `<button class="latest-card${isV ? ' latest-card--v' : ''}" type="button"
+    data-latest-url="${(p.url || '').replace(/"/g, '&quot;')}"
+    data-latest-title="${safeTitle}"
+    aria-label="${safeTitle}">
+    <div class="latest-thumb" ${thumbStyle}>
+      ${playable ? '<span class="latest-play" aria-hidden="true">▶</span>' : ''}
+      <span class="latest-badge">${safeBadge}</span>
+    </div>
+    <h4 class="latest-title">${p.title || ''}</h4>
+  </button>`;
+}
+
+function renderLatestStrip() {
+  const track = document.getElementById('latestTrack');
+  if (!track) return;
+  const latest = getLatestProjects(10);
+  if (!latest.length) {
+    track.innerHTML = '';
+    return;
+  }
+  // Duplicate items so the scroll position can wrap seamlessly
+  const half = latest.map(latestCardHTML).join('');
+  track.innerHTML = half + half;
+  track.dataset.itemCount = String(latest.length);
+  // Ensure auto-scroll is running for this freshly-rendered track
+  setupLatestAutoScroll();
+}
+
+// The marquee motion is driven by a pure CSS keyframe animation on
+// `.latest-track`. This avoids cross-browser RTL `scrollLeft` quirks (legacy
+// negative model in Chromium vs positive WHATWG model in WebKit/Firefox),
+// is GPU-accelerated, and runs even when the JS thread is busy. JS only
+// handles pause-on-interaction and arrow controls.
+let _latestAutoScrollSetup = false;
+function setupLatestAutoScroll() {
+  const track = document.getElementById('latestTrack');
+  if (!track) return;
+  if (_latestAutoScrollSetup) return; // setup once globally
+  _latestAutoScrollSetup = true;
+
+  const viewport = track.closest('.latest-viewport');
+  const isRTL = () => (document.documentElement.getAttribute('dir') || 'ltr') === 'rtl';
+
+  // Scale animation duration to the content width so motion speed feels
+  // consistent regardless of how many items are in the slider. Target speed:
+  // ~50 px/sec desktop, ~35 px/sec mobile.
+  function tuneDuration() {
+    const half = track.scrollWidth / 2;
+    if (!half || !isFinite(half)) return;
+    const speed = window.innerWidth < 720 ? 35 : 50;
+    const duration = Math.max(20, Math.round(half / speed));
+    track.style.animationDuration = duration + 's';
+  }
+  // Defer one tick so layout has settled with the freshly-rendered cards.
+  requestAnimationFrame(tuneDuration);
+  window.addEventListener('resize', tuneDuration);
+
+  // Brief pause after user interaction so motion doesn't fight gestures.
+  let pauseTimer = null;
+  function pauseBriefly(ms) {
+    track.classList.add('is-paused');
+    if (pauseTimer) clearTimeout(pauseTimer);
+    pauseTimer = setTimeout(() => track.classList.remove('is-paused'), ms);
+  }
+
+  // Touch: pause for the duration of the touch + a short cooldown.
+  track.addEventListener('touchstart', () => {
+    track.classList.add('is-paused');
+    if (pauseTimer) { clearTimeout(pauseTimer); pauseTimer = null; }
+  }, { passive: true });
+  track.addEventListener('touchend', () => pauseBriefly(2000), { passive: true });
+  track.addEventListener('touchcancel', () => pauseBriefly(2000), { passive: true });
+
+  // Arrow controls — nudge the marquee by shifting the running animation
+  // forward/backward in time. This keeps the CSS animation in charge while
+  // letting the user jump a card-width at a time.
+  document.querySelectorAll('.latest-arrow').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isPrev = btn.classList.contains('latest-prev');
+      // Compute target translateX delta: ~one card width (260px on desktop,
+      // 210px on mobile after gap).
+      const cardWidth = window.innerWidth < 720 ? 210 : 260;
+      const half = track.scrollWidth / 2 || 1;
+      const fraction = cardWidth / half; // of one full cycle
+
+      // Read current animation progress, then jump.
+      const cs = getComputedStyle(track);
+      const durationSec = parseFloat(cs.animationDuration) || 60;
+      const delaySec = parseFloat(cs.animationDelay) || 0;
+      // Advancing animation-delay in the negative direction moves it forward;
+      // positive delay moves it backward (pre-rolls before it starts).
+      const ltrSign = isRTL() ? -1 : 1;
+      const direction = isPrev ? 1 : -1;       // prev = rewind; next = forward
+      const deltaSec = direction * ltrSign * fraction * durationSec;
+      track.style.animationDelay = (delaySec + deltaSec) + 's';
+
+      // Visually nudge with a brief micro-pause so the jump reads as a beat.
+      pauseBriefly(900);
+    });
+  });
+
+  // Pause when offscreen — saves CPU/battery and prevents wasted work.
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          track.style.animationPlayState = '';
+        } else {
+          track.style.animationPlayState = 'paused';
+        }
+      });
+    }, { rootMargin: '200px' });
+    io.observe(viewport || track);
+  }
+}
+
+// Click on a slider card → scroll the user to the matching item in the full
+// gallery (and play it via the existing card-click handler if available).
+document.addEventListener('click', (e) => {
+  const card = e.target.closest('.latest-card');
+  if (!card) return;
+  const url = card.dataset.latestUrl;
+  const works = document.getElementById('works');
+  if (!works) return;
+
+  // Reset filter to 'all' so the target is definitely rendered
+  const allChip = document.querySelector('.filters .chip[data-filter="all"]');
+  if (allChip && !allChip.classList.contains('active')) {
+    allChip.click();
+  }
+
+  // Smooth-scroll the works section into view
+  works.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // After scroll settles, focus and pulse-highlight the matching card
+  setTimeout(() => {
+    if (!url) return;
+    const esc = (window.CSS && CSS.escape) ? CSS.escape(url) : url.replace(/"/g, '\\"');
+    const match = document.querySelector(`.gallery .card[data-video-url="${esc}"]`);
+    if (!match) return;
+    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    match.classList.add('card-highlight');
+    setTimeout(() => match.classList.remove('card-highlight'), 2400);
+  }, 650);
+});
 
 // ====== Lightbox for video playback ======
 function openLightbox(url, title) {

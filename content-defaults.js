@@ -119,6 +119,10 @@ window.__i18n_defaults = {
     'skills.s5': 'سرعة تنفيذ والتزام بالمواعيد',
     'skills.s6': 'حل المشاكل',
 
+    'latest.tag': 'مقتطفات',
+    'latest.title': 'أحدث الأعمال',
+    'latest.lead': 'آخر اللي اشتغلت عليه — اضغط على أي لقطة عشان تشوف الشغل كامل تحت.',
+
     'works.tag': 'الأعمال',
     'works.title': 'آخر الأعمال — مختارات من البودكاست والريلز',
     'works.lead': 'اضغط على أي فيديو يشتغل جوّا الموقع — دي نماذج من حلقات البودكاست وأمثلة على مونتاج الريلز.',
@@ -395,6 +399,10 @@ window.__i18n_defaults = {
     'showcase.st6.d': 'Scheduling, publishing, Meta/TikTok ads, and performance analysis',
 
     'nav.showcase': 'Project',
+
+    'latest.tag': 'Showreel',
+    'latest.title': 'Latest Work',
+    'latest.lead': 'The most recent pieces I shipped — tap any clip to jump to the full grid below.',
 
     'works.tag': 'Work',
     'works.title': 'Latest Work — Podcast & Reels',
