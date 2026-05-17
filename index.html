@@ -42,7 +42,7 @@
   <!-- Preload hero image (LCP, WebP with JPG fallback) -->
   <link rel="preload" as="image" href="khaled-hero.webp" type="image/webp" fetchpriority="high" />
 
-  <link rel="stylesheet" href="styles.css?v=34" />
+  <link rel="stylesheet" href="styles.css?v=35" />
 
   <!-- Structured data: Person + ProfessionalService -->
   <script type="application/ld+json">
@@ -340,11 +340,13 @@
         <p class="lead" data-i18n="software.lead">من المونتاج للموشن للتصميم — كل أداة في حتّتها الصح.</p>
       </div>
       <div class="software-strip" id="softwareStrip">
+        <button class="software-arrow software-prev" type="button" aria-label="prev">‹</button>
         <div class="software-viewport">
           <div class="software-track" id="softwareTrack" role="list" aria-label="Editing software"></div>
           <div class="software-fade software-fade-start" aria-hidden="true"></div>
           <div class="software-fade software-fade-end" aria-hidden="true"></div>
         </div>
+        <button class="software-arrow software-next" type="button" aria-label="next">›</button>
       </div>
     </div>
   </section>
@@ -1062,7 +1064,7 @@
   <script src="projects-defaults.js?v=27"></script>
   <script src="theme.js?v=30"></script>
   <script src="designs.js?v=30"></script>
-  <script src="script.js?v=40"></script>
+  <script src="script.js?v=41"></script>
   <!-- Inline edit overlay (only activates when ?edit=1 is in URL) -->
   <script src="github-api.js?v=30"></script>
   <script src="inline-edit.js?v=30"></script>
