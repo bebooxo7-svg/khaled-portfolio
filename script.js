@@ -1106,10 +1106,21 @@ function waChatHTML(t) {
     + `</figure>`;
 }
 
+// Fisher–Yates: deterministic-quality shuffle that produces a fresh order on
+// every page load (no seeded RNG).
+function shuffled(arr) {
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [out[i], out[j]] = [out[j], out[i]];
+  }
+  return out;
+}
+
 function renderTestimonials() {
   const grid = document.getElementById('waChatGrid');
   if (!grid) return;
-  grid.innerHTML = TESTIMONIALS.map(waChatHTML).join('');
+  grid.innerHTML = shuffled(TESTIMONIALS).map(waChatHTML).join('');
   // Reveal-on-scroll for staggered bubble pop
   const cards = grid.querySelectorAll('.wa-chat');
   if ('IntersectionObserver' in window) {
@@ -1159,6 +1170,7 @@ function renderSoftwareStrip() {
   track.innerHTML = half + half;
   if (_softwareSetupDone) return;
   _softwareSetupDone = true;
+  const isRTL = () => (document.documentElement.getAttribute('dir') || 'ltr') === 'rtl';
   // Tune duration so motion speed feels consistent
   function tune() {
     const w = track.scrollWidth / 2;
@@ -1169,6 +1181,32 @@ function renderSoftwareStrip() {
   }
   requestAnimationFrame(tune);
   window.addEventListener('resize', tune);
+
+  // Manual nudge: jump animation-delay by one logo-card width so the user can
+  // scrub the marquee left/right. Mirrors the latest-arrow control pattern.
+  let pauseTimer = null;
+  function pauseBriefly(ms) {
+    track.classList.add('is-paused');
+    if (pauseTimer) clearTimeout(pauseTimer);
+    pauseTimer = setTimeout(() => track.classList.remove('is-paused'), ms);
+  }
+  document.querySelectorAll('.software-arrow').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const isPrev = btn.classList.contains('software-prev');
+      const cardWidth = window.innerWidth < 720 ? 150 : 200; // includes gap
+      const half = track.scrollWidth / 2 || 1;
+      const fraction = cardWidth / half;
+      const cs = getComputedStyle(track);
+      const durationSec = parseFloat(cs.animationDuration) || 40;
+      const delaySec = parseFloat(cs.animationDelay) || 0;
+      const ltrSign = isRTL() ? -1 : 1;
+      const direction = isPrev ? 1 : -1;
+      const deltaSec = direction * ltrSign * fraction * durationSec;
+      track.style.animationDelay = (delaySec + deltaSec) + 's';
+      pauseBriefly(900);
+    });
+  });
+
   // Pause when off-screen
   if ('IntersectionObserver' in window) {
     const vp = track.closest('.software-viewport') || track;

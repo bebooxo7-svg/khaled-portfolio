@@ -875,10 +875,10 @@ html[dir="rtl"] .latest-arrow { transform: scaleX(-1); }
 html[dir="rtl"] .latest-arrow:hover { transform: scaleX(-1) scale(1.08); }
 html[dir="rtl"] .latest-arrow:active { transform: scaleX(-1) scale(0.96); }
 
-/* Mobile: hide arrows, rely on native horizontal scroll + autoplay */
+/* Mobile: keep arrows visible but smaller so user can scrub manually too */
 @media (max-width: 720px) {
-  .latest-strip { grid-template-columns: 1fr; }
-  .latest-arrow { display: none; }
+  .latest-strip { gap: 6px; }
+  .latest-arrow { width: 36px; height: 36px; font-size: 20px; }
   .latest-card { flex-basis: 230px; }
   .latest-card--v { flex-basis: 160px; }
   .latest-title { font-size: var(--fs-sm); min-height: 2.6em; margin: 10px 12px 12px; }
@@ -906,7 +906,40 @@ html[dir="rtl"] .latest-arrow:active { transform: scaleX(-1) scale(0.96); }
 
 /* ===== Software / tools logos — marquee with strong motion ===== */
 .software-section { padding: 40px 0 30px; }
-.software-strip { position: relative; }
+.software-strip {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+/* Arrow buttons (mirror the .latest-arrow look-and-feel) */
+.software-arrow {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  display: grid; place-items: center;
+  transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+  flex-shrink: 0;
+}
+.software-arrow:hover {
+  background: var(--surface-2);
+  border-color: rgba(34, 197, 94, 0.5);
+  transform: scale(1.08);
+}
+.software-arrow:active { transform: scale(0.96); }
+html[dir="rtl"] .software-arrow { transform: scaleX(-1); }
+html[dir="rtl"] .software-arrow:hover { transform: scaleX(-1) scale(1.08); }
+html[dir="rtl"] .software-arrow:active { transform: scaleX(-1) scale(0.96); }
+@media (max-width: 720px) {
+  .software-strip { gap: 6px; }
+  .software-arrow { width: 36px; height: 36px; font-size: 20px; }
+}
 .software-viewport {
   position: relative;
   overflow: hidden;
@@ -1326,17 +1359,17 @@ html[dir="ltr"] .wa-float { left: auto; right: 24px; }
 }
 .step:hover .step-num { transform: scale(1.1) translateX(-3px); }
 .step-line {
-  position: absolute;
-  top: 38px;
+  display: block;
   height: 2px;
+  width: 40px;
+  margin: 0 0 14px;
   background: linear-gradient(90deg, var(--neon), transparent);
-  width: 36px;
-  margin-inline-start: 6px;
-  display: inline-block;
+  border-radius: 2px;
   position: relative;
-  margin-top: -28px;
-  margin-bottom: 14px;
   z-index: 1;
+}
+html[dir="rtl"] .step-line {
+  background: linear-gradient(270deg, var(--neon), transparent);
 }
 .step h3 { margin: 0 0 8px; font-size: var(--fs-md); position: relative; z-index: 2; }
 .step p { margin: 0; color: var(--muted); font-size: var(--fs-sm); position: relative; z-index: 2; }
@@ -1880,32 +1913,34 @@ html[lang="en"] body { direction: ltr; }
 }
 
 /* ===== Mobile section-spacing hardening (prevents visual overlap of stacked sections) ===== */
+/* Each section establishes its own stacking context so decorative glows/blurs cannot bleed */
+.hero, .latest-section, .bts-strip, .section { isolation: isolate; position: relative; }
+main { overflow-x: clip; }
 @media (max-width: 720px) {
-  /* Reduce hero top/bottom padding so it doesn't bleed into the next section */
-  .hero { padding: 56px 0 44px; }
+  /* Hero: more bottom padding + hide the scroll-cue mouse icon that visually crowds the next section */
+  .hero { padding: 56px 0 96px; }
   .hero-inner { gap: 32px; }
   h1 { font-size: clamp(28px, 8vw, 38px); line-height: 1.25; margin: 0 0 16px; }
   .lead { font-size: var(--fs-md); }
   .eyebrow { margin-bottom: 18px; }
   .hero-cta { flex-wrap: wrap; gap: 12px; }
   .hero-stats { margin-top: 28px; }
-  /* Give each section a clear gap so the slider, BTS image, etc. don't collide */
-  .latest-section { padding: 44px 0 36px; }
-  .latest-section .section-head-tight { margin-bottom: 18px; }
-  .bts-strip { padding: 36px 0; }
-  .section { padding: 48px 0; }
-  .section-head { margin-bottom: 28px; }
-  /* Section gradient/blob decorations that bleed beyond the section get clipped on mobile */
-  main { overflow-x: clip; }
+  .scroll-hint { display: none; }
+  /* Each section gets clear top/bottom gaps so nothing collides visually */
+  .latest-section { padding: 72px 0 48px; }
+  .latest-section .section-head-tight { margin-bottom: 22px; }
+  .bts-strip { padding: 56px 0; }
+  .section { padding: 64px 0; }
+  .section-head { margin-bottom: 32px; }
 }
 @media (max-width: 480px) {
-  .hero { padding: 40px 0 32px; }
+  .hero { padding: 40px 0 72px; }
   .hero-inner { gap: 24px; }
   h1 { font-size: clamp(26px, 8.6vw, 34px); }
-  .latest-section { padding: 32px 0 28px; }
-  .bts-strip { padding: 28px 0; }
-  .section { padding: 40px 0; }
-  .section-head { margin-bottom: 22px; }
+  .latest-section { padding: 56px 0 36px; }
+  .bts-strip { padding: 44px 0; }
+  .section { padding: 52px 0; }
+  .section-head { margin-bottom: 24px; }
   .container { padding: 0 18px; }
 }
 
