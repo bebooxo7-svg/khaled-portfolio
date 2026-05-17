@@ -989,28 +989,26 @@ html[dir="rtl"] .software-track { animation-name: software-marquee-rtl; }
 .software-card__logo {
   position: relative;
   z-index: 1;
-  width: 76px; height: 76px;
-  border-radius: 16px;
+  width: 92px; height: 92px;
+  border-radius: 18px;
   display: grid; place-items: center;
-  font-family: var(--font-en);
-  font-weight: 800;
-  font-size: 34px;
-  letter-spacing: -1.5px;
-  color: var(--c-fg, #fff);
-  background: var(--c-bg, #1a1a2e);
-  border: 2px solid var(--c-border, rgba(255,255,255,0.12));
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,0.04),
-    0 8px 18px rgba(0,0,0,0.45);
+  background: transparent;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
               filter 0.4s ease;
   animation: software-float 6s ease-in-out infinite;
 }
+.software-card__logo img {
+  width: 100%; height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 18px rgba(0,0,0,0.55));
+  pointer-events: none;
+  user-select: none;
+}
 .software-card:nth-child(odd)  .software-card__logo { animation-delay: -2s; }
 .software-card:nth-child(even) .software-card__logo { animation-delay: -4s; }
 .software-card:hover .software-card__logo {
-  transform: scale(1.12) rotate(-6deg);
-  filter: drop-shadow(0 0 12px var(--c, rgba(34,197,94,0.6)));
+  transform: scale(1.14) rotate(-6deg);
+  filter: drop-shadow(0 0 16px var(--c, rgba(34,197,94,0.6)));
   animation-play-state: paused;
 }
 .software-card__name {
@@ -1053,7 +1051,7 @@ html[dir="rtl"] .software-track { animation-name: software-marquee-rtl; }
 @media (max-width: 720px) {
   .software-track { gap: 14px; animation-duration: 32s; }
   .software-card  { flex-basis: 140px; height: 140px; }
-  .software-card__logo { width: 60px; height: 60px; font-size: 26px; border-radius: 14px; }
+  .software-card__logo { width: 72px; height: 72px; border-radius: 14px; }
   .software-card__name { font-size: 11.5px; margin-top: 10px; }
   .software-card__name small { font-size: 10px; }
   .software-fade { width: 40px; }
@@ -1881,6 +1879,36 @@ html[lang="en"] body { direction: ltr; }
   html[dir="rtl"] .wa-float { left: 14px; }
 }
 
+/* ===== Mobile section-spacing hardening (prevents visual overlap of stacked sections) ===== */
+@media (max-width: 720px) {
+  /* Reduce hero top/bottom padding so it doesn't bleed into the next section */
+  .hero { padding: 56px 0 44px; }
+  .hero-inner { gap: 32px; }
+  h1 { font-size: clamp(28px, 8vw, 38px); line-height: 1.25; margin: 0 0 16px; }
+  .lead { font-size: var(--fs-md); }
+  .eyebrow { margin-bottom: 18px; }
+  .hero-cta { flex-wrap: wrap; gap: 12px; }
+  .hero-stats { margin-top: 28px; }
+  /* Give each section a clear gap so the slider, BTS image, etc. don't collide */
+  .latest-section { padding: 44px 0 36px; }
+  .latest-section .section-head-tight { margin-bottom: 18px; }
+  .bts-strip { padding: 36px 0; }
+  .section { padding: 48px 0; }
+  .section-head { margin-bottom: 28px; }
+  /* Section gradient/blob decorations that bleed beyond the section get clipped on mobile */
+  main { overflow-x: clip; }
+}
+@media (max-width: 480px) {
+  .hero { padding: 40px 0 32px; }
+  .hero-inner { gap: 24px; }
+  h1 { font-size: clamp(26px, 8.6vw, 34px); }
+  .latest-section { padding: 32px 0 28px; }
+  .bts-strip { padding: 28px 0; }
+  .section { padding: 40px 0; }
+  .section-head { margin-bottom: 22px; }
+  .container { padding: 0 18px; }
+}
+
 /* ===== Global prefers-reduced-motion guard ===== */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
@@ -2016,6 +2044,11 @@ select:focus-visible, textarea:focus-visible, button:focus-visible {
   position: relative;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   margin-bottom: 4px;
+}
+.wa-bubble__text {
+  display: block;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 .wa-bubble::after {
   content: "";

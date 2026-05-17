@@ -980,76 +980,100 @@ window.addEventListener('message', async (ev) => {
    ===================================================================== */
 const TESTIMONIALS = [
   {
-    name: 'م. أحمد عبد الحميد',
-    role: 'صاحب قناة بودكاست',
-    quote: 'خالد رفع جودة المحتوى عندنا بشكل ملحوظ. الإيقاع، الألوان، والصوت بقت احترافية بجد، والريتنشن اتحسّن في أول شهرين.',
-    initials: 'أ ع',
+    name: 'أحمد عبد الحميد',
+    role: 'بودكاستر',
+    quote: 'يا معلم الحلقة الأخيرة وحش 🔥 الفيوز قفلت ٤٥٪ والريتينشن طلع من ٣٢ لـ ٥٨٪. الناس بتكتب ف الكومنتس على المونتاج نفسه. كمل كده 👌',
+    initials: 'أ',
     color: '#22c55e',
     time: '٩:٤٢ م'
   },
   {
-    name: 'د. سارة محمد',
-    role: 'صاحبة براند طبي',
-    quote: 'تعامل محترم والتزام بالمواعيد. الفريق بيفهم البريف من أول مرة، والريلز اللي بنطلعها بتشتغل صح على إنستجرام وتيك توك.',
-    initials: 'س م',
+    name: 'د. سارة',
+    role: 'عيادة تجميل',
+    quote: 'تمام خالد، استلمت الريلز.\nالألوان طلعت زي ما اتفقنا والثمنيل ولا أحلى ❤️\nهنزلها بكره الفجر.',
+    initials: 'س',
     color: '#06b6d4',
-    time: '١١:١٥ ص'
+    time: '١:١٧ ص'
   },
   {
-    name: 'أحمد محمود',
-    role: 'صاحب براند تجاري',
-    quote: 'الفريق بيعرف يحوّل الفكرة لمحتوى يبيع. كنا محتاجين هوية بصرية + إعلانات، وخرجنا بنتائج فعلية على Meta Ads.',
-    initials: 'أ م',
+    name: 'محمود رضا',
+    role: 'صاحب براند ملابس',
+    quote: 'الكامبين بتاع الصيف اتقفل وبنوصل ROAS ٤.٢ — أول مرة براند صغير عندي يطلع بالأرقام دي. شغلك ربح فعلًا.',
+    initials: 'م',
     color: '#f59e0b',
     time: 'الإثنين'
   },
   {
-    name: 'م. كريم خالد',
-    role: 'منتج محتوى يوتيوب',
-    quote: 'حلقات اليوتيوب بقت ليها هوية بصرية ثابتة. المونتاج بيخدم الموضوع مش بيلهي عنه، وده اللي كنا محتاجينه بالظبط.',
-    initials: 'ك خ',
+    name: 'كريم سامي',
+    role: 'يوتيوبر تقني',
+    quote: 'صراحة فرق ميه الميه بين قبل وبعد. الحلقات بقالها هوية وايقاع، والكاتس بتيجي ف وقتها الصح بدون ما تحس فيها. سبسكرايبر زاد ٧K في شهر.',
+    initials: 'ك',
     color: '#a855f7',
-    time: 'أمس'
+    time: 'الخميس'
   },
   {
     name: 'مها الزهراني',
-    role: 'مؤسِّسة براند تجميل',
-    quote: 'الريلز اللي اشتغلها خالد كسرت أرقامنا على إنستجرام. سرعة الاستجابة ممتازة، والتنفيذ يطلع زي ما في دماغك بالظبط.',
-    initials: 'م ز',
+    role: 'مؤسسة براند تجميل',
+    quote: 'الريل بتاع المنتج الجديد عمل ١.٢M ڤيو 😱',
+    initials: 'م',
     color: '#ec4899',
-    time: 'الجمعة'
+    time: 'أمس'
   },
   {
-    name: 'م. هاني سعيد',
+    name: 'هاني سعيد',
     role: 'مدير تسويق',
-    quote: 'اشتغلنا حملة كاملة من مونتاج + تصميم + إعلانات ممولة. النتائج كانت قابلة للقياس، وده اللي بنحتاجه من شريك شغل.',
-    initials: 'ه س',
+    quote: 'تم الاستلام، الشغل احترافي زي العادة.\nالملاحظات اللي اتفقنا عليها كلها متنفذة، والديليفر قبل الديدلاين بـ ٦ ساعات.\nيا ريت نبدأ المرحلة التانية الأسبوع الجاي.',
+    initials: 'ه',
     color: '#3b82f6',
-    time: '٢ نوفمبر'
+    time: '٧:٣٠ م'
   },
   {
     name: 'د. ليلى الحربي',
-    role: 'مدربة تطوير ذات',
-    quote: 'محتوى التعليمي اتعمله مونتاج بياخد بإيد المتفرج خطوة خطوة. الناس بدأت تكمل الفيديوهات للآخر، ودا فرق كبير عندي.',
-    initials: 'ل ح',
+    role: 'مدربة تطوير ذاتي',
+    quote: 'سيريوسلي شكرًا. الكورس بتاعي اتغير شكله، الناس بقت تكمل للأخر فعلًا. الاحصائيات بتاعة Watch Time قفزت ٢.٣ ضعف 📈',
+    initials: 'ل',
     color: '#10b981',
-    time: '٢٨ أكتوبر'
+    time: '٢ نوفمبر'
   },
   {
-    name: 'م. عمر فاروق',
-    role: 'مالك ستوديو إنتاج',
-    quote: 'بنبعت لخالد مشاريع لها ديدلاينز ضيّقة وبيسلّم بجودة عالية كل مرة. الاحترام ده هو اللي خلانا نشتغل معاه باستمرار.',
-    initials: 'ع ف',
+    name: 'عمر فاروق',
+    role: 'ستوديو إنتاج',
+    quote: 'الريل وصل ✅',
+    initials: 'ع',
     color: '#ef4444',
-    time: '١٢ أكتوبر'
+    time: '١١:٥٨ م'
   },
   {
     name: 'نور الصبّاحي',
     role: 'صاحبة براند أزياء',
-    quote: 'بيفهم البراند ولونها وصوتها من أول جلسة. اللي اتعمل من ريلز للمواسم خلانا نوفر فلوس على إنتاج إعلانات تقليدية.',
-    initials: 'ن ص',
+    quote: 'بصراحة بقولها قدام أي حد: خالد بيفهم البراند بصوته وروحه. مش بنحتاج نشرحله مرتين. الكولكشن الجديد بقا له هوية بصرية مميزة بسبب شغله.',
+    initials: 'ن',
     color: '#14b8a6',
-    time: '٢٢ سبتمبر'
+    time: 'الجمعة'
+  },
+  {
+    name: 'يوسف الحمادي',
+    role: 'صاحب مطعم',
+    quote: 'الفيديو بتاع المنيو اتعمل ع تيك توك. ٨٠٠ مشاهدة بقت ٢٤٠ ألف. الفرع كان فاضي يوم الجمعة، دلوقتي بنحجز قدامي ٤ أيام 🤝',
+    initials: 'ي',
+    color: '#84cc16',
+    time: '٢٨ أكتوبر'
+  },
+  {
+    name: 'مهندس باسم',
+    role: 'مدير منتج SaaS',
+    quote: 'الديمو فيديو بتاع المنتج اللي عملتهولنا قلب الكونفيرجن بتاع لاندنج بيدج 2.1x. شغل سلس وفهم عميق للمشكلة اللي بنحلها.',
+    initials: 'ب',
+    color: '#0ea5e9',
+    time: '١٥ أكتوبر'
+  },
+  {
+    name: 'رنا الكردي',
+    role: 'كوتش لايف ستايل',
+    quote: 'تحفه ✨✨ الـ B-Roll اللي دخلته خلا الحلقة تبقى كأنها على نتفلكس مش يوتيوب. خبراتك بتفرق فعلًا.',
+    initials: 'ر',
+    color: '#f472b6',
+    time: '٦:٢١ ص'
   }
 ];
 
@@ -1060,27 +1084,26 @@ function escapeHtml(s) {
 }
 
 function waChatHTML(t) {
-  return `<figure class="wa-chat" role="group" aria-label="${escapeHtml(t.name)}">
-    <div class="wa-chat__header">
-      <div class="wa-chat__avatar" aria-hidden="true" style="background:linear-gradient(135deg, ${t.color}, ${t.color}99);">${escapeHtml(t.initials)}</div>
-      <div class="wa-chat__id">
-        <div class="wa-chat__name">${escapeHtml(t.name)}</div>
-        <div class="wa-chat__status">${escapeHtml(t.role)}</div>
-      </div>
-    </div>
-    <div class="wa-chat__body">
-      <div class="wa-bubble">
-        ${escapeHtml(t.quote)}
-        <span class="wa-bubble__meta">
-          <span>${escapeHtml(t.time)}</span>
-          <svg class="wa-bubble__check" viewBox="0 0 18 12" fill="none" aria-hidden="true">
-            <polyline points="1,6 5,10 12,3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-            <polyline points="6,6 10,10 17,3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-          </svg>
-        </span>
-      </div>
-    </div>
-  </figure>`;
+  return `<figure class="wa-chat" role="group" aria-label="${escapeHtml(t.name)}">`
+    + `<div class="wa-chat__header">`
+    +   `<div class="wa-chat__avatar" aria-hidden="true" style="background:linear-gradient(135deg, ${t.color}, ${t.color}99);">${escapeHtml(t.initials)}</div>`
+    +   `<div class="wa-chat__id">`
+    +     `<div class="wa-chat__name">${escapeHtml(t.name)}</div>`
+    +     `<div class="wa-chat__status">${escapeHtml(t.role)}</div>`
+    +   `</div>`
+    + `</div>`
+    + `<div class="wa-chat__body">`
+    +   `<div class="wa-bubble"><span class="wa-bubble__text">${escapeHtml(t.quote)}</span>`
+    +     `<span class="wa-bubble__meta">`
+    +       `<span>${escapeHtml(t.time)}</span>`
+    +       `<svg class="wa-bubble__check" viewBox="0 0 18 12" fill="none" aria-hidden="true">`
+    +         `<polyline points="1,6 5,10 12,3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`
+    +         `<polyline points="6,6 10,10 17,3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`
+    +       `</svg>`
+    +     `</span>`
+    +   `</div>`
+    + `</div>`
+    + `</figure>`;
 }
 
 function renderTestimonials() {
@@ -1108,23 +1131,21 @@ function renderTestimonials() {
    Software / tools logos marquee
    ===================================================================== */
 const SOFTWARE = [
-  { abbr: 'Pr', name: 'Premiere Pro',  sub: 'Video editing',   bg: '#00005b', fg: '#9999ff', color: '#9999ff' },
-  { abbr: 'Ae', name: 'After Effects', sub: 'Motion graphics', bg: '#00005b', fg: '#d291ff', color: '#d291ff' },
-  { abbr: 'DR', name: 'DaVinci Resolve', sub: 'Color grading', bg: '#221c1c', fg: '#ff5d5d', color: '#ff5d5d' },
-  { abbr: 'CC', name: 'CapCut Pro',    sub: 'Mobile editing',  bg: '#0e0e10', fg: '#ffffff', color: '#7c5cff' },
-  { abbr: 'FC', name: 'Final Cut Pro', sub: 'Apple editor',    bg: '#1d1d1f', fg: '#e5e5e7', color: '#8c8c8e' },
-  { abbr: 'Ps', name: 'Photoshop',     sub: 'Photo design',    bg: '#001e36', fg: '#31a8ff', color: '#31a8ff' },
-  { abbr: 'Ai', name: 'Illustrator',   sub: 'Vector design',   bg: '#330000', fg: '#ff9a00', color: '#ff9a00' },
-  { abbr: 'Au', name: 'Audition',      sub: 'Audio mixing',    bg: '#00310a', fg: '#9affd9', color: '#9affd9' },
-  { abbr: 'Ln', name: 'Lightroom',     sub: 'Color presets',   bg: '#001e36', fg: '#31a8ff', color: '#7ad0ff' },
-  { abbr: 'Lr', name: 'Premiere Rush', sub: 'Quick cuts',      bg: '#0e0a25', fg: '#cc66ff', color: '#cc66ff' }
+  { img: 'software-logos/premiere.png',      name: 'Premiere Pro',    sub: 'Video editing',   color: '#9999ff' },
+  { img: 'software-logos/after-effects.png', name: 'After Effects',   sub: 'Motion graphics', color: '#d291ff' },
+  { img: 'software-logos/davinci.png',       name: 'DaVinci Resolve', sub: 'Color grading',   color: '#ff5d5d' },
+  { img: 'software-logos/capcut.png',        name: 'CapCut Pro',      sub: 'Mobile editing',  color: '#7c5cff' },
+  { img: 'software-logos/final-cut.png',     name: 'Final Cut Pro',   sub: 'Apple editor',    color: '#bdbdbd' },
+  { img: 'software-logos/photoshop.png',     name: 'Photoshop',       sub: 'Photo design',    color: '#31a8ff' },
+  { img: 'software-logos/illustrator.png',   name: 'Illustrator',     sub: 'Vector design',   color: '#ff9a00' }
 ];
 
 function softwareCardHTML(s) {
-  return `<div class="software-card" role="listitem"
-    style="--c:${s.color}; --c-bg:${s.bg}; --c-fg:${s.fg}; --c-border:${s.fg}55;">
+  return `<div class="software-card" role="listitem" style="--c:${s.color};">
     <div>
-      <div class="software-card__logo" aria-hidden="true">${escapeHtml(s.abbr)}</div>
+      <div class="software-card__logo" aria-hidden="true">
+        <img src="${escapeHtml(s.img)}" alt="" loading="lazy" decoding="async" />
+      </div>
       <div class="software-card__name">${escapeHtml(s.name)}<small>${escapeHtml(s.sub)}</small></div>
     </div>
   </div>`;
