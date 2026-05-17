@@ -611,6 +611,46 @@ document.querySelectorAll('.hero-text, .hero-visual, .mini-card, .contact-item')
   io.observe(el);
 });
 
+// ====== Per-stat breathing offset so each digit pulses on its own beat ======
+document.querySelectorAll('.hero-stats li').forEach((li, i) => {
+  li.style.setProperty('--stat-i', String(i));
+});
+
+// ====== Footer reveal on view ======
+const footerEl = document.querySelector('footer');
+if (footerEl) {
+  const fio = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('is-revealed'); fio.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  fio.observe(footerEl);
+}
+
+// ====== BTS image: mouse parallax (desktop only) ======
+(() => {
+  const fig = document.querySelector('.bts-figure');
+  if (!fig) return;
+  const img = fig.querySelector('img');
+  if (!img) return;
+  // Only on devices with a real pointer — touch devices keep just the CSS Ken Burns.
+  const hasFinePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (!hasFinePointer) return;
+  let raf = null, tx = 0, ty = 0;
+  fig.addEventListener('mousemove', (ev) => {
+    const r = fig.getBoundingClientRect();
+    tx = ((ev.clientX - r.left) / r.width - 0.5) * 14;
+    ty = ((ev.clientY - r.top) / r.height - 0.5) * 10;
+    if (!raf) raf = requestAnimationFrame(() => {
+      img.style.transform = `scale(1.08) translate3d(${tx}px, ${ty}px, 0)`;
+      raf = null;
+    });
+  });
+  fig.addEventListener('mouseleave', () => {
+    img.style.transform = '';
+  });
+})();
+
 // Stagger groups
 document.querySelectorAll('.process-grid, .pricing-grid, .services, .skills, .about-cards').forEach(el => {
   el.classList.add('reveal-stagger');
