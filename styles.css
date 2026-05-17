@@ -448,6 +448,36 @@ html[lang="en"] .hero-role { font-family: var(--font-en); }
 .bts-figure img {
   width: 100%; height: auto; display: block;
   aspect-ratio: 16 / 9; object-fit: cover;
+  /* Slow continuous Ken Burns + mouse-driven parallax via inline style set in JS */
+  transform-origin: 50% 50%;
+  animation: btsKenBurns 18s ease-in-out infinite alternate;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.bts-figure:hover img { animation-play-state: paused; }
+@keyframes btsKenBurns {
+  0%   { transform: scale(1.04) translate3d(0,0,0); }
+  50%  { transform: scale(1.10) translate3d(-1%, -1%, 0); }
+  100% { transform: scale(1.06) translate3d(1%, 0.5%, 0); }
+}
+/* Slow horizontal sheen sweep across the BTS image to add subtle life */
+.bts-figure::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.06) 50%, transparent 70%);
+  transform: translateX(-110%);
+  animation: btsSheen 7s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 2;
+}
+@keyframes btsSheen {
+  0%, 60% { transform: translateX(-110%); }
+  80%     { transform: translateX(110%); }
+  100%    { transform: translateX(110%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bts-figure img { animation: none; transform: none; }
+  .bts-figure::after { animation: none; opacity: 0; }
 }
 .bts-caption {
   position: absolute; left: 0; right: 0; bottom: 0;
@@ -2579,51 +2609,31 @@ html[dir="rtl"] .wa-bubble::after {
    SECTION ENTRY ANIMATION + DIVIDERS + ALTERNATING BACKGROUNDS
    ============================================================ */
 
-/* Section base: alternating backgrounds + decorative top border */
+/* Section base — sections flow seamlessly into each other (no per-section backgrounds,
+   no decorative divider lines). The page-wide bg-gradient handles ambience. */
 .section {
   position: relative;
   isolation: isolate;
 }
 .section::before {
+  /* Soft, very low-intensity ambient halo that ONLY fades in while the section is on
+     screen. Kept at very low alpha so it never reads as a hard band/shadow. */
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(1200px 500px at 20% -10%, rgba(34, 197, 94, 0.06), transparent 60%),
-    radial-gradient(1000px 500px at 100% 110%, rgba(59, 130, 246, 0.05), transparent 60%);
+    radial-gradient(1200px 500px at 20% -10%, rgba(34, 197, 94, 0.035), transparent 60%),
+    radial-gradient(1000px 500px at 100% 110%, rgba(59, 130, 246, 0.025), transparent 60%);
   opacity: 0;
   transition: opacity 0.9s ease-out;
   z-index: -1;
 }
 .section.section-in::before { opacity: 1; }
 
-/* Decorative SVG-like divider above each section */
-.section::after {
-  content: '';
-  position: absolute;
-  /* Offset a bit so the line lives clearly INSIDE the section instead of
-     visually touching the section above (which previously looked like an overlap). */
-  top: 28px; left: 50%;
-  transform: translateX(-50%) scaleX(0);
-  transform-origin: center;
-  width: 220px; height: 2px;
-  background: linear-gradient(90deg, transparent, var(--neon), var(--blue), transparent);
-  border-radius: 2px;
-  opacity: 0;
-  transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s, opacity 0.8s ease 0.1s;
-}
-.section.section-in::after { transform: translateX(-50%) scaleX(1); opacity: 0.85; }
-/* No top divider line for the very first content section after the hero — it sits too
-   close to the hero stats / social icons and reads as an overlap on mobile. */
-.section.latest-section::after { display: none; }
-
-/* Alternating section tones for visual separation */
-.section:nth-of-type(even) { background: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.45), transparent); }
-.section#pricing { background: linear-gradient(180deg, transparent, rgba(34, 197, 94, 0.025) 30%, rgba(59, 130, 246, 0.03) 70%, transparent); }
-.section#works  { background: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.55), transparent); }
-.section#process { background: linear-gradient(180deg, transparent, rgba(59, 130, 246, 0.04), transparent); }
-.section#designs { background: linear-gradient(180deg, transparent, rgba(34, 197, 94, 0.03), transparent); }
+/* Previously we drew a 220px gradient line and tinted alternating sections with darker
+   stripes — the user reported this looked like a shadow band that visually chopped the
+   page into separate boxes. Both effects have been removed below so sections flow. */
 
 /* ===== Section entry animation ===== */
 .section-enter .se-tag { opacity: 0; transform: translateY(-12px) scale(0.85); filter: blur(4px); transition: opacity 0.6s ease, transform 0.7s cubic-bezier(0.2, 0.9, 0.2, 1), filter 0.6s ease; }
@@ -2939,6 +2949,45 @@ html[dir="rtl"] .wa-bubble::after {
 .btn-primary:hover::after { left: 120%; }
 
 /* ============================================================
+   Ambient motion — gentle floats/pulses across the page so things feel alive
+   without overwhelming the user. All low-amplitude and slow.
+   ============================================================ */
+/* Hero "متاح لمشاريع …" pill: very gentle vertical bob */
+.eyebrow { animation: slideInDown 0.8s ease both, eyebrowBob 5.5s ease-in-out 0.8s infinite; }
+@keyframes eyebrowBob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-4px); }
+}
+/* Primary CTA: subtle glow breath so it draws the eye without being distracting */
+.btn-primary { animation: ctaBreath 3.8s ease-in-out 1.2s infinite; }
+@keyframes ctaBreath {
+  0%, 100% { box-shadow: 0 18px 40px rgba(34, 197, 94, 0.32); }
+  50%      { box-shadow: 0 22px 55px rgba(34, 197, 94, 0.55), 0 0 0 6px rgba(34, 197, 94, 0.05); }
+}
+/* Hero stat numbers: slow breathing scale so each digit feels alive */
+.hero-stats strong {
+  animation: statBreath 4.2s ease-in-out infinite;
+  animation-delay: calc(var(--stat-i, 0) * 0.4s);
+}
+@keyframes statBreath {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.045); }
+}
+/* Section tag pill: tiny tilt to feel alive */
+.section-tag { animation: tagSway 5.5s ease-in-out infinite; }
+@keyframes tagSway {
+  0%, 100% { transform: rotate(-0.6deg); }
+  50%      { transform: rotate(0.6deg); }
+}
+.skills li,
+.about-cards .about-card { transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.45s ease; }
+.skills li:hover,
+.about-cards .about-card:hover { transform: translateY(-4px); }
+/* Footer: fade up when it enters the viewport */
+footer { opacity: 0; transform: translateY(20px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
+footer.is-revealed { opacity: 1; transform: none; }
+
+/* ============================================================
    reduce-motion fallback
    ============================================================ */
 @media (prefers-reduced-motion: reduce) {
@@ -2952,12 +3001,17 @@ html[dir="rtl"] .wa-bubble::after {
   .gallery .card { transform: none !important; }
   .gradient-text,
   .bg-gradient,
+  .eyebrow,
   .eyebrow .dot,
+  .btn-primary,
+  .hero-stats strong,
+  .section-tag,
   .card-placeholder .soon-icon,
   .section.section-in .section-head::after {
     animation: none !important;
   }
   .hero-visual .photo-card img { transform: none !important; }
+  footer { opacity: 1 !important; transform: none !important; }
 }
 
 /* ============================================================
