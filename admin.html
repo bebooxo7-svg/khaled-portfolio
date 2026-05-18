@@ -552,15 +552,40 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
 
 /* ===== Tabs (top-level panel switcher) ===== */
 .panel-tabs {
-  display: inline-flex; padding: 4px; gap: 4px;
+  display: flex; flex-wrap: wrap; padding: 4px; gap: 4px;
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; margin-bottom: 18px;
+  max-width: 100%;
 }
 .panel-tabs button {
   padding: 10px 18px; border: 0; background: transparent; color: var(--muted);
   border-radius: 9px; font: inherit; font-weight: 600;
+  white-space: nowrap; cursor: pointer;
+  transition: background .2s ease, color .2s ease, transform .15s ease;
 }
+.panel-tabs button:hover { background: var(--surface-2); color: var(--text); }
 .panel-tabs button.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #0a0e1a; }
+/* Sticky horizontal-scroll panel tabs on mobile so user always sees them */
+@media (max-width: 700px) {
+  .panel-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    position: sticky; top: 0; z-index: 30;
+    backdrop-filter: blur(10px);
+    background: rgba(20, 22, 30, 0.92);
+  }
+  .panel-tabs::-webkit-scrollbar { display: none; }
+  .panel-tabs button { padding: 9px 14px; font-size: 0.84rem; flex-shrink: 0; }
+  /* Software panel: stack rows vertically on mobile */
+  #softwareRoot .sw-row { grid-template-columns: 1fr !important; }
+  #softwareRoot .sw-row > div:last-child {
+    display: flex !important; flex-direction: row !important; flex-wrap: wrap; gap: 6px;
+  }
+  #softwareRoot .sw-row > div:last-child button { flex: 1; min-width: 64px; padding: 8px; font-size: 0.84rem; }
+}
 
 /* ===== Videos panel ===== */
 .videos-row {
@@ -668,10 +693,13 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
   <div class="panel-tabs" role="tablist" aria-label="لوحات التحكم">
     <button data-panel="texts" class="active">📝 النصوص والأسعار</button>
     <button data-panel="videos">🎬 الفيديوهات</button>
+    <button data-panel="latest">✨ المقتطفات</button>
+    <button data-panel="software">🛠️ البرامج</button>
     <button data-panel="designs">🎨 ديزاينات</button>
     <button data-panel="images">🖼️ الصور</button>
     <button data-panel="theme">🎛️ الشكل والألوان</button>
     <button data-panel="visibility">🙈 إظهار / إخفاء</button>
+    <button data-panel="access">🔑 الوصول</button>
   </div>
 
   <div id="textsPanel">
@@ -833,6 +861,49 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
   </div>
 
   <!-- v3.2: Visibility panel — show/hide whole sections of the site -->
+  <!-- v4: Latest / مقتطفات info panel (auto-driven by latest project per category) -->
+  <div id="latestPanel" hidden>
+    <div class="design-intro" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center;">
+      <span style="font-size: 26px;">✨</span>
+      <div style="flex:1">
+        <div style="font-weight: 700; margin-bottom: 4px;">قسم المقتطفات — أحدث الأعمال</div>
+        <div style="color: var(--muted); font-size: 0.86rem;">القسم ده بيتعمر تلقائي. أحدث شغل من كل تصنيف بيظهر هنا (ريلز · يوتيوب طويل · بودكاست · تعليمي · أفراح). لو ضفت أو شلت فيديو من تاب "الفيديوهات" بيتحدّث لوحده هنا.</div>
+      </div>
+      <a class="btn primary" href="#" data-goto-panel="videos">🎬 إدارة الفيديوهات</a>
+    </div>
+    <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <h3 style="margin:0; font-size:1.0rem;">المعاينة الحالية</h3>
+        <span style="color:var(--muted); font-size:0.78rem;">يتم اختيار آخر مشروع من كل قسم بالتاريخ</span>
+        <button class="btn" id="latestRefreshBtn" style="margin-inline-start:auto;" title="إعادة تحميل">↻ تحديث</button>
+      </div>
+      <div id="latestPreview" style="display:grid; gap:10px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));"></div>
+      <div style="margin-top:14px;">
+        <label style="display:flex; align-items:center; gap:10px; padding: 12px; background: var(--bg); border: 1px dashed var(--border); border-radius: var(--radius); cursor:pointer;">
+          <input type="checkbox" id="latestVisibleChk" />
+          <span><b>إظهار قسم المقتطفات على الموقع</b> — لو شيلت العلامة هيختفي من الصفحة الرئيسية ومن قائمة التنقل.</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <!-- v4: Software / البرامج management panel (bilingual sub text, color, visibility, reorder) -->
+  <div id="softwarePanel" hidden>
+    <div class="design-intro" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center;">
+      <span style="font-size: 26px;">🛠️</span>
+      <div style="flex:1">
+        <div style="font-weight: 700; margin-bottom: 4px;">شريط البرامج اللي بشتغل بيها</div>
+        <div style="color: var(--muted); font-size: 0.86rem;">عدّل النص العربي والإنجليزي لكل برنامج، اللون، وأخفي/أظهر — التعديل بينحفظ تلقائي على GitHub.</div>
+      </div>
+      <label class="btn" style="cursor:pointer;">
+        + رفع لوجو
+        <input type="file" id="softwareLogoInput" accept="image/*" hidden />
+      </label>
+      <button class="btn primary" id="softwareAddBtn">+ برنامج جديد</button>
+    </div>
+    <div id="softwareRoot" style="display:grid; gap:10px;"></div>
+  </div>
+
   <div id="visibilityPanel" hidden>
     <div class="design-intro" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center;">
       <span style="font-size: 26px;">🙈</span>
@@ -844,6 +915,36 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
     </div>
     <div id="visibilityRoot" style="display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
       <!-- toggles injected by JS -->
+    </div>
+  </div>
+
+  <!-- v4: Access / token visibility panel -->
+  <div id="accessPanel" hidden>
+    <div class="design-intro" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 18px; margin-bottom: 14px; display: flex; gap: 12px; align-items: center;">
+      <span style="font-size: 26px;">🔑</span>
+      <div style="flex:1">
+        <div style="font-weight: 700; margin-bottom: 4px;">الوصول إلى GitHub</div>
+        <div style="color: var(--muted); font-size: 0.86rem;">التوكن مشفّر في المتصفح بمعلومات اللوجن. لو حصل أي خطأ في الحفظ، تقدر تشوف الحالة وتجدّد التوكن من هنا.</div>
+      </div>
+    </div>
+    <div style="display:grid; gap:14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));">
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px;">
+        <div style="font-weight:700; margin-bottom:8px;">🔐 التوكن (مخفي)</div>
+        <div id="accessTokenView" style="font-family: ui-monospace, monospace; letter-spacing: 1px; font-size: 0.96rem; word-break: break-all;">…</div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;">
+          <button class="btn" id="accessTokenToggleBtn">👁️ إظهار آخر ٨ أحرف</button>
+          <button class="btn" id="accessTokenCopyBtn">📋 نسخ</button>
+          <button class="btn danger" id="accessTokenRotateBtn">🔄 تجديد</button>
+        </div>
+        <small style="display:block; margin-top:10px; color:var(--muted); font-size:0.78rem;">التوكن مش بينطبع كامل أبدًا — حتى لو ضغطت إظهار، هيظهر آخر ٨ أحرف بس عشان لو الشاشة مكشوفة.</small>
+      </div>
+      <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px;">
+        <div style="font-weight:700; margin-bottom:8px;">⚙️ معلومات الـ Repo</div>
+        <div style="font-size:0.9rem; color:var(--muted);">المالك: <b id="accessOwner" style="color:var(--text);">—</b></div>
+        <div style="font-size:0.9rem; color:var(--muted);">الريبو: <b id="accessRepo" style="color:var(--text);">—</b></div>
+        <div style="font-size:0.9rem; color:var(--muted);">الفرع: <b id="accessBranch" style="color:var(--text);">—</b></div>
+        <div style="font-size:0.9rem; color:var(--muted);">الحالة: <b id="accessStatus" style="color:var(--accent);">…</b></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1751,11 +1852,26 @@ function setActivePanel(name) {
   const designsPanel = document.getElementById('designsPanel');
   const themePanel = document.getElementById('themePanel');
   const visPanel = document.getElementById('visibilityPanel');
+  const latestPanel = document.getElementById('latestPanel');
+  const softwarePanel = document.getElementById('softwarePanel');
+  const accessPanel = document.getElementById('accessPanel');
   if (designsPanel) designsPanel.hidden = name !== 'designs';
   if (themePanel) themePanel.hidden = name !== 'theme';
   if (visPanel) visPanel.hidden = name !== 'visibility';
+  if (latestPanel) latestPanel.hidden = name !== 'latest';
+  if (softwarePanel) softwarePanel.hidden = name !== 'software';
+  if (accessPanel) accessPanel.hidden = name !== 'access';
   if (name === 'visibility') {
     try { window.__renderVisibility && window.__renderVisibility(); } catch (e) {}
+  }
+  if (name === 'latest') {
+    try { window.__renderLatestPanel && window.__renderLatestPanel(); } catch (e) {}
+  }
+  if (name === 'software') {
+    try { window.__renderSoftwarePanel && window.__renderSoftwarePanel(); } catch (e) {}
+  }
+  if (name === 'access') {
+    try { window.__renderAccessPanel && window.__renderAccessPanel(); } catch (e) {}
   }
 
   // Update download/save buttons label
@@ -1767,7 +1883,7 @@ function setActivePanel(name) {
     dlBtn.textContent = '⬇️ تنزيل projects.json';
     if (saveBtn) saveBtn.textContent = '💾 حفظ على GitHub';
     if (resetBtn) resetBtn.hidden = false;
-  } else if (name === 'images' || name === 'designs' || name === 'theme') {
+  } else if (name === 'images' || name === 'designs' || name === 'theme' || name === 'latest' || name === 'software' || name === 'access') {
     dlBtn.hidden = true;
     if (resetBtn) resetBtn.hidden = true;
     if (saveBtn) saveBtn.hidden = true;
@@ -1777,7 +1893,7 @@ function setActivePanel(name) {
     if (saveBtn) saveBtn.textContent = '💾 حفظ على GitHub';
     if (resetBtn) resetBtn.hidden = false;
   }
-  if (name !== 'images' && name !== 'designs' && name !== 'theme') {
+  if (name !== 'images' && name !== 'designs' && name !== 'theme' && name !== 'latest' && name !== 'software' && name !== 'access') {
     dlBtn.hidden = false;
     syncGhButtons();
   }
@@ -3194,8 +3310,10 @@ async function handleDesignFiles(files) {
    ============================================================ */
 const VISIBILITY_SECTIONS = [
   { id: 'home',         label: 'الصفحة الرئيسية / الهيرو' },
+  { id: 'latest',       label: 'مقتطفات / أحدث الأعمال' },
   { id: 'bts',          label: 'صورة Behind the scenes' },
   { id: 'about',        label: 'عني' },
+  { id: 'software',     label: 'البرامج (شريط اللوجوهات)' },
   { id: 'works',        label: 'الأعمال (الفيديوهات)' },
   { id: 'designs',      label: 'الديزاينات' },
   { id: 'services',     label: 'الخدمات' },
@@ -3343,6 +3461,283 @@ document.addEventListener('DOMContentLoaded', () => {
   // Pre-load so opening the tab is instant
   loadVisibilityFromRepo();
 });
+
+/* ============================================================
+   v4: Latest / مقتطفات info panel
+   ============================================================ */
+const LATEST_CAT_ORDER = ['reels', 'longyt', 'podcast', 'edu', 'wedding'];
+const LATEST_CAT_LABELS = { reels: '🎞️ ريلز', longyt: '▶️ يوتيوب طويل', podcast: '🎙️ بودكاست', edu: '🎓 تعليمي', wedding: '💍 أفراح' };
+function escapeAdminHtml(s) {
+  return (s || '').toString().replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+}
+function renderLatestPanel() {
+  const root = document.getElementById('latestPreview');
+  if (!root) return;
+  const list = (videos && videos.ar) ? videos.ar.slice() : [];
+  list.sort((a, b) => {
+    const ta = a.addedAt ? Date.parse(a.addedAt) : 0;
+    const tb = b.addedAt ? Date.parse(b.addedAt) : 0;
+    return tb - ta;
+  });
+  const picks = [];
+  for (const cat of LATEST_CAT_ORDER) {
+    const top = list.find(p => p.cat === cat);
+    picks.push({ cat, item: top || null });
+  }
+  root.innerHTML = picks.map(p => `
+    <div style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px;">
+      <div style="font-size:0.84rem; color:var(--muted); margin-bottom:6px;">${LATEST_CAT_LABELS[p.cat] || p.cat}</div>
+      ${p.item
+        ? `<div style="font-weight:700; font-size:0.96rem; line-height:1.35; margin-bottom:6px;">${escapeAdminHtml(p.item.title || '')}</div>
+           <div style="font-size:0.76rem; color:var(--muted); word-break: break-all;">${escapeAdminHtml(p.item.url || '')}</div>`
+        : `<div style="color:#ef4444; font-weight:600;">⚠️ مفيش فيديو في القسم ده</div>`
+      }
+    </div>
+  `).join('');
+  const chk = document.getElementById('latestVisibleChk');
+  if (chk) {
+    if (!visibilityState) loadVisibilityFromRepo().then(() => { chk.checked = visibilityState.sections.latest !== false; });
+    else chk.checked = visibilityState.sections.latest !== false;
+    chk.onchange = () => {
+      if (!visibilityState) visibilityState = { sections: {} };
+      visibilityState.sections.latest = chk.checked;
+      try { localStorage.setItem('khaled_visibility_draft', JSON.stringify(visibilityState)); } catch {}
+      if (window.kha_autosync) window.kha_autosync.schedule('visibility');
+      const fr = document.getElementById('ppFrame');
+      if (fr && fr.contentWindow) fr.contentWindow.postMessage({ type: 'kha-refresh' }, '*');
+    };
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const rb = document.getElementById('latestRefreshBtn');
+  if (rb) rb.addEventListener('click', renderLatestPanel);
+  document.querySelectorAll('[data-goto-panel]').forEach(a => {
+    a.addEventListener('click', (e) => { e.preventDefault(); setActivePanel(a.dataset.gotoPanel); });
+  });
+});
+window.__renderLatestPanel = renderLatestPanel;
+
+/* ============================================================
+   v4: Software / البرامج management panel
+   Bilingual editor for the logos marquee. Saves to software.json
+   via auto-commit so changes reach the live site automatically.
+   ============================================================ */
+const SOFTWARE_DEFAULTS_ADMIN = [
+  { img: 'software-logos/premiere.png',      color: '#9999ff', ar: { name: 'Premiere Pro',    sub: 'مونتاج فيديو' },     en: { name: 'Premiere Pro',    sub: 'Video editing'   } },
+  { img: 'software-logos/after-effects.png', color: '#d291ff', ar: { name: 'After Effects',   sub: 'موشن جرافيك' },      en: { name: 'After Effects',   sub: 'Motion graphics' } },
+  { img: 'software-logos/davinci.png',       color: '#ff5d5d', ar: { name: 'DaVinci Resolve', sub: 'تصحيح الألوان' },    en: { name: 'DaVinci Resolve', sub: 'Color grading'   } },
+  { img: 'software-logos/capcut.png',        color: '#7c5cff', ar: { name: 'CapCut Pro',      sub: 'مونتاج موبايل' },    en: { name: 'CapCut Pro',      sub: 'Mobile editing'  } },
+  { img: 'software-logos/final-cut.png',     color: '#bdbdbd', ar: { name: 'Final Cut Pro',   sub: 'مونتاج Apple' },     en: { name: 'Final Cut Pro',   sub: 'Apple editor'    } },
+  { img: 'software-logos/photoshop.png',     color: '#31a8ff', ar: { name: 'Photoshop',       sub: 'تصميم وصور' },       en: { name: 'Photoshop',       sub: 'Photo design'    } },
+  { img: 'software-logos/illustrator.png',   color: '#ff9a00', ar: { name: 'Illustrator',     sub: 'تصميم فيكتور' },     en: { name: 'Illustrator',     sub: 'Vector design'   } }
+];
+let softwareDraft = loadSoftwareDraft();
+function loadSoftwareDraft() {
+  try {
+    const raw = localStorage.getItem('khaled_software_draft');
+    if (!raw) return JSON.parse(JSON.stringify(SOFTWARE_DEFAULTS_ADMIN));
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed;
+    if (parsed && Array.isArray(parsed.items)) return parsed.items;
+  } catch {}
+  return JSON.parse(JSON.stringify(SOFTWARE_DEFAULTS_ADMIN));
+}
+function persistSoftwareDraft() {
+  const diff = JSON.stringify(softwareDraft) !== JSON.stringify(SOFTWARE_DEFAULTS_ADMIN);
+  if (diff) localStorage.setItem('khaled_software_draft', JSON.stringify(softwareDraft));
+  else localStorage.removeItem('khaled_software_draft');
+  if (window.kha_autosync && diff) window.kha_autosync.schedule('software');
+  const fr = document.getElementById('ppFrame');
+  if (fr && fr.contentWindow) fr.contentWindow.postMessage({ type: 'kha-refresh' }, '*');
+}
+function softwareRowHTML(s, i) {
+  const ar = s.ar || { name: s.name || '', sub: s.sub || '' };
+  const en = s.en || { name: s.name || '', sub: s.sub || '' };
+  const hidden = !!s.hidden;
+  return `
+    <div class="sw-row" data-i="${i}" style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; display: grid; gap: 10px; grid-template-columns: 88px 1fr auto; align-items: start;">
+      <div style="display:grid; gap:6px; place-items:center;">
+        <div style="width:72px; height:72px; border-radius:14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); display:grid; place-items:center; overflow:hidden;">
+          <img src="${escapeAdminHtml(s.img || '')}" alt="" style="max-width: 88%; max-height: 88%; object-fit: contain;" onerror="this.style.opacity=0.2" />
+        </div>
+        <input class="sw-color" type="color" value="${escapeAdminHtml(s.color || '#22c55e')}" title="لون البرنامج" style="width:40px; height:24px; border:none; background:transparent; cursor:pointer;" />
+      </div>
+      <div style="display:grid; gap:8px;">
+        <input class="sw-img" type="text" value="${escapeAdminHtml(s.img || '')}" placeholder="software-logos/xxx.png" style="width:100%; padding:8px 10px; background:var(--bg); border:1px solid var(--border); color:var(--text); border-radius:10px; font-family: ui-monospace, monospace; font-size:0.84rem;" />
+        <div style="display:grid; gap:8px; grid-template-columns: 1fr 1fr;">
+          <div>
+            <div style="font-size:0.76rem; color:var(--muted); margin-bottom:4px;">🇪🇬 الاسم (عربي)</div>
+            <input class="sw-name-ar" type="text" value="${escapeAdminHtml(ar.name)}" style="width:100%; padding:8px 10px; background:var(--bg); border:1px solid var(--border); color:var(--text); border-radius:10px;" />
+          </div>
+          <div>
+            <div style="font-size:0.76rem; color:var(--muted); margin-bottom:4px;">🇬🇧 Name (English)</div>
+            <input class="sw-name-en" type="text" value="${escapeAdminHtml(en.name)}" style="width:100%; padding:8px 10px; background:var(--bg); border:1px solid var(--border); color:var(--text); border-radius:10px;" />
+          </div>
+          <div>
+            <div style="font-size:0.76rem; color:var(--muted); margin-bottom:4px;">🇪🇬 الوصف (عربي)</div>
+            <input class="sw-sub-ar" type="text" value="${escapeAdminHtml(ar.sub)}" style="width:100%; padding:8px 10px; background:var(--bg); border:1px solid var(--border); color:var(--text); border-radius:10px;" />
+          </div>
+          <div>
+            <div style="font-size:0.76rem; color:var(--muted); margin-bottom:4px;">🇬🇧 Sub (English)</div>
+            <input class="sw-sub-en" type="text" value="${escapeAdminHtml(en.sub)}" style="width:100%; padding:8px 10px; background:var(--bg); border:1px solid var(--border); color:var(--text); border-radius:10px;" />
+          </div>
+        </div>
+      </div>
+      <div style="display:grid; gap:6px; align-content:start;">
+        <button class="btn" data-act="up"   title="فوق">▲</button>
+        <button class="btn" data-act="down" title="تحت">▼</button>
+        <button class="btn" data-act="toggle" style="background: ${hidden ? 'rgba(239,68,68,0.18)' : 'rgba(34,197,94,0.18)'}; color: ${hidden ? '#ef4444' : '#22c55e'};" title="${hidden ? 'مخفي' : 'ظاهر'}">${hidden ? '✕ مخفي' : '✓ ظاهر'}</button>
+        <button class="btn danger" data-act="del" title="حذف">🗑</button>
+      </div>
+    </div>`;
+}
+function renderSoftwarePanel() {
+  const root = document.getElementById('softwareRoot');
+  if (!root) return;
+  if (!softwareDraft.length) {
+    root.innerHTML = `<div class="empty" style="text-align:center; padding:24px; color:var(--muted);">لا يوجد برامج. اضغط "+ برنامج جديد" للإضافة.</div>`;
+    return;
+  }
+  root.innerHTML = softwareDraft.map(softwareRowHTML).join('');
+  root.querySelectorAll('.sw-row').forEach(row => {
+    const i = parseInt(row.dataset.i, 10);
+    const upd = (path, val) => {
+      const s = softwareDraft[i];
+      if (path === 'img')    s.img = val;
+      if (path === 'color')  s.color = val;
+      if (path === 'name-ar') { s.ar = s.ar || {}; s.ar.name = val; }
+      if (path === 'name-en') { s.en = s.en || {}; s.en.name = val; }
+      if (path === 'sub-ar')  { s.ar = s.ar || {}; s.ar.sub = val; }
+      if (path === 'sub-en')  { s.en = s.en || {}; s.en.sub = val; }
+      delete s.name; delete s.sub;
+      persistSoftwareDraft();
+    };
+    row.querySelector('.sw-img').addEventListener('input', e => upd('img', e.target.value));
+    row.querySelector('.sw-color').addEventListener('input', e => upd('color', e.target.value));
+    row.querySelector('.sw-name-ar').addEventListener('input', e => upd('name-ar', e.target.value));
+    row.querySelector('.sw-name-en').addEventListener('input', e => upd('name-en', e.target.value));
+    row.querySelector('.sw-sub-ar').addEventListener('input', e => upd('sub-ar', e.target.value));
+    row.querySelector('.sw-sub-en').addEventListener('input', e => upd('sub-en', e.target.value));
+    row.querySelectorAll('button[data-act]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const a = btn.dataset.act;
+        if (a === 'toggle') softwareDraft[i].hidden = !softwareDraft[i].hidden;
+        if (a === 'del') softwareDraft.splice(i, 1);
+        if (a === 'up' && i > 0) { const t = softwareDraft[i-1]; softwareDraft[i-1] = softwareDraft[i]; softwareDraft[i] = t; }
+        if (a === 'down' && i < softwareDraft.length - 1) { const t = softwareDraft[i+1]; softwareDraft[i+1] = softwareDraft[i]; softwareDraft[i] = t; }
+        persistSoftwareDraft();
+        renderSoftwarePanel();
+      });
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', () => {
+  const addBtn = document.getElementById('softwareAddBtn');
+  if (addBtn) addBtn.addEventListener('click', () => {
+    softwareDraft.push({
+      img: 'software-logos/new.png',
+      color: '#22c55e',
+      hidden: false,
+      ar: { name: 'برنامج جديد', sub: 'وصف' },
+      en: { name: 'New tool', sub: 'description' }
+    });
+    persistSoftwareDraft();
+    renderSoftwarePanel();
+  });
+  const upBtn = document.getElementById('softwareLogoInput');
+  if (upBtn) upBtn.addEventListener('change', async (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+    if (!window.GitHubAPI || !window.GitHubAPI.isConfigured()) {
+      toast('⚠️ سجّل دخول الـ GitHub الأول', 'error'); return;
+    }
+    const safe = file.name.replace(/[^a-zA-Z0-9._-]+/g, '-').toLowerCase();
+    const path = 'software-logos/' + Date.now() + '-' + safe;
+    try {
+      const buf = await file.arrayBuffer();
+      let bin = ''; const u = new Uint8Array(buf);
+      for (let i=0; i<u.length; i++) bin += String.fromCharCode(u[i]);
+      const b64 = btoa(bin);
+      await window.GitHubAPI.commitBase64(path, b64, 'Upload software logo');
+      softwareDraft.push({
+        img: path, color: '#22c55e', hidden: false,
+        ar: { name: 'برنامج جديد', sub: 'وصف' },
+        en: { name: 'New tool', sub: 'description' }
+      });
+      persistSoftwareDraft();
+      renderSoftwarePanel();
+      toast('✅ اترفع اللوجو على GitHub');
+    } catch (err) {
+      toast('❌ فشل رفع اللوجو: ' + (err.message || ''), 'error');
+    }
+    e.target.value = '';
+  });
+});
+window.__renderSoftwarePanel = renderSoftwarePanel;
+if (typeof kha_autosync !== 'undefined') kha_autosync.register('software', () => {
+  return {
+    path: 'software.json',
+    json: JSON.stringify({ items: softwareDraft, _meta: { description: 'Software / tools marquee config. Auto-saved from /admin.html.' } }, null, 2) + '\n',
+    msg:  'Update software list [auto]',
+  };
+}, () => { try { localStorage.removeItem('khaled_software_draft'); } catch {} });
+
+/* ============================================================
+   v4: Access / token visibility panel
+   Shows last-N chars of the active token + repo info + status.
+   Token is NEVER printed in full plain text — only the last 4-8.
+   ============================================================ */
+function getAdminTokenSafe() {
+  try { return (window.GitHubAPI && window.GitHubAPI.config && window.GitHubAPI.config.token) || ''; } catch { return ''; }
+}
+function maskToken(tok, revealLast) {
+  if (!tok) return '—';
+  const n = revealLast || 4;
+  if (tok.length <= n) return '••••' + tok;
+  return '••••••••••••••••' + tok.slice(-n);
+}
+function renderAccessPanel() {
+  const cfg = (window.GitHubAPI && window.GitHubAPI.config) || {};
+  const view = document.getElementById('accessTokenView');
+  const owner = document.getElementById('accessOwner');
+  const repo = document.getElementById('accessRepo');
+  const branch = document.getElementById('accessBranch');
+  const status = document.getElementById('accessStatus');
+  if (view) view.textContent = maskToken(getAdminTokenSafe(), 4);
+  if (owner) owner.textContent = cfg.owner || '—';
+  if (repo) repo.textContent = cfg.repo || '—';
+  if (branch) branch.textContent = cfg.branch || 'main';
+  if (status) {
+    if (!getAdminTokenSafe()) { status.textContent = '✕ مفيش توكن'; status.style.color = '#ef4444'; }
+    else { status.textContent = '✓ متصل'; status.style.color = '#22c55e'; }
+  }
+}
+document.addEventListener('DOMContentLoaded', () => {
+  let revealed = false;
+  const toggle = document.getElementById('accessTokenToggleBtn');
+  const copy = document.getElementById('accessTokenCopyBtn');
+  const rotate = document.getElementById('accessTokenRotateBtn');
+  if (toggle) toggle.addEventListener('click', () => {
+    revealed = !revealed;
+    const v = document.getElementById('accessTokenView');
+    if (v) v.textContent = maskToken(getAdminTokenSafe(), revealed ? 8 : 4);
+    toggle.textContent = revealed ? '🙈 إخفاء' : '👁️ إظهار آخر ٨ أحرف';
+  });
+  if (copy) copy.addEventListener('click', async () => {
+    const tok = getAdminTokenSafe();
+    if (!tok) { toast('مفيش توكن للنسخ', 'error'); return; }
+    try { await navigator.clipboard.writeText(tok); toast('✅ التوكن اتنسخ — متشاركوش'); }
+    catch { toast('❌ المتصفح رفض النسخ', 'error'); }
+  });
+  if (rotate) rotate.addEventListener('click', () => {
+    if (window.KhaledAuth) {
+      window.KhaledAuth.clear();
+      toast('سجل دخول من جديد عشان تجدد التوكن', 'success');
+      setTimeout(() => location.reload(), 800);
+    }
+  });
+});
+window.__renderAccessPanel = renderAccessPanel;
 
 </script>
 

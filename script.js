@@ -1014,8 +1014,9 @@ async function loadProjectsOverrides() {
 }
 
 (async () => {
-  await Promise.all([loadContentOverrides(), loadProjectsOverrides(), applyVisibility()]);
+  await Promise.all([loadContentOverrides(), loadProjectsOverrides(), loadSoftwareOverrides(), applyVisibility()]);
   applyLanguage(currentLang);
+  try { renderSoftwareStrip(); } catch {}
   // Tell parent (admin live preview iframe) we're ready.
   try { window.parent && window.parent !== window && window.parent.postMessage({ type: 'kha-preview-ready' }, '*'); } catch {}
 })();
@@ -1030,8 +1031,10 @@ window.addEventListener('message', async (ev) => {
     Object.assign(i18n, JSON.parse(JSON.stringify((window && window.__i18n_defaults) || { ar: {}, en: {} })));
     Object.keys(projects).forEach(k => delete projects[k]);
     Object.assign(projects, JSON.parse(JSON.stringify((window && window.__projects_defaults) || { ar: [], en: [] })));
-    await Promise.all([loadContentOverrides(), loadProjectsOverrides(), applyVisibility()]);
+    SOFTWARE = (window && window.__software_defaults) ? window.__software_defaults.slice() : SOFTWARE;
+    await Promise.all([loadContentOverrides(), loadProjectsOverrides(), loadSoftwareOverrides(), applyVisibility()]);
     applyLanguage(currentLang);
+    try { renderSoftwareStrip(); } catch {}
     // Also refresh theme + designs from disk if their loaders are present.
     try { window.__reloadTheme && window.__reloadTheme(); } catch {}
     try { window.__loadDesigns && window.__loadDesigns(currentLang); } catch {}
@@ -1153,24 +1156,63 @@ function renderTestimonials() {
 
 /* =====================================================================
    Software / tools logos marquee
+
+   Each entry is bilingual:
+     { img, color, hidden, ar: { name, sub }, en: { name, sub } }
+   The dashboard ships overrides via software.json (and a localStorage draft
+   for live preview). pickSoftwareLang() picks the right language block at
+   render time. Hidden entries are skipped entirely.
    ===================================================================== */
-const SOFTWARE = [
-  { img: 'software-logos/premiere.png',      name: 'Premiere Pro',    sub: 'Video editing',   color: '#9999ff' },
-  { img: 'software-logos/after-effects.png', name: 'After Effects',   sub: 'Motion graphics', color: '#d291ff' },
-  { img: 'software-logos/davinci.png',       name: 'DaVinci Resolve', sub: 'Color grading',   color: '#ff5d5d' },
-  { img: 'software-logos/capcut.png',        name: 'CapCut Pro',      sub: 'Mobile editing',  color: '#7c5cff' },
-  { img: 'software-logos/final-cut.png',     name: 'Final Cut Pro',   sub: 'Apple editor',    color: '#bdbdbd' },
-  { img: 'software-logos/photoshop.png',     name: 'Photoshop',       sub: 'Photo design',    color: '#31a8ff' },
-  { img: 'software-logos/illustrator.png',   name: 'Illustrator',     sub: 'Vector design',   color: '#ff9a00' }
+const SOFTWARE_DEFAULTS = [
+  { img: 'software-logos/premiere.png',      color: '#9999ff', ar: { name: 'Premiere Pro',    sub: 'مونتاج فيديو' },     en: { name: 'Premiere Pro',    sub: 'Video editing'   } },
+  { img: 'software-logos/after-effects.png', color: '#d291ff', ar: { name: 'After Effects',   sub: 'موشن جرافيك' },      en: { name: 'After Effects',   sub: 'Motion graphics' } },
+  { img: 'software-logos/davinci.png',       color: '#ff5d5d', ar: { name: 'DaVinci Resolve', sub: 'تصحيح الألوان' },    en: { name: 'DaVinci Resolve', sub: 'Color grading'   } },
+  { img: 'software-logos/capcut.png',        color: '#7c5cff', ar: { name: 'CapCut Pro',      sub: 'مونتاج موبايل' },    en: { name: 'CapCut Pro',      sub: 'Mobile editing'  } },
+  { img: 'software-logos/final-cut.png',     color: '#bdbdbd', ar: { name: 'Final Cut Pro',   sub: 'مونتاج Apple' },     en: { name: 'Final Cut Pro',   sub: 'Apple editor'    } },
+  { img: 'software-logos/photoshop.png',     color: '#31a8ff', ar: { name: 'Photoshop',       sub: 'تصميم وصور' },       en: { name: 'Photoshop',       sub: 'Photo design'    } },
+  { img: 'software-logos/illustrator.png',   color: '#ff9a00', ar: { name: 'Illustrator',     sub: 'تصميم فيكتور' },     en: { name: 'Illustrator',     sub: 'Vector design'   } }
 ];
+let SOFTWARE = SOFTWARE_DEFAULTS.slice();
+window.__software_defaults = SOFTWARE_DEFAULTS;
+
+async function loadSoftwareOverrides() {
+  // 1) localStorage draft (admin live preview — only this browser)
+  try {
+    const draft = localStorage.getItem('khaled_software_draft');
+    if (draft) {
+      const data = JSON.parse(draft);
+      if (Array.isArray(data) && data.length) { SOFTWARE = data; return; }
+      if (data && Array.isArray(data.items)) { SOFTWARE = data.items; return; }
+    }
+  } catch (e) { /* ignore */ }
+  // 2) committed software.json (production override for all visitors)
+  try {
+    const res = await fetch('software.json?v=' + Date.now(), { cache: 'no-cache' });
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length) { SOFTWARE = data; return; }
+      if (data && Array.isArray(data.items) && data.items.length) { SOFTWARE = data.items; return; }
+    }
+  } catch (e) { /* no software.json — defaults stand */ }
+}
+window.__loadSoftware = loadSoftwareOverrides;
+
+function pickSoftwareLang(s) {
+  const lang = (document.documentElement.getAttribute('lang') === 'en') ? 'en' : 'ar';
+  // Old shape support: { name, sub } at the top level.
+  if (typeof s.name === 'string') return { name: s.name, sub: s.sub || '' };
+  const block = s && s[lang] ? s[lang] : (s && s.ar) || {};
+  return { name: block.name || '', sub: block.sub || '' };
+}
 
 function softwareCardHTML(s) {
-  return `<div class="software-card" role="listitem" style="--c:${s.color};">
+  const t = pickSoftwareLang(s);
+  return `<div class="software-card" role="listitem" style="--c:${s.color || '#22c55e'};">
     <div>
       <div class="software-card__logo" aria-hidden="true">
         <img src="${escapeHtml(s.img)}" alt="" loading="lazy" decoding="async" />
       </div>
-      <div class="software-card__name">${escapeHtml(s.name)}<small>${escapeHtml(s.sub)}</small></div>
+      <div class="software-card__name">${escapeHtml(t.name)}<small>${escapeHtml(t.sub)}</small></div>
     </div>
   </div>`;
 }
@@ -1179,7 +1221,8 @@ let _softwareSetupDone = false;
 function renderSoftwareStrip() {
   const track = document.getElementById('softwareTrack');
   if (!track) return;
-  const half = SOFTWARE.map(softwareCardHTML).join('');
+  const visible = (SOFTWARE || []).filter(s => !s.hidden);
+  const half = visible.map(softwareCardHTML).join('');
   track.innerHTML = half + half;
   if (_softwareSetupDone) return;
   _softwareSetupDone = true;
