@@ -204,12 +204,24 @@ function renderGallery(filter = 'all', subFilter = 'all') {
 }
 
 // ====== "Latest Work" auto-scrolling strip (slider) ======
-function getLatestProjects(limit = 10) {
+// Pull 1 latest project from each category so the strip is a true cross-
+// section of recent work (reels + longyt + podcast + edu + wedding), not 10
+// of the same kind. Each card is from a different section.
+const LATEST_CAT_ORDER = ['reels', 'longyt', 'podcast', 'edu', 'wedding'];
+function getLatestProjects() {
   const list = projects[currentLang] || [];
-  // Pick only items with a playable url so each card is useful when tapped
   const playable = list.filter(p => isPlayable(p.url));
-  const pool = playable.length >= limit ? playable : list;
-  return sortByDateDesc(pool).slice(0, limit);
+  const pool = playable.length ? playable : list;
+  const sorted = sortByDateDesc(pool);
+  const picks = [];
+  for (const cat of LATEST_CAT_ORDER) {
+    const top = sorted.find(p => p.cat === cat);
+    if (top) picks.push(top);
+  }
+  // If for some reason no items matched (e.g. categories renamed), fall back
+  // to the 5 most-recent overall so the strip is never empty.
+  if (!picks.length) return sorted.slice(0, 5);
+  return picks;
 }
 
 function latestCardHTML(p) {
@@ -238,12 +250,16 @@ function latestCardHTML(p) {
 function renderLatestStrip() {
   const track = document.getElementById('latestTrack');
   if (!track) return;
-  const latest = getLatestProjects(10);
+  let latest = getLatestProjects();
   if (!latest.length) {
     track.innerHTML = '';
     return;
   }
-  // Duplicate items so the scroll position can wrap seamlessly
+  // The CSS marquee animates translate by -50% (half the track), so we always
+  // need exactly two copies of the same block. With only ~5 cards (one per
+  // category) one block can be narrower than a wide viewport — duplicate the
+  // items inside the block until it's at least ~1200px wide visually.
+  while (latest.length < 8) latest = latest.concat(latest);
   const half = latest.map(latestCardHTML).join('');
   track.innerHTML = half + half;
   track.dataset.itemCount = String(latest.length);
@@ -785,15 +801,21 @@ document.querySelectorAll('.plan.card-flip').forEach(card => {
 // (Tilt disabled — caused conflict with 3D flip)
 
 // ====== Counter animation ======
-function animateCounter(el) {
+// Tick up from (target - 10) to target so each digit is readable. For tiny
+// targets (e.g. 4 years), start at 0 since 4-10 would be negative.
+function animateCounter(el, delay = 0) {
   const target = parseInt(el.dataset.counter, 10);
   const suffix = el.dataset.suffix || '';
-  const duration = 1800;
-  const start = performance.now();
+  const offset = parseInt(el.dataset.offset || (target > 10 ? '10' : String(target)), 10);
+  const startVal = Math.max(0, target - offset);
+  const duration = 2200;
+  const startAt = performance.now() + delay;
+  el.textContent = startVal + suffix;
   function tick(now) {
-    const t = Math.min((now - start) / duration, 1);
+    if (now < startAt) { requestAnimationFrame(tick); return; }
+    const t = Math.min((now - startAt) / duration, 1);
     const eased = 1 - Math.pow(1 - t, 3);
-    const value = Math.floor(eased * target);
+    const value = Math.floor(startVal + eased * (target - startVal));
     el.textContent = value + suffix;
     if (t < 1) requestAnimationFrame(tick);
     else el.textContent = target + suffix;
@@ -801,10 +823,13 @@ function animateCounter(el) {
   requestAnimationFrame(tick);
 }
 const counterObserver = new IntersectionObserver((entries) => {
+  // Stagger each visible counter so they don't all tick in lockstep.
+  let idx = 0;
   entries.forEach(e => {
     if (e.isIntersecting) {
-      animateCounter(e.target);
+      animateCounter(e.target, idx * 250);
       counterObserver.unobserve(e.target);
+      idx++;
     }
   });
 }, { threshold: 0.5 });
@@ -1018,104 +1043,58 @@ window.addEventListener('message', async (ev) => {
 /* =====================================================================
    WhatsApp-style testimonials (chat bubbles)
    ===================================================================== */
-const TESTIMONIALS = [
-  {
-    name: 'أحمد عبد الحميد',
-    role: 'بودكاستر',
-    quote: 'يا معلم الحلقة الأخيرة وحش 🔥 الفيوز قفلت ٤٥٪ والريتينشن طلع من ٣٢ لـ ٥٨٪. الناس بتكتب ف الكومنتس على المونتاج نفسه. كمل كده 👌',
-    initials: 'أ',
-    color: '#22c55e',
-    time: '٩:٤٢ م'
-  },
-  {
-    name: 'د. سارة',
-    role: 'عيادة تجميل',
-    quote: 'تمام خالد، استلمت الريلز.\nالألوان طلعت زي ما اتفقنا والثمنيل ولا أحلى ❤️\nهنزلها بكره الفجر.',
-    initials: 'س',
-    color: '#06b6d4',
-    time: '١:١٧ ص'
-  },
-  {
-    name: 'محمود رضا',
-    role: 'صاحب براند ملابس',
-    quote: 'الكامبين بتاع الصيف اتقفل وبنوصل ROAS ٤.٢ — أول مرة براند صغير عندي يطلع بالأرقام دي. شغلك ربح فعلًا.',
-    initials: 'م',
-    color: '#f59e0b',
-    time: 'الإثنين'
-  },
-  {
-    name: 'كريم سامي',
-    role: 'يوتيوبر تقني',
-    quote: 'صراحة فرق ميه الميه بين قبل وبعد. الحلقات بقالها هوية وايقاع، والكاتس بتيجي ف وقتها الصح بدون ما تحس فيها. سبسكرايبر زاد ٧K في شهر.',
-    initials: 'ك',
-    color: '#a855f7',
-    time: 'الخميس'
-  },
-  {
-    name: 'مها الزهراني',
-    role: 'مؤسسة براند تجميل',
-    quote: 'الريل بتاع المنتج الجديد عمل ١.٢M ڤيو 😱',
-    initials: 'م',
-    color: '#ec4899',
-    time: 'أمس'
-  },
-  {
-    name: 'هاني سعيد',
-    role: 'مدير تسويق',
-    quote: 'تم الاستلام، الشغل احترافي زي العادة.\nالملاحظات اللي اتفقنا عليها كلها متنفذة، والديليفر قبل الديدلاين بـ ٦ ساعات.\nيا ريت نبدأ المرحلة التانية الأسبوع الجاي.',
-    initials: 'ه',
-    color: '#3b82f6',
-    time: '٧:٣٠ م'
-  },
-  {
-    name: 'د. ليلى الحربي',
-    role: 'مدربة تطوير ذاتي',
-    quote: 'سيريوسلي شكرًا. الكورس بتاعي اتغير شكله، الناس بقت تكمل للأخر فعلًا. الاحصائيات بتاعة Watch Time قفزت ٢.٣ ضعف 📈',
-    initials: 'ل',
-    color: '#10b981',
-    time: '٢ نوفمبر'
-  },
-  {
-    name: 'عمر فاروق',
-    role: 'ستوديو إنتاج',
-    quote: 'الريل وصل ✅',
-    initials: 'ع',
-    color: '#ef4444',
-    time: '١١:٥٨ م'
-  },
-  {
-    name: 'نور الصبّاحي',
-    role: 'صاحبة براند أزياء',
-    quote: 'بصراحة بقولها قدام أي حد: خالد بيفهم البراند بصوته وروحه. مش بنحتاج نشرحله مرتين. الكولكشن الجديد بقا له هوية بصرية مميزة بسبب شغله.',
-    initials: 'ن',
-    color: '#14b8a6',
-    time: 'الجمعة'
-  },
-  {
-    name: 'يوسف الحمادي',
-    role: 'صاحب مطعم',
-    quote: 'الفيديو بتاع المنيو اتعمل ع تيك توك. ٨٠٠ مشاهدة بقت ٢٤٠ ألف. الفرع كان فاضي يوم الجمعة، دلوقتي بنحجز قدامي ٤ أيام 🤝',
-    initials: 'ي',
-    color: '#84cc16',
-    time: '٢٨ أكتوبر'
-  },
-  {
-    name: 'مهندس باسم',
-    role: 'مدير منتج SaaS',
-    quote: 'الديمو فيديو بتاع المنتج اللي عملتهولنا قلب الكونفيرجن بتاع لاندنج بيدج 2.1x. شغل سلس وفهم عميق للمشكلة اللي بنحلها.',
-    initials: 'ب',
-    color: '#0ea5e9',
-    time: '١٥ أكتوبر'
-  },
-  {
-    name: 'رنا الكردي',
-    role: 'كوتش لايف ستايل',
-    quote: 'تحفه ✨✨ الـ B-Roll اللي دخلته خلا الحلقة تبقى كأنها على نتفلكس مش يوتيوب. خبراتك بتفرق فعلًا.',
-    initials: 'ر',
-    color: '#f472b6',
-    time: '٦:٢١ ص'
+// Lightweight bilingual helper: read the right language block from a pool entry.
+function pickLang(entry) {
+  const lang = (document.documentElement.getAttribute('lang') === 'en') ? 'en' : 'ar';
+  const block = (entry && entry[lang]) ? entry[lang] : (entry && entry.ar) || {};
+  return {
+    name: block.name || '',
+    role: block.role || '',
+    quote: block.quote || '',
+    time: block.time || '',
+    initials: (entry && entry.initials && entry.initials[lang]) || (block.name ? block.name.charAt(0) : '')
+  };
+}
+
+// localStorage key tracking which testimonial IDs have been shown to this
+// visitor so we never repeat the same 16 on a refresh until the pool is
+// exhausted. When everything's been seen, the seen-list resets so the next
+// refresh starts a fresh cycle.
+const TESTIMONIALS_SEEN_KEY = 'khaled_testimonials_seen_v1';
+const TESTIMONIALS_PER_RENDER = 16;
+function getSeenIds() {
+  try {
+    const raw = localStorage.getItem(TESTIMONIALS_SEEN_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+function saveSeenIds(ids) {
+  try { localStorage.setItem(TESTIMONIALS_SEEN_KEY, JSON.stringify(ids)); } catch {}
+}
+
+// Pick N fresh testimonials that haven't been shown to this visitor yet.
+// If fewer than N remain unseen, reset the seen list and start a new cycle so
+// the user always gets a full grid.
+function pickFreshTestimonials(pool, n) {
+  if (!Array.isArray(pool) || pool.length === 0) return [];
+  let seen = new Set(getSeenIds());
+  let unseen = pool.filter(t => !seen.has(t.id));
+  if (unseen.length < n) {
+    // Reset cycle when the remaining unseen pool can't fill a full grid.
+    seen = new Set();
+    unseen = pool.slice();
   }
-];
+  // Fisher–Yates shuffle a copy of the unseen pool.
+  const shuf = unseen.slice();
+  for (let i = shuf.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuf[i], shuf[j]] = [shuf[j], shuf[i]];
+  }
+  const picked = shuf.slice(0, Math.min(n, shuf.length));
+  picked.forEach(p => seen.add(p.id));
+  saveSeenIds(Array.from(seen));
+  return picked;
+}
 
 function escapeHtml(s) {
   return (s || '').replace(/[&<>"']/g, c => ({
@@ -1123,10 +1102,12 @@ function escapeHtml(s) {
   }[c]));
 }
 
-function waChatHTML(t) {
-  return `<figure class="wa-chat" role="group" aria-label="${escapeHtml(t.name)}">`
+function waChatHTML(entry) {
+  const t = pickLang(entry);
+  const color = entry.color || '#22c55e';
+  return `<figure class="wa-chat" role="group" aria-label="${escapeHtml(t.name)}" data-tid="${escapeHtml(entry.id || '')}">`
     + `<div class="wa-chat__header">`
-    +   `<div class="wa-chat__avatar" aria-hidden="true" style="background:linear-gradient(135deg, ${t.color}, ${t.color}99);">${escapeHtml(t.initials)}</div>`
+    +   `<div class="wa-chat__avatar" aria-hidden="true" style="background:linear-gradient(135deg, ${color}, ${color}99);">${escapeHtml(t.initials)}</div>`
     +   `<div class="wa-chat__id">`
     +     `<div class="wa-chat__name">${escapeHtml(t.name)}</div>`
     +     `<div class="wa-chat__status">${escapeHtml(t.role)}</div>`
@@ -1146,21 +1127,13 @@ function waChatHTML(t) {
     + `</figure>`;
 }
 
-// Fisher–Yates: deterministic-quality shuffle that produces a fresh order on
-// every page load (no seeded RNG).
-function shuffled(arr) {
-  const out = arr.slice();
-  for (let i = out.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [out[i], out[j]] = [out[j], out[i]];
-  }
-  return out;
-}
-
 function renderTestimonials() {
   const grid = document.getElementById('waChatGrid');
   if (!grid) return;
-  grid.innerHTML = shuffled(TESTIMONIALS).map(waChatHTML).join('');
+  const pool = (window && window.TESTIMONIALS_POOL) || [];
+  const picks = pickFreshTestimonials(pool, TESTIMONIALS_PER_RENDER);
+  if (!picks.length) { grid.innerHTML = ''; return; }
+  grid.innerHTML = picks.map(waChatHTML).join('');
   // Reveal-on-scroll for staggered bubble pop
   const cards = grid.querySelectorAll('.wa-chat');
   if ('IntersectionObserver' in window) {
