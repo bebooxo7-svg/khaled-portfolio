@@ -757,6 +757,18 @@
       "poster": "https://i.vimeocdn.com/video/2155580091-c7d16719598cb7f9cd30809ec8135621c5fdf51594857879da4a8ccaf94dbd0b-d_640?region=us",
       "url": "https://vimeo.com/1190730732?share=copy&fl=sv&fe=ci",
       "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "ريل طب بيطري 1",
+      "desc": "مونتاج ريل لعيادة طب بيطري",
+      "tag": "ريلز",
+      "badge": "Vimeo",
+      "thumb": "",
+      "url": "https://vimeo.com/manage/videos/1193342129",
+      "orient": "horizontal",
+      "addedAt": 1779127534842
     }
   ],
   "en": [
@@ -1517,6 +1529,18 @@
       "poster": "https://i.vimeocdn.com/video/2155580091-c7d16719598cb7f9cd30809ec8135621c5fdf51594857879da4a8ccaf94dbd0b-d_640?region=us",
       "url": "https://vimeo.com/1190730732?share=copy&fl=sv&fe=ci",
       "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "Real Veterinary Medicine 1",
+      "desc": "Realme montage of a veterinary clinic",
+      "tag": "Reels",
+      "badge": "Vimeo",
+      "thumb": "",
+      "url": "https://vimeo.com/manage/videos/1193342129",
+      "orient": "horizontal",
+      "addedAt": 1779127534842
     }
   ]
 }
