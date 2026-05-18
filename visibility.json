@@ -8,9 +8,11 @@
     "services": true,
     "pricing": false,
     "process": true,
-    "testimonials": true,
+    "testimonials": false,
     "skills": true,
-    "contact": true
+    "contact": true,
+    "latest": true,
+    "software": true
   },
   "_meta": {
     "description": "Per-section visibility flags. Auto-saved from /admin.html."
