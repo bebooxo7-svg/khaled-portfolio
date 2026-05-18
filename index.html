@@ -42,7 +42,7 @@
   <!-- Preload hero image (LCP, WebP with JPG fallback) -->
   <link rel="preload" as="image" href="khaled-hero.webp" type="image/webp" fetchpriority="high" />
 
-  <link rel="stylesheet" href="styles.css?v=38" />
+  <link rel="stylesheet" href="styles.css?v=39" />
 
   <!-- Structured data: Person + ProfessionalService -->
   <script type="application/ld+json">
@@ -193,15 +193,15 @@
         </div>
         <ul class="hero-stats">
           <li>
-            <strong data-counter="4" data-suffix="+">0</strong>
+            <strong data-counter="4" data-suffix="+">0+</strong>
             <span data-i18n="stats.years">سنين خبرة</span>
           </li>
           <li>
-            <strong data-counter="500" data-suffix="+">0</strong>
+            <strong data-counter="500" data-suffix="+">490+</strong>
             <span data-i18n="stats.projects">مشروع منجز</span>
           </li>
           <li>
-            <strong data-counter="100" data-suffix="+">0</strong>
+            <strong data-counter="100" data-suffix="+">90+</strong>
             <span data-i18n="stats.clients">عميل سعيد</span>
           </li>
         </ul>
@@ -889,25 +889,34 @@
       </div>
       <div class="process-grid">
         <article class="step" data-step="01">
-          <span class="step-num">01</span>
-          <div class="step-line"></div>
+          <span class="step-badge" aria-hidden="true">01</span>
+          <div class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          </div>
           <h3 data-i18n="process.s1.t">الاستكشاف والتخطيط</h3>
           <p data-i18n="process.s1.d">بفهم جمهورك، أهدافك، وبوزيشن براندك علشان أبني خطة محتوى تخدمها.</p>
         </article>
         <article class="step" data-step="02">
-          <span class="step-num">02</span>
-          <div class="step-line"></div>
+          <span class="step-badge" aria-hidden="true">02</span>
+          <div class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h4"></path></svg>
+          </div>
           <h3 data-i18n="process.s2.t">السكريبت والستوريبورد</h3>
           <p data-i18n="process.s2.d">بكتب سكريبت سردي وبرسم ستوريبورد تفصيلي بيغيّر تجربة المشاهد.</p>
         </article>
         <article class="step" data-step="03">
-          <span class="step-num">03</span>
-          <div class="step-line"></div>
+          <span class="step-badge" aria-hidden="true">03</span>
+          <div class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"></path><rect x="2" y="6" width="14" height="12" rx="2" ry="2"></rect></svg>
+          </div>
           <h3 data-i18n="process.s3.t">التصوير والإدارة</h3>
           <p data-i18n="process.s3.d">إعداد إضاءة سينمائي، إدارة بلاتو، وتصوير بأعلى جودة بأدوات احترافية.</p>
         </article>
         <article class="step" data-step="04">
-          <span class="step-num">04</span>
+          <span class="step-badge" aria-hidden="true">04</span>
+          <div class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 14.5 16 10 4 20"></path><path d="M2 6h20"></path><path d="m8 2 1.5 4"></path><path d="m14.5 2 1.5 4"></path><path d="M2 6v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6"></path></svg>
+          </div>
           <h3 data-i18n="process.s4.t">المونتاج والتسليم</h3>
           <p data-i18n="process.s4.d">مونتاج سينمائي + تصحيح ألوان + موشن + صوت، ثم تسليم بعد المراجعات.</p>
         </article>
@@ -1064,7 +1073,8 @@
   <script src="projects-defaults.js?v=27"></script>
   <script src="theme.js?v=30"></script>
   <script src="designs.js?v=30"></script>
-  <script src="script.js?v=44"></script>
+  <script src="testimonials-pool.js?v=1"></script>
+  <script src="script.js?v=46"></script>
   <!-- Inline edit overlay (only activates when ?edit=1 is in URL) -->
   <script src="github-api.js?v=30"></script>
   <script src="inline-edit.js?v=30"></script>
