@@ -1952,7 +1952,7 @@ html[lang="en"] body { direction: ltr; }
 main { overflow-x: clip; }
 @media (max-width: 720px) {
   /* Hero: hide the scroll-cue mouse icon that visually crowds the next section */
-  .hero { padding: 56px 0 64px; }
+  .hero { padding: 56px 0 96px; }
   .hero-inner { gap: 32px; }
   h1 { font-size: clamp(28px, 8vw, 38px); line-height: 1.25; margin: 0 0 16px; }
   .lead { font-size: var(--fs-md); }
@@ -1960,20 +1960,28 @@ main { overflow-x: clip; }
   .hero-cta { flex-wrap: wrap; gap: 12px; }
   .hero-stats { margin-top: 28px; }
   .scroll-hint { display: none; }
+  /* Social icons on mobile: lighter visual weight — no surface fill, very subtle
+     border, so the row of 4 icons doesn't read as "boxes with shadows" right before
+     the next section. */
+  .hero-socials { margin-top: 8px; gap: 14px; }
+  .social-btn { width: 40px; height: 40px; background: transparent; border-color: rgba(255,255,255,0.10); box-shadow: none; }
+  .social-btn:hover { box-shadow: none; transform: none; }
   /* Each section gets clear top/bottom gaps so nothing collides visually.
-     The first content section after the hero gets an extra top margin so it can never
-     visually run into the hero's social icons / stats. */
-  .latest-section { padding: 56px 0 40px; margin-top: 32px; }
+     Latest is the first content section after the hero — give it a big margin-top so
+     the green "مقتطفات" pill cannot ever sit right under the social icons. */
+  .latest-section { padding: 64px 0 40px; margin-top: 56px; }
   .latest-section .section-head-tight { margin-bottom: 22px; }
   .bts-strip { padding: 56px 0; }
   .section { padding: 64px 0; }
   .section-head { margin-bottom: 32px; }
 }
 @media (max-width: 480px) {
-  .hero { padding: 40px 0 48px; }
+  .hero { padding: 40px 0 80px; }
   .hero-inner { gap: 24px; }
   h1 { font-size: clamp(26px, 8.6vw, 34px); }
-  .latest-section { padding: 48px 0 32px; margin-top: 24px; }
+  .hero-socials { margin-top: 4px; }
+  .social-btn { width: 38px; height: 38px; }
+  .latest-section { padding: 56px 0 32px; margin-top: 48px; }
   .bts-strip { padding: 44px 0; }
   .section { padding: 52px 0; }
   .section-head { margin-bottom: 24px; }
