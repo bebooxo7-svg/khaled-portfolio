@@ -11,23 +11,23 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 :root {
-  --bg: #0a0e1a;
-  --bg-2: #0f172a;
+  --bg: #0c1220;
+  --bg-2: #151f32;
   --surface: rgba(255,255,255,0.04);
-  --surface-2: rgba(255,255,255,0.07);
-  --border: rgba(255,255,255,0.10);
-  --border-2: rgba(255,255,255,0.18);
+  --surface-2: rgba(255,255,255,0.08);
+  --border: rgba(148,163,184,0.16);
+  --border-2: rgba(148,163,184,0.26);
   --text: #e6edf6;
-  --muted: #8d96a8;
+  --muted: #94a3b8;
   --accent: #22c55e;
   --accent-2: #3b82f6;
   --warn: #f59e0b;
   --danger: #ef4444;
   --radius: 14px;
-  --shadow: 0 8px 24px rgba(0,0,0,0.35);
+  --shadow: 0 18px 48px rgba(12,22,30,0.25);
 }
 * { box-sizing: border-box; }
-html, body { margin:0; padding:0; background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%); color: var(--text); font-family: 'IBM Plex Sans Arabic','Inter','Segoe UI',Tahoma,system-ui,sans-serif; min-height: 100vh; }
+html, body { margin:0; padding:0; background: radial-gradient(80% 60% at 90% 0%, rgba(167,180,234,.12), transparent 72%), radial-gradient(70% 55% at 0% 30%, rgba(124,205,186,.10), transparent 70%), linear-gradient(145deg, var(--bg), var(--bg-2)); color: var(--text); font-family: 'IBM Plex Sans Arabic','Inter','Segoe UI',Tahoma,system-ui,sans-serif; min-height: 100vh; }
 a { color: var(--accent); text-decoration: none; }
 
 /* ===== Layout ===== */
@@ -36,7 +36,7 @@ header.topbar {
   position: sticky; top: 0; z-index: 50;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
   padding: 14px 18px; margin-bottom: 24px;
-  background: rgba(10,14,26,0.85); backdrop-filter: blur(10px);
+  background: rgba(38,52,62,0.82); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--border); border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
@@ -567,6 +567,20 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
 .panel-tabs button.active { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #0a0e1a; }
 /* Sticky horizontal-scroll panel tabs on mobile so user always sees them */
 @media (max-width: 700px) {
+  header.topbar { position: relative; top: auto; }
+  header.topbar .actions {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+  }
+  header.topbar .actions .btn { min-width: 0; min-height: 42px; padding: 8px 9px; font-size: .82rem; }
+  .shell { padding: 12px 12px 76px; }
+  .gh-bar { align-items: stretch; }
+  .gh-bar .gh-info { min-width: 0; flex-basis: 100%; }
+  .gh-bar .gh-actions { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .toolbar { padding: 10px; }
+  .toolbar .search { min-width: min(220px, 100%); }
+  .toolbar .filter { max-width: 100%; overflow-x: auto; }
+  .toolbar .filter button { white-space: nowrap; }
   .panel-tabs {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -579,6 +593,7 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
   }
   .panel-tabs::-webkit-scrollbar { display: none; }
   .panel-tabs button { padding: 9px 14px; font-size: 0.84rem; flex-shrink: 0; }
+  .panel-tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   /* Software panel: stack rows vertically on mobile */
   #softwareRoot .sw-row { grid-template-columns: 1fr !important; }
   #softwareRoot .sw-row > div:last-child {
@@ -618,6 +633,7 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
   border: 1px solid var(--border);
 }
 .videos-cat-group h3 .count { color: var(--muted); font-size: 0.8rem; font-weight: 400; }
+.videos-cat-group { scroll-margin-top: 90px; }
 .video-modal { max-width: 720px; }
 .video-form { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
 .video-form .full { grid-column: 1 / -1; }
@@ -641,8 +657,186 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
   .videos-row { grid-template-columns: 64px 1fr; }
   .videos-row .actions-col { grid-column: 1 / -1; justify-content: stretch; }
   .videos-row .actions-col button { flex: 1; justify-content: center; }
+  .videos-row .actions-col { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .videos-row .actions-col button { min-width: 0; padding: 8px 5px; }
+  .modal-bg { padding: 12px; overflow-y: auto; align-items: flex-start; }
+  .modal { margin-block: auto; padding: 18px; max-height: calc(100dvh - 24px); overflow-y: auto; }
+  .video-form fieldset { grid-template-columns: 1fr; }
+  .toast-wrap { inset-inline: 12px; bottom: 12px; }
+  .toast { max-width: 100%; }
 }
-</style>
+@media (max-width: 380px) {
+  .shell { padding-inline: 8px; }
+  header.topbar { padding: 12px; }
+  header.topbar .actions .btn { font-size: .76rem; }
+  .videos-row { grid-template-columns: 54px minmax(0,1fr); gap: 9px; padding: 9px; }
+  .videos-row .thumb { width: 54px; height: 54px; }
+}
+
+/* A lighter glass surface for the editor, with touch-friendly controls. */
+header.topbar, .panel-tabs, .section, .videos-row, .toolbar, .gh-bar,
+.modal, .cmd-palette, .image-card, .design-list-card {
+  background-color: rgba(16, 25, 41, .74);
+  border-color: rgba(197, 219, 255, .12);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 12px 34px rgba(0,0,0,.19), inset 0 1px rgba(255,255,255,.035);
+}
+html, body {
+  background:
+    radial-gradient(70% 48% at 90% 0%, rgba(59,130,246,.09), transparent 72%),
+    radial-gradient(55% 45% at 0% 52%, rgba(34,197,94,.06), transparent 72%),
+    var(--bg);
+}
+button, .btn, input[type="text"], input[type="search"], input[type="url"],
+input[type="number"], input[type="password"], textarea, select { min-height: 40px; }
+button:focus-visible, .btn:focus-visible, input:focus-visible,
+textarea:focus-visible, select:focus-visible {
+  outline: 2px solid rgba(96, 165, 250, .85);
+  outline-offset: 2px;
+}
+.panel-tabs button { min-height: 42px; }
+.panel-tabs button.active { box-shadow: 0 6px 18px rgba(34,197,94,.16); }
+.section, .videos-row, .image-card, .design-list-card { border-radius: 16px; }
+.videos-row { transition: border-color .18s ease, transform .18s ease; }
+.videos-row:hover { border-color: rgba(125, 211, 198, .28); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
+}
+
+/* Calm glass dashboard surfaces in the same mid-tone palette as the portfolio. */
+:root { --radius: 18px; --glass-line: rgba(225,239,242,.17); }
+body { background-attachment: fixed; }
+header.topbar, .toolbar, .panel-tabs, .panel, .modal, .card, .table-wrap {
+  border-color: var(--glass-line);
+  box-shadow: 0 14px 38px rgba(13,24,32,.18), inset 0 1px rgba(255,255,255,.045);
+}
+header.topbar, .toolbar, .panel-tabs, .section, .videos-row, .gh-bar,
+.image-card, .design-list-card, .deploy-toast, .modal, .cmd-palette {
+  background-color: rgba(248,252,253,.065);
+  border-color: var(--glass-line);
+}
+header.topbar, .toolbar, .panel-tabs, .section, .videos-row, .gh-bar,
+.image-card, .design-list-card, .deploy-toast, .modal, .cmd-palette {
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+header.topbar { border-radius: 22px; }
+.panel-tabs { background: rgba(248,252,253,.055); border: 1px solid var(--glass-line); border-radius: 16px; }
+.panel-tabs button.active { background: linear-gradient(135deg, rgba(124,205,186,.22), rgba(167,180,234,.18)); color: var(--text); }
+.toolbar { background: rgba(248,252,253,.055); }
+.section, .videos-row, .image-card, .design-list-card { border-radius: 18px; }
+.modal, .cmd-palette { background-color: color-mix(in srgb, var(--bg-2) 94%, white); }
+.sticky-save { background: linear-gradient(to top, color-mix(in srgb, var(--bg) 95%, transparent) 60%, transparent); }
+.toolbar .search input, .field input, .field textarea, .field select,
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]), textarea, select {
+  background-color: rgba(18,31,39,.34); border-color: rgba(225,239,242,.20); color: var(--text);
+}
+input::placeholder, textarea::placeholder { color: rgba(221,231,235,.62); }
+option { background: #151f32; color: var(--text); }
+button.primary { color: #06131d; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 3px;
+}
+@media (max-width: 640px) {
+  .shell { padding: 12px 12px 52px; }
+  header.topbar { padding: 12px; }
+  .toolbar { padding: 10px; }
+  .panel-tabs { border-radius: 14px; }
+}
+
+/* Dark glass dashboard: original emerald and blue accents, sharper contrast. */
+:root {
+  --glass-line: rgba(148,163,184,.20);
+  --admin-glass: rgba(15,23,42,.74);
+  --admin-glass-strong: rgba(20,30,49,.88);
+  --shadow: 0 22px 58px rgba(0,0,0,.42);
+}
+html, body {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse 44% 36% at 92% 0%, rgba(59,130,246,.14), transparent 76%),
+    radial-gradient(ellipse 40% 34% at 0% 35%, rgba(34,197,94,.09), transparent 76%),
+    linear-gradient(145deg, var(--bg), color-mix(in srgb, var(--bg) 74%, var(--bg-2)) 54%, var(--bg-2));
+  background-attachment: fixed; color: var(--text);
+}
+.shell { max-width: 1340px; padding-inline: clamp(16px, 3.5vw, 48px); }
+header.topbar {
+  display:grid; grid-template-columns:1fr; gap:14px;
+  background:linear-gradient(135deg,rgba(27,39,61,.92),rgba(13,20,35,.86));
+  border:1px solid rgba(148,163,184,.24);
+  box-shadow:0 22px 54px rgba(0,0,0,.35),inset 0 1px rgba(255,255,255,.09);
+  backdrop-filter:saturate(145%) blur(22px); -webkit-backdrop-filter:saturate(145%) blur(22px);
+}
+header.topbar .brand .logo { box-shadow:0 8px 20px rgba(34,197,94,.20),inset 0 1px rgba(255,255,255,.30); }
+header.topbar .actions { display:flex; align-items:center; gap:8px; }
+button, .btn {
+  min-height:44px; border:1px solid rgba(148,163,184,.22); background:rgba(30,41,59,.76);
+  box-shadow:inset 0 1px rgba(255,255,255,.07);
+  transition:transform .16s ease,background .16s ease,border-color .16s ease,box-shadow .16s ease;
+}
+button:hover, .btn:hover { background:rgba(51,65,85,.86); border-color:rgba(148,163,184,.38); }
+button.primary {
+  background:linear-gradient(130deg,var(--accent),var(--accent-2)); color:#07111f;
+  border-color:rgba(255,255,255,.18); box-shadow:0 10px 24px rgba(34,197,94,.17),inset 0 1px rgba(255,255,255,.16);
+}
+button.primary:hover { filter:brightness(1.05); }
+.status-pill, .status-pill.dirty { font-size:.82rem; padding:7px 12px; }
+.gh-bar, .sync-banner, .toolbar, .section, .videos-row, .image-card, .design-list-card,
+.deploy-toast, .modal, .cmd-palette {
+  background:linear-gradient(145deg,rgba(24,35,56,.82),rgba(13,20,35,.78));
+  border-color:rgba(148,163,184,.19); box-shadow:0 16px 42px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.075);
+  backdrop-filter:saturate(135%) blur(18px); -webkit-backdrop-filter:saturate(135%) blur(18px);
+}
+.panel-tabs {
+  display:flex; align-items:stretch; flex-wrap:wrap; gap:8px; padding:10px; margin-bottom:14px;
+  background:rgba(10,16,29,.76); border:1px solid rgba(148,163,184,.20); border-radius:18px;
+  box-shadow:0 14px 36px rgba(0,0,0,.26),inset 0 1px rgba(255,255,255,.07);
+  backdrop-filter:saturate(140%) blur(20px); -webkit-backdrop-filter:saturate(140%) blur(20px);
+}
+.tab-group {
+  display:flex; flex-wrap:wrap; align-items:center; gap:4px; padding:5px;
+  border:1px solid rgba(148,163,184,.12); border-radius:14px; background:rgba(30,41,59,.42);
+}
+.tab-group-label { align-self:center; padding:0 9px; color:#aab7ca; font-size:.75rem; font-weight:700; white-space:nowrap; }
+.panel-tabs button { min-height:42px; padding:9px 13px; color:#cbd5e1; font-size:.9rem; border:1px solid transparent; border-radius:10px; background:transparent; }
+.panel-tabs button:hover { background:rgba(148,163,184,.12); color:#f1f5f9; }
+.panel-tabs button.active {
+  color:#07111f; background:linear-gradient(130deg,#22c55e,#3b82f6);
+  box-shadow:0 7px 18px rgba(34,197,94,.20),inset 0 1px rgba(255,255,255,.20);
+}
+.panel-context {
+  display:flex; align-items:center; justify-content:space-between; gap:18px; padding:19px 23px; margin:0 0 18px;
+  border:1px solid rgba(148,163,184,.20); border-radius:17px;
+  background:linear-gradient(125deg,rgba(22,33,53,.84),rgba(12,19,34,.78));
+  box-shadow:0 14px 36px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.08);
+  backdrop-filter:saturate(135%) blur(18px); -webkit-backdrop-filter:saturate(135%) blur(18px);
+}
+.panel-context-label { color:#4ade80; font-size:.78rem; font-weight:700; }
+.panel-context h2 { margin:2px 0 1px; font-size:1.22rem; line-height:1.45; }
+.panel-context p { margin:0; color:var(--muted); font-size:.88rem; line-height:1.6; }
+.panel-context-mark { flex:0 0 auto; display:grid; place-items:center; width:42px; height:42px; color:#86efac; font-size:1.3rem; border:1px solid rgba(34,197,94,.31); border-radius:13px; background:rgba(34,197,94,.10); }
+.toolbar { border-radius:15px; }
+.toolbar .search input, .field input, .field textarea, .field select,
+input:not([type="checkbox"]):not([type="radio"]):not([type="color"]), textarea, select {
+  background:rgba(5,10,20,.70); border-color:rgba(148,163,184,.24); color:var(--text);
+}
+input::placeholder, textarea::placeholder { color:rgba(203,213,225,.62); }
+option { background:#111827; color:var(--text); }
+.videos-row, .image-card, .design-list-card { transition:border-color .18s ease,background .18s ease,transform .18s ease; }
+.videos-row:hover, .image-card:hover, .design-list-card:hover { border-color:rgba(34,197,94,.42); background-color:rgba(30,41,59,.86); }
+.sticky-save { background:linear-gradient(to top,color-mix(in srgb,var(--bg) 93%,transparent) 56%,transparent); }
+@media (max-width:900px) { header.topbar .actions { flex-wrap:wrap; } .panel-tabs { gap:6px; } .tab-group { flex:1 1 auto; } }
+@media (max-width:700px) {
+  header.topbar { grid-template-columns:1fr; }
+  header.topbar .actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .panel-tabs { flex-wrap:nowrap; overflow-x:auto; gap:7px; padding:8px; }
+  .tab-group { flex:0 0 auto; flex-wrap:nowrap; }
+  .tab-group-label { padding-inline:7px; }
+  .panel-tabs button { padding:9px 11px; font-size:.82rem; }
+  .panel-context { padding:15px 16px; }
+  .panel-context-mark { width:36px; height:36px; border-radius:11px; }
+}
+@media (max-width:400px) { .tab-group-label { font-size:.68rem; padding-inline:5px; } .panel-tabs button { padding:8px 9px; } }</style>
 </head>
 <body>
 
@@ -652,7 +846,7 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
       <div class="logo">K</div>
       <div>
         <h1>لوحة التحكم</h1>
-        <div class="sub">عدّل النصوص والأسعار، ثم نزّل ملف <code style="color:var(--accent)">content.json</code></div>
+        <div class="sub">إدارة المحتوى والفيديوهات وشكل الموقع من مكان واحد</div>
       </div>
     </div>
     <div class="actions">
@@ -690,17 +884,35 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
     <button id="syncBannerSaveBtn">💾 احفظ الكل دلوقتي</button>
   </div>
 
-  <div class="panel-tabs" role="tablist" aria-label="لوحات التحكم">
-    <button data-panel="texts" class="active">📝 النصوص والأسعار</button>
-    <button data-panel="videos">🎬 الفيديوهات</button>
-    <button data-panel="latest">✨ المقتطفات</button>
-    <button data-panel="software">🛠️ البرامج</button>
-    <button data-panel="designs">🎨 ديزاينات</button>
-    <button data-panel="images">🖼️ الصور</button>
-    <button data-panel="theme">🎛️ الشكل والألوان</button>
-    <button data-panel="visibility">🙈 إظهار / إخفاء</button>
-    <button data-panel="access">🔑 الوصول</button>
-  </div>
+  <nav class="panel-tabs" role="tablist" aria-label="أقسام لوحة التحكم">
+    <div class="tab-group" role="presentation">
+      <span class="tab-group-label" aria-hidden="true">المحتوى</span>
+      <button type="button" role="tab" data-panel="texts" class="active" aria-selected="true">📝 النصوص والأسعار</button>
+      <button type="button" role="tab" data-panel="videos" aria-selected="false">🎬 الفيديوهات والريلز</button>
+      <button type="button" role="tab" data-panel="latest" aria-selected="false">✨ المقتطفات</button>
+    </div>
+    <div class="tab-group" role="presentation">
+      <span class="tab-group-label" aria-hidden="true">الشكل والهوية</span>
+      <button type="button" role="tab" data-panel="software" aria-selected="false">🛠️ البرامج</button>
+      <button type="button" role="tab" data-panel="designs" aria-selected="false">🎨 التصميمات</button>
+      <button type="button" role="tab" data-panel="images" aria-selected="false">🖼️ الصور</button>
+      <button type="button" role="tab" data-panel="theme" aria-selected="false">🎛️ الألوان والحركة</button>
+    </div>
+    <div class="tab-group" role="presentation">
+      <span class="tab-group-label" aria-hidden="true">إدارة الموقع</span>
+      <button type="button" role="tab" data-panel="visibility" aria-selected="false">🙈 إظهار الأقسام</button>
+      <button type="button" role="tab" data-panel="access" aria-selected="false">🔑 الوصول</button>
+    </div>
+  </nav>
+
+  <section class="panel-context" aria-live="polite" aria-atomic="true">
+    <div>
+      <span class="panel-context-label" id="panelContextTag">المحتوى</span>
+      <h2 id="panelContextTitle">النصوص والأسعار</h2>
+      <p id="panelContextDesc">عدّل الكلام الظاهر في الموقع والترجمات والباقات من مكان واحد.</p>
+    </div>
+    <span class="panel-context-mark" aria-hidden="true">✦</span>
+  </section>
 
   <div id="textsPanel">
     <div class="toolbar">
@@ -1110,8 +1322,8 @@ html[dir="rtl"] .diff-row .new { border-right-color: var(--accent); }
   </div>
 </div>
 
-<script src="content-defaults.js?v=28"></script>
-<script src="projects-defaults.js?v=27"></script>
+<script src="content-defaults.js?v=30"></script>
+<script src="projects-defaults.js?v=28"></script>
 <script src="github-api.js?v=30"></script>
 <script src="auth.js?v=37"></script>
 <script>
@@ -1675,9 +1887,12 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
   render();
 });
 
-document.querySelectorAll('.toolbar .filter button').forEach(btn => {
+// Keep the text-field filter scoped to its own panel. The video toolbar has a
+// second filter group; sharing this listener made video category clicks alter
+// the text panel's filter and clear active states across both panels.
+document.querySelectorAll('#textsPanel .toolbar .filter button').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.toolbar .filter button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#textsPanel .toolbar .filter button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentFilter = btn.dataset.filter;
     if (currentFilter === 'dirty') openSections = new Set(Object.keys(SECTION_META));
@@ -1783,8 +1998,10 @@ document.getElementById('resetBtn').addEventListener('click', () => {
 // ===== Videos panel ==========================================
 // ============================================================
 
-const projectsDefaults = (window.__projects_defaults && JSON.parse(JSON.stringify(window.__projects_defaults))) || { ar: [], en: [] };
+let projectsDefaults = (window.__projects_defaults && JSON.parse(JSON.stringify(window.__projects_defaults))) || { ar: [], en: [] };
 let videos = loadVideosDraft();
+const hasSavedProjectsDraft = (() => { try { return !!localStorage.getItem('khaled_projects_draft'); } catch { return false; } })();
+let videosTouched = false;
 let activePanel = 'texts';
 let videosFilter = 'all';
 let videosSearch = '';
@@ -1804,7 +2021,21 @@ function loadVideosDraft() {
   } catch { return clone(projectsDefaults); }
 }
 
+// Start from the published list when available. The dashboard used to always
+// start from projects-defaults.js, which could be older than projects.json and
+// overwrite newer items on the next save.
+fetch('projects.json?v=' + Date.now(), { cache: 'no-cache' })
+  .then(res => res.ok ? res.json() : null)
+  .then(data => {
+    if (!data || !Array.isArray(data.ar) || !Array.isArray(data.en)) return;
+    projectsDefaults = clone(data);
+    if (!hasSavedProjectsDraft && !videosTouched) videos = clone(projectsDefaults);
+    if (activePanel === 'videos') renderVideos();
+  })
+  .catch(() => {});
+
 function persistVideosDraft() {
+  videosTouched = true;
   // Only persist if something differs from defaults
   const diff = JSON.stringify(videos) !== JSON.stringify(projectsDefaults);
   if (diff) {
@@ -1841,11 +2072,32 @@ const SUBCAT_LABEL = {
   ai: 'ذكاء اصطناعي',
 };
 
+const PANEL_CONTEXT = {
+  texts: ['المحتوى', 'النصوص والأسعار', 'عدّل الكلام الظاهر في الموقع والترجمات والباقات من مكان واحد.'],
+  videos: ['المحتوى', 'الفيديوهات والريلز', 'أضف الأعمال، صنّفها، وعدّل العناوين والأوصاف والصور المصغّرة.'],
+  latest: ['المحتوى', 'المقتطفات', 'اختَر الفيديوهات التي تظهر في مساحة المقتطفات على الصفحة الرئيسية.'],
+  software: ['الشكل والهوية', 'البرامج', 'رتّب البرامج التي تعمل بها وعدّل أسماءها ووصفها بالعربي والإنجليزي.'],
+  designs: ['الشكل والهوية', 'التصميمات', 'أضف تصميماتك الإعلانية ورتّبها داخل معرض الموقع.'],
+  images: ['الشكل والهوية', 'الصور', 'ارفع صور الموقع وبدّلها من مساحة واحدة.'],
+  theme: ['الشكل والهوية', 'الألوان والحركة', 'غيّر لوحة الألوان والخطوط ومستوى الحركة، ثم راجع المعاينة.'],
+  visibility: ['إدارة الموقع', 'إظهار الأقسام', 'اختَر الأقسام التي تريد إظهارها أو إخفاءها على الموقع.'],
+  access: ['إدارة الموقع', 'الوصول', 'أدِر إعدادات الدخول والاتصال اللازمة للوحة التحكم.'],
+};
 function setActivePanel(name) {
   activePanel = name;
+  const context = PANEL_CONTEXT[name] || PANEL_CONTEXT.texts;
+  document.getElementById('panelContextTag').textContent = context[0];
+  document.getElementById('panelContextTitle').textContent = context[1];
+  document.getElementById('panelContextDesc').textContent = context[2];
   document.querySelectorAll('.panel-tabs button').forEach(b => {
     b.classList.toggle('active', b.dataset.panel === name);
+    b.setAttribute('aria-selected', b.dataset.panel === name ? 'true' : 'false');
+    b.tabIndex = b.dataset.panel === name ? 0 : -1;
   });
+  if (window.innerWidth <= 700) {
+    document.querySelector(`.panel-tabs button[data-panel="${name}"]`)
+      ?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+  }
   document.getElementById('textsPanel').hidden  = name !== 'texts';
   document.getElementById('videosPanel').hidden = name !== 'videos';
   document.getElementById('imagesPanel').hidden = name !== 'images';
@@ -1905,6 +2157,21 @@ function setActivePanel(name) {
 
 document.querySelectorAll('.panel-tabs button').forEach(b => {
   b.addEventListener('click', () => setActivePanel(b.dataset.panel));
+});
+
+// Keyboard navigation for the section tabs, including the scrollable mobile row.
+document.querySelector('.panel-tabs').addEventListener('keydown', e => {
+  if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) return;
+  const tabs = [...document.querySelectorAll('.panel-tabs button')];
+  const index = tabs.indexOf(document.activeElement);
+  if (index < 0) return;
+  e.preventDefault();
+  const rtl = document.documentElement.dir === 'rtl';
+  const step = (e.key === 'ArrowRight' ? 1 : -1) * (rtl ? -1 : 1);
+  const next = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : (index + step + tabs.length) % tabs.length;
+  tabs[next].focus();
+  tabs[next].click();
+  tabs[next].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
 });
 
 document.getElementById('videosSearch').addEventListener('input', e => {
@@ -3032,10 +3299,10 @@ window.addEventListener('message', (ev) => {
    ========================================================================= */
 const THEME_DEFAULT = {
   accent: '#22c55e', accent2: '#3b82f6',
-  bg: '#0a0e1a',     bg2: '#0f172a',
-  text: '#e6edf6',   muted: '#8d96a8',
+  bg: '#0c1220',     bg2: '#151f32',
+  text: '#e6edf6',   muted: '#94a3b8',
   fontAr: 'Cairo', fontEn: 'Inter',
-  animLevel: 'med', shapesBg: true,
+  animLevel: 'subtle', shapesBg: false,
 };
 const THEME_PRESETS = {
   'green-blue': { accent: '#22c55e', accent2: '#3b82f6' },

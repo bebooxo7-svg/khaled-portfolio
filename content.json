@@ -1,10 +1,10 @@
 {
   "ar": {
-    "works.title": "آخر الأعمال ",
-    "works.lead": "اضغط على أي فيديو يشتغل جوّا الموقع "
+    "works.title": "أعمال مختارة",
+    "works.lead": "تصفّح الأعمال حسب نوع الفيديو، وافتح أي مشروع لمشاهدته."
   },
   "en": {
-    "works.title": "Latest Work ",
-    "works.lead": "Click any video to play it inside the site"
+    "works.title": "Selected Work",
+    "works.lead": "Browse by video format, then open a project to watch it."
   }
 }

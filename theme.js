@@ -21,14 +21,14 @@
   const DEFAULT = {
     accent: '#22c55e',
     accent2: '#3b82f6',
-    bg: '#0a0e1a',
-    bg2: '#0f172a',
+    bg: '#0c1220',
+    bg2: '#151f32',
     text: '#e6edf6',
-    muted: '#8d96a8',
+    muted: '#94a3b8',
     fontAr: 'Cairo',
     fontEn: 'Inter',
-    animLevel: 'med',
-    shapesBg: true,
+    animLevel: 'subtle',
+    shapesBg: false,
   };
 
   const FONT_MAP_AR = {

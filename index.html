@@ -42,7 +42,7 @@
   <!-- Preload hero image (LCP, WebP with JPG fallback) -->
   <link rel="preload" as="image" href="khaled-hero.webp" type="image/webp" fetchpriority="high" />
 
-  <link rel="stylesheet" href="styles.css?v=39" />
+  <link rel="stylesheet" href="styles.css?v=40" />
 
   <!-- Structured data: Person + ProfessionalService -->
   <script type="application/ld+json">
@@ -152,12 +152,11 @@
           <span class="logo-glow" aria-hidden="true"></span>
         </span>
       </a>
-      <nav class="nav-links" id="navLinks">
-        <a href="#home" data-i18n="nav.home">الرئيسية</a>
-        <a href="#about" data-i18n="nav.about">عني</a>
+      <nav class="nav-links" id="navLinks" aria-label="Main navigation">
         <a href="#works" data-i18n="nav.works">الأعمال</a>
-        <a href="#designs" data-i18n="nav.designs">التصاميم</a>
+        <a href="#about" data-i18n="nav.about">عني</a>
         <a href="#services" data-i18n="nav.services">الخدمات</a>
+        <a href="#designs" data-i18n="nav.designs">التصاميم</a>
         <a href="#pricing" data-i18n="nav.pricing">الباقات</a>
         <a href="#contact" data-i18n="nav.contact">تواصل</a>
       </nav>
@@ -235,45 +234,55 @@
         </figure>
       </div>
     </div>
-    <a class="scroll-hint" href="#about" aria-label="scroll">
+    <a class="scroll-hint" href="#works" aria-label="scroll">
       <span></span>
     </a>
   </section>
 
-  <!-- Latest Work — auto-scrolling reel strip -->
-  <section class="section latest-section" id="latest" aria-labelledby="latestTitle">
+  <!-- Works -->
+  <section class="section works" id="works" aria-labelledby="worksTitle">
     <div class="container">
-      <div class="section-head section-head-tight">
-        <span class="section-tag" data-i18n="latest.tag">مقتطفات</span>
-        <h2 id="latestTitle" data-i18n="latest.title">أحدث الأعمال</h2>
-        <p class="lead" data-i18n="latest.lead">آخر اللي اشتغلت عليه — اضغط على أي لقطة عشان تشوف الشغل كامل تحت.</p>
+      <div class="section-head">
+        <span class="section-tag" data-i18n="works.tag">الأعمال</span>
+        <h2 id="worksTitle" data-i18n="works.title">شغل اتعمل عشان يخلّي الفكرة توصل</h2>
+        <p class="lead" data-i18n="works.lead">اختار نوع الفيديو اللي بتدور عليه، وبعدها اضغط على أي عمل عشان تشوفه.</p>
       </div>
-      <div class="latest-strip" id="latestStrip">
-        <button class="latest-arrow latest-prev" type="button" aria-label="prev">‹</button>
-        <div class="latest-viewport">
-          <div class="latest-track" id="latestTrack" role="list" aria-label="Latest work"></div>
-          <div class="latest-fade latest-fade-start" aria-hidden="true"></div>
-          <div class="latest-fade latest-fade-end" aria-hidden="true"></div>
-        </div>
-        <button class="latest-arrow latest-next" type="button" aria-label="next">›</button>
-      </div>
-    </div>
-  </section>
 
-  <!-- Behind the scenes strip -->
-  <section class="bts-strip" id="bts" aria-label="Behind the scenes">
-    <div class="container">
-      <figure class="bts-figure">
-        <picture>
-          <source srcset="khaled-bts.webp" type="image/webp" />
-          <img src="khaled-bts.jpg" alt="Behind the scenes" loading="lazy" decoding="async" width="1536" height="1024" />
-        </picture>
-        <figcaption class="bts-caption">
-          <span class="bts-tag" data-i18n="bts.tag">وراء الكاميرا</span>
-          <h3 data-i18n="bts.title">لقطات في سياقها الصحيح</h3>
-          <p data-i18n="bts.desc">إعداد إضاءة، إدارة بلاتو، وتصوير بأدوات احترافية.</p>
-        </figcaption>
-      </figure>
+      <div class="filters" id="filters" role="group" aria-label="Project categories">
+        <button class="chip active" type="button" data-filter="all" aria-pressed="true"><span class="filter-label" data-i18n="filter.all">الكل</span><span class="filter-count" data-filter-count="all">0</span></button>
+        <button class="chip" type="button" data-filter="reels" aria-pressed="false"><span class="filter-label" data-i18n="filter.reels">ريلز</span><span class="filter-count" data-filter-count="reels">0</span></button>
+        <button class="chip" type="button" data-filter="longyt" aria-pressed="false"><span class="filter-label" data-i18n="filter.longyt">يوتيوب</span><span class="filter-count" data-filter-count="longyt">0</span></button>
+        <button class="chip" type="button" data-filter="podcast" aria-pressed="false"><span class="filter-label" data-i18n="filter.podcast">بودكاست</span><span class="filter-count" data-filter-count="podcast">0</span></button>
+        <button class="chip" type="button" data-filter="edu" aria-pressed="false"><span class="filter-label" data-i18n="filter.edu">تعليمي</span><span class="filter-count" data-filter-count="edu">0</span></button>
+        <button class="chip" type="button" data-filter="wedding" aria-pressed="false"><span class="filter-label" data-i18n="filter.wedding">أفراح</span><span class="filter-count" data-filter-count="wedding">0</span></button>
+      </div>
+
+      <div class="reel-subfilter" id="reelSubfilterWrap" hidden>
+        <label for="reelSubfilter" data-i18n="works.reels-filter">تخصص الريل</label>
+        <select id="reelSubfilter">
+          <option value="all" data-i18n="subfilter.all">كل الريلز</option>
+          <option value="medical" data-i18n="subfilter.medical">طبي</option>
+          <option value="educational" data-i18n="subfilter.educational">تعليمي</option>
+          <option value="marketing" data-i18n="subfilter.marketing">ماركتينج</option>
+          <option value="ai" data-i18n="subfilter.ai">AI</option>
+          <option value="general" data-i18n="subfilter.general">عام</option>
+        </select>
+      </div>
+
+      <p class="gallery-status" id="galleryStatus" aria-live="polite"></p>
+      <div class="gallery" id="gallery">
+        <!-- Cards generated dynamically via JS -->
+      </div>
+      <div class="gallery-more-wrap" id="galleryMoreWrap">
+        <button class="btn btn-ghost gallery-more" id="galleryMore" type="button" hidden data-i18n="works.more">عرض أعمال إضافية</button>
+      </div>
+      <div class="works-cta">
+        <div>
+          <h3 data-i18n="works.cta-title">عندك مشروع محتاج مونتاج؟</h3>
+          <p data-i18n="works.cta-lead">احكيلي فكرته والهدف منه، ونظبط الشكل المناسب سوا.</p>
+        </div>
+        <a class="btn btn-primary magnetic" href="#contact" data-i18n="works.cta-button">خلّينا نتكلم</a>
+      </div>
     </div>
   </section>
 
@@ -331,7 +340,25 @@
     </div>
   </section>
 
-  <!-- Software / tools logos — marquee with motion -->
+  <!-- Skills -->
+  <section class="section skills-section" id="skills">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag" data-i18n="skills.tag">المهارات</span>
+        <h2 data-i18n="skills.title">إيه اللي بميّزني؟</h2>
+      </div>
+      <div class="skills">
+        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s1">السرد البصري والإيقاع</span></div>
+        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s2">رؤية إبداعية</span></div>
+        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s3">تركيز عالي على التفاصيل</span></div>
+        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s4">قيادة فريق وإدارة شغل</span></div>
+        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s5">سرعة تنفيذ والتزام بالمواعيد</span></div>
+        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s6">حل المشاكل</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Software and tools -->
   <section class="section software-section" id="software" aria-labelledby="softwareTitle">
     <div class="container">
       <div class="section-head section-head-tight">
@@ -347,61 +374,6 @@
           <div class="software-fade software-fade-end" aria-hidden="true"></div>
         </div>
         <button class="software-arrow software-next" type="button" aria-label="next">›</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Works -->
-  <section class="section works" id="works">
-    <div class="container">
-      <div class="section-head">
-        <span class="section-tag" data-i18n="works.tag">الأعمال</span>
-        <h2 data-i18n="works.title">آخر الأعمال — حلقات بودكاست وريلز</h2>
-        <p class="lead" data-i18n="works.lead">اضغط على أي فيديو يشتغل جوّا الموقع — دي نماذج من حلقات البودكاست وأمثلة على مونتاج الريلز.</p>
-      </div>
-
-      <div class="filters" id="filters">
-        <button class="chip active" data-filter="all" data-i18n="filter.all">الكل</button>
-        <button class="chip" data-filter="podcast" data-i18n="filter.podcast">بودكاست</button>
-        <button class="chip" data-filter="reels" data-i18n="filter.reels">ريلز</button>
-        <button class="chip" data-filter="longyt" data-i18n="filter.longyt">يوتيوب طويلة</button>
-        <button class="chip" data-filter="edu" data-i18n="filter.edu">تعليمي</button>
-        <button class="chip" data-filter="wedding" data-i18n="filter.wedding">أفراح</button>
-      </div>
-
-      <div class="subfilters" id="subfilters" hidden>
-        <button class="chip chip-sm active" data-subfilter="all" data-i18n="subfilter.all">كل الريلز</button>
-        <button class="chip chip-sm" data-subfilter="medical" data-i18n="subfilter.medical">طبي</button>
-        <button class="chip chip-sm" data-subfilter="educational" data-i18n="subfilter.educational">تعليمي</button>
-        <button class="chip chip-sm" data-subfilter="marketing" data-i18n="subfilter.marketing">ماركتينج</button>
-        <button class="chip chip-sm" data-subfilter="ai" data-i18n="subfilter.ai">AI</button>
-        <button class="chip chip-sm" data-subfilter="general" data-i18n="subfilter.general">عام</button>
-      </div>
-
-      <div class="gallery" id="gallery">
-        <!-- Cards generated dynamically via JS -->
-      </div>
-    </div>
-  </section>
-
-  <!-- Designs -->
-  <section class="section designs" id="designs">
-    <div class="container">
-      <div class="section-head">
-        <span class="section-tag" data-i18n="designs.tag">التصاميم</span>
-        <h2 data-i18n="designs.title">إعلانات وتصاميم بتبيع</h2>
-        <p class="lead" data-i18n="designs.lead">مختارات من تصاميم البوسترات والإعلانات اللي اتنفّذت لبراندات مختلفة. تقدر تشوف أحدث الأعمال على إنستجرام.</p>
-      </div>
-      <div class="designs-cta-band">
-        <ul class="design-tags">
-          <li data-i18n="designs.tag1">Social Ads</li>
-          <li data-i18n="designs.tag2">Posters</li>
-          <li data-i18n="designs.tag3">Brand Identity</li>
-          <li data-i18n="designs.tag4">YouTube Thumbnails</li>
-          <li data-i18n="designs.tag5">Reels Covers</li>
-          <li data-i18n="designs.tag6">Logos</li>
-        </ul>
-        <a href="https://instagram.com/kkhalidoxo" target="_blank" rel="noopener" class="btn btn-primary magnetic" data-i18n="designs.cta">شاهد المزيد على إنستجرام</a>
       </div>
     </div>
   </section>
@@ -464,6 +436,102 @@
           <p data-i18n="services.s8.d">إدارة المشروع من A إلى Z: تخطيط، تصوير، مونتاج، تصميم، نشر، وقياس النتائج.</p>
         </article>
       </div>
+    </div>
+  </section>
+
+  <!-- Designs -->
+  <section class="section designs" id="designs">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag" data-i18n="designs.tag">التصاميم</span>
+        <h2 data-i18n="designs.title">إعلانات وتصاميم بتبيع</h2>
+        <p class="lead" data-i18n="designs.lead">مختارات من تصاميم البوسترات والإعلانات اللي اتنفّذت لبراندات مختلفة. تقدر تشوف أحدث الأعمال على إنستجرام.</p>
+      </div>
+      <div class="designs-cta-band">
+        <ul class="design-tags">
+          <li data-i18n="designs.tag1">Social Ads</li>
+          <li data-i18n="designs.tag2">Posters</li>
+          <li data-i18n="designs.tag3">Brand Identity</li>
+          <li data-i18n="designs.tag4">YouTube Thumbnails</li>
+          <li data-i18n="designs.tag5">Reels Covers</li>
+          <li data-i18n="designs.tag6">Logos</li>
+        </ul>
+        <a href="https://instagram.com/kkhalidoxo" target="_blank" rel="noopener" class="btn btn-primary magnetic" data-i18n="designs.cta">شاهد المزيد على إنستجرام</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Behind the scenes strip -->
+  <section class="bts-strip" id="bts" aria-label="Behind the scenes">
+    <div class="container">
+      <figure class="bts-figure">
+        <picture>
+          <source srcset="khaled-bts.webp" type="image/webp" />
+          <img src="khaled-bts.jpg" alt="Behind the scenes" loading="lazy" decoding="async" width="1536" height="1024" />
+        </picture>
+        <figcaption class="bts-caption">
+          <span class="bts-tag" data-i18n="bts.tag">وراء الكاميرا</span>
+          <h3 data-i18n="bts.title">لقطات في سياقها الصحيح</h3>
+          <p data-i18n="bts.desc">إعداد إضاءة، إدارة بلاتو، وتصوير بأدوات احترافية.</p>
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Process -->
+  <section class="section process" id="process">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag" data-i18n="process.tag">طريقة الشغل</span>
+        <h2 data-i18n="process.title">إزاي بشتغل على فيديو يستحقّ المشاهدة؟</h2>
+        <p class="lead" data-i18n="process.lead">عملية واضحة ومدروسة بتضمن إن كل فيديو يطلع بأعلى جودة وفي الموعد.</p>
+      </div>
+      <div class="process-grid">
+        <article class="step" data-step="01">
+          <span class="step-badge" aria-hidden="true">01</span>
+          <div class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          </div>
+          <h3 data-i18n="process.s1.t">الاستكشاف والتخطيط</h3>
+          <p data-i18n="process.s1.d">بفهم جمهورك، أهدافك، وبوزيشن براندك علشان أبني خطة محتوى تخدمها.</p>
+        </article>
+        <article class="step" data-step="02">
+          <span class="step-badge" aria-hidden="true">02</span>
+          <div class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h4"></path></svg>
+          </div>
+          <h3 data-i18n="process.s2.t">السكريبت والستوريبورد</h3>
+          <p data-i18n="process.s2.d">بكتب سكريبت سردي وبرسم ستوريبورد تفصيلي بيغيّر تجربة المشاهد.</p>
+        </article>
+        <article class="step" data-step="03">
+          <span class="step-badge" aria-hidden="true">03</span>
+          <div class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"></path><rect x="2" y="6" width="14" height="12" rx="2" ry="2"></rect></svg>
+          </div>
+          <h3 data-i18n="process.s3.t">التصوير والإدارة</h3>
+          <p data-i18n="process.s3.d">إعداد إضاءة سينمائي، إدارة بلاتو، وتصوير بأعلى جودة بأدوات احترافية.</p>
+        </article>
+        <article class="step" data-step="04">
+          <span class="step-badge" aria-hidden="true">04</span>
+          <div class="step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 14.5 16 10 4 20"></path><path d="M2 6h20"></path><path d="m8 2 1.5 4"></path><path d="m14.5 2 1.5 4"></path><path d="M2 6v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6"></path></svg>
+          </div>
+          <h3 data-i18n="process.s4.t">المونتاج والتسليم</h3>
+          <p data-i18n="process.s4.d">مونتاج سينمائي + تصحيح ألوان + موشن + صوت، ثم تسليم بعد المراجعات.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials — WhatsApp-style chat bubbles -->
+  <section class="section testimonials" id="testimonials">
+    <div class="container">
+      <div class="section-head">
+        <span class="section-tag" data-i18n="testimonials.tag">آراء العملاء</span>
+        <h2 data-i18n="testimonials.title">ناس اشتغلت معاهم بتقول إيه؟</h2>
+        <p class="lead" data-i18n="testimonials.lead">رسايل وصلتني فعلاً من شركاء الشغل بعد ما اتسلّمت المشاريع.</p>
+      </div>
+      <div class="wa-chat-grid" id="waChatGrid" aria-label="آراء العملاء"></div>
     </div>
   </section>
 
@@ -878,82 +946,6 @@
     </div>
   </section>
 
-
-  <!-- Process -->
-  <section class="section process" id="process">
-    <div class="container">
-      <div class="section-head">
-        <span class="section-tag" data-i18n="process.tag">طريقة الشغل</span>
-        <h2 data-i18n="process.title">إزاي بشتغل على فيديو يستحقّ المشاهدة؟</h2>
-        <p class="lead" data-i18n="process.lead">عملية واضحة ومدروسة بتضمن إن كل فيديو يطلع بأعلى جودة وفي الموعد.</p>
-      </div>
-      <div class="process-grid">
-        <article class="step" data-step="01">
-          <span class="step-badge" aria-hidden="true">01</span>
-          <div class="step-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
-          </div>
-          <h3 data-i18n="process.s1.t">الاستكشاف والتخطيط</h3>
-          <p data-i18n="process.s1.d">بفهم جمهورك، أهدافك، وبوزيشن براندك علشان أبني خطة محتوى تخدمها.</p>
-        </article>
-        <article class="step" data-step="02">
-          <span class="step-badge" aria-hidden="true">02</span>
-          <div class="step-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M9 13h6"></path><path d="M9 17h4"></path></svg>
-          </div>
-          <h3 data-i18n="process.s2.t">السكريبت والستوريبورد</h3>
-          <p data-i18n="process.s2.d">بكتب سكريبت سردي وبرسم ستوريبورد تفصيلي بيغيّر تجربة المشاهد.</p>
-        </article>
-        <article class="step" data-step="03">
-          <span class="step-badge" aria-hidden="true">03</span>
-          <div class="step-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m22 8-6 4 6 4V8Z"></path><rect x="2" y="6" width="14" height="12" rx="2" ry="2"></rect></svg>
-          </div>
-          <h3 data-i18n="process.s3.t">التصوير والإدارة</h3>
-          <p data-i18n="process.s3.d">إعداد إضاءة سينمائي، إدارة بلاتو، وتصوير بأعلى جودة بأدوات احترافية.</p>
-        </article>
-        <article class="step" data-step="04">
-          <span class="step-badge" aria-hidden="true">04</span>
-          <div class="step-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.4 14.5 16 10 4 20"></path><path d="M2 6h20"></path><path d="m8 2 1.5 4"></path><path d="m14.5 2 1.5 4"></path><path d="M2 6v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V6"></path></svg>
-          </div>
-          <h3 data-i18n="process.s4.t">المونتاج والتسليم</h3>
-          <p data-i18n="process.s4.d">مونتاج سينمائي + تصحيح ألوان + موشن + صوت، ثم تسليم بعد المراجعات.</p>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials — WhatsApp-style chat bubbles -->
-  <section class="section testimonials" id="testimonials">
-    <div class="container">
-      <div class="section-head">
-        <span class="section-tag" data-i18n="testimonials.tag">آراء العملاء</span>
-        <h2 data-i18n="testimonials.title">ناس اشتغلت معاهم بتقول إيه؟</h2>
-        <p class="lead" data-i18n="testimonials.lead">رسايل وصلتني فعلاً من شركاء الشغل بعد ما اتسلّمت المشاريع.</p>
-      </div>
-      <div class="wa-chat-grid" id="waChatGrid" aria-label="آراء العملاء"></div>
-    </div>
-  </section>
-
-  <!-- Skills -->
-  <section class="section skills-section" id="skills">
-    <div class="container">
-      <div class="section-head">
-        <span class="section-tag" data-i18n="skills.tag">المهارات</span>
-        <h2 data-i18n="skills.title">إيه اللي بميّزني؟</h2>
-      </div>
-      <div class="skills">
-        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s1">السرد البصري والإيقاع</span></div>
-        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s2">رؤية إبداعية</span></div>
-        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s3">تركيز عالي على التفاصيل</span></div>
-        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s4">قيادة فريق وإدارة شغل</span></div>
-        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s5">سرعة تنفيذ والتزام بالمواعيد</span></div>
-        <div class="skill"><span class="skill-ico">✦</span><span data-i18n="skills.s6">حل المشاكل</span></div>
-      </div>
-    </div>
-  </section>
-
   <!-- Contact -->
   <section class="section contact" id="contact">
     <div class="container contact-inner">
@@ -1069,9 +1061,9 @@
     <span class="wa-pulse"></span>
   </a>
 
-  <script src="content-defaults.js?v=29"></script>
-  <script src="projects-defaults.js?v=27"></script>
-  <script src="theme.js?v=30"></script>
+  <script src="content-defaults.js?v=30"></script>
+  <script src="projects-defaults.js?v=28"></script>
+  <script src="theme.js?v=31"></script>
   <script src="designs.js?v=30"></script>
   <script src="testimonials-pool.js?v=1"></script>
   <script src="script.js?v=46"></script>

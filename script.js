@@ -63,6 +63,12 @@ function applyLanguage(lang) {
     || (lang === 'ar' ? 'خالد علي — مونتاج فيديو · تسويق رقمي · تصميم'
                       : 'Khaled Ali — Video Editing · Digital Marketing · Design');
 
+  // The software cards are rendered separately from translated DOM nodes.
+  // Rebuild their bilingual labels whenever the selected language changes.
+  if (typeof renderSoftwareStrip === 'function') {
+    try { renderSoftwareStrip(); } catch (e) { console.warn('[software]', e.message); }
+  }
+
   renderGallery(currentFilter, currentSubFilter);
 
   // Re-render Designs grid when language changes (keys may differ per lang)
@@ -188,7 +194,12 @@ function projectCardHTML(p) {
   let poster = p.poster || ytThumb;
   if (isVimeoPageUrl(poster)) poster = '';
   poster = fixVimeoPosterAspect(poster, p.orient);
-  const thumbStyle = poster ? `style="background-image: url('${escapeHtml(poster)}'); background-size: cover; background-position: center;"` : '';
+  const safePoster = escapeHtml(poster || '');
+  const thumbStyle = poster
+    ? (p.orient === 'vertical'
+      ? `style="background-image: url('${safePoster}'), url('${safePoster}'); background-size: contain, cover; background-position: center, center; background-repeat: no-repeat, no-repeat;"`
+      : `style="background-image: url('${safePoster}'); background-size: cover; background-position: center;"`)
+    : '';
   const playable = isPlayable(p.url);
   const orientCls = p.orient === 'vertical' ? ' card-vertical' : '';
   const placeholderCls = p.placeholder ? ' card-placeholder' : '';
@@ -247,191 +258,58 @@ function sortByDateDesc(list) {
     .map(o => o.p);
 }
 
-// ====== Render Works gallery (handles all cats + reels subfilter) ======
-function renderGallery(filter = 'all', subFilter = 'all') {
+// ====== Render a focused, paginated Works gallery ======
+const GALLERY_PAGE_SIZE = 9;
+let galleryLimit = GALLERY_PAGE_SIZE;
+
+function formatCount(value) {
+  return new Intl.NumberFormat(currentLang === 'ar' ? 'ar-EG' : 'en-US').format(value);
+}
+
+function updateGalleryFilterCounts() {
+  const list = projects[currentLang] || [];
+  document.querySelectorAll('[data-filter-count]').forEach(count => {
+    const key = count.dataset.filterCount;
+    const total = key === 'all' ? list.length : list.filter(project => project.cat === key).length;
+    count.textContent = formatCount(total);
+    const button = count.closest('[data-filter]');
+    if (button) button.setAttribute('aria-label', (button.querySelector('.filter-label')?.textContent || key) + ': ' + formatCount(total));
+  });
+}
+
+function renderGallery(filter = 'all', subFilter = 'all', preserveLimit = false) {
   currentFilter = filter;
   currentSubFilter = subFilter;
+  if (!preserveLimit) galleryLimit = GALLERY_PAGE_SIZE;
   const gallery = document.getElementById('gallery');
   if (!gallery) return;
-  const list = projects[currentLang];
-  let filtered;
-  if (filter === 'all') {
-    filtered = list;
-  } else if (filter === 'reels') {
-    filtered = list.filter(p => p.cat === 'reels' && (subFilter === 'all' || p.subCat === subFilter));
-  } else {
-    filtered = list.filter(p => p.cat === filter);
-  }
-  // Newest first
+  const list = projects[currentLang] || [];
+  let filtered = filter === 'all'
+    ? list
+    : filter === 'reels'
+      ? list.filter(project => project.cat === 'reels' && (subFilter === 'all' || project.subCat === subFilter))
+      : list.filter(project => project.cat === filter);
   filtered = sortByDateDesc(filtered);
-  gallery.innerHTML = filtered.length ? filtered.map(projectCardHTML).join('') : emptyStateHTML();
+
+  updateGalleryFilterCounts();
+  const visible = filtered.slice(0, galleryLimit);
+  gallery.innerHTML = visible.length ? visible.map(projectCardHTML).join('') : emptyStateHTML();
+  const status = document.getElementById('galleryStatus');
+  if (status) {
+    const template = (i18n[currentLang] && i18n[currentLang]['gallery.status']) || '{shown} of {total} projects';
+    status.textContent = template.replace('{shown}', formatCount(visible.length)).replace('{total}', formatCount(filtered.length));
+  }
+  const more = document.getElementById('galleryMore');
+  if (more) {
+    more.hidden = filtered.length <= visible.length;
+    const moreWrap = document.getElementById('galleryMoreWrap');
+    if (moreWrap) moreWrap.hidden = more.hidden;
+    const label = (i18n[currentLang] && i18n[currentLang]['works.more']) || 'Show more work';
+    more.textContent = label + ' (' + formatCount(filtered.length - visible.length) + ')';
+  }
   staggerReveal(gallery);
   attachInteractiveCursorTargets();
-  renderLatestStrip();
 }
-
-// ====== "Latest Work" auto-scrolling strip (slider) ======
-// Pull 1 latest project from each category so the strip is a true cross-
-// section of recent work (reels + longyt + podcast + edu + wedding), not 10
-// of the same kind. Each card is from a different section.
-const LATEST_CAT_ORDER = ['reels', 'longyt', 'podcast', 'edu', 'wedding'];
-function getLatestProjects() {
-  const list = projects[currentLang] || [];
-  const playable = list.filter(p => isPlayable(p.url));
-  const pool = playable.length ? playable : list;
-  const sorted = sortByDateDesc(pool);
-  const picks = [];
-  for (const cat of LATEST_CAT_ORDER) {
-    const top = sorted.find(p => p.cat === cat);
-    if (top) picks.push(top);
-  }
-  // If for some reason no items matched (e.g. categories renamed), fall back
-  // to the 5 most-recent overall so the strip is never empty.
-  if (!picks.length) return sorted.slice(0, 5);
-  return picks;
-}
-
-function latestCardHTML(p) {
-  const ytThumb = getYouTubeThumbnail(p.url);
-  let poster = p.poster || ytThumb || '';
-  if (isVimeoPageUrl(poster)) poster = '';
-  poster = fixVimeoPosterAspect(poster, p.orient);
-  const thumbStyle = poster
-    ? `style="background-image:url('${escapeHtml(poster)}');"`
-    : 'style="background:linear-gradient(135deg,#0f172a,#22c55e);"';
-  const isV = p.orient === 'vertical';
-  const playable = isPlayable(p.url);
-  const safeTitle = escapeHtml(p.title || '');
-  const safeBadge = escapeHtml(`${p.tag || ''} · ${p.badge || ''}`.replace(/^· $/, '').replace(/^ · /, ''));
-  return `<button class="latest-card${isV ? ' latest-card--v' : ''}" type="button"
-    data-latest-url="${escapeHtml(p.url || '')}"
-    data-latest-title="${safeTitle}"
-    data-latest-orient="${escapeHtml(p.orient || '')}"
-    aria-label="${safeTitle}">
-    <div class="latest-thumb" ${thumbStyle}>
-      ${playable ? '<span class="latest-play" aria-hidden="true">▶</span>' : ''}
-      <span class="latest-badge">${safeBadge}</span>
-    </div>
-    <h4 class="latest-title">${safeTitle}</h4>
-  </button>`;
-}
-
-function renderLatestStrip() {
-  const track = document.getElementById('latestTrack');
-  if (!track) return;
-  let latest = getLatestProjects();
-  if (!latest.length) {
-    track.innerHTML = '';
-    return;
-  }
-  // The CSS marquee animates translate by -50% (half the track), so we always
-  // need exactly two copies of the same block. With only ~5 cards (one per
-  // category) one block can be narrower than a wide viewport — duplicate the
-  // items inside the block until it's at least ~1200px wide visually.
-  while (latest.length < 8) latest = latest.concat(latest);
-  const half = latest.map(latestCardHTML).join('');
-  track.innerHTML = half + half;
-  track.dataset.itemCount = String(latest.length);
-  // Ensure auto-scroll is running for this freshly-rendered track
-  setupLatestAutoScroll();
-}
-
-// The marquee motion is driven by a pure CSS keyframe animation on
-// `.latest-track`. This avoids cross-browser RTL `scrollLeft` quirks (legacy
-// negative model in Chromium vs positive WHATWG model in WebKit/Firefox),
-// is GPU-accelerated, and runs even when the JS thread is busy. JS only
-// handles pause-on-interaction and arrow controls.
-let _latestAutoScrollSetup = false;
-function setupLatestAutoScroll() {
-  const track = document.getElementById('latestTrack');
-  if (!track) return;
-  if (_latestAutoScrollSetup) return; // setup once globally
-  _latestAutoScrollSetup = true;
-
-  const viewport = track.closest('.latest-viewport');
-  const isRTL = () => (document.documentElement.getAttribute('dir') || 'ltr') === 'rtl';
-
-  // Scale animation duration to the content width so motion speed feels
-  // consistent regardless of how many items are in the slider. Target speed:
-  // ~50 px/sec desktop, ~35 px/sec mobile.
-  function tuneDuration() {
-    const half = track.scrollWidth / 2;
-    if (!half || !isFinite(half)) return;
-    const speed = window.innerWidth < 720 ? 35 : 50;
-    const duration = Math.max(20, Math.round(half / speed));
-    track.style.animationDuration = duration + 's';
-  }
-  // Defer one tick so layout has settled with the freshly-rendered cards.
-  requestAnimationFrame(tuneDuration);
-  window.addEventListener('resize', tuneDuration);
-
-  // Brief pause after user interaction so motion doesn't fight gestures.
-  let pauseTimer = null;
-  function pauseBriefly(ms) {
-    track.classList.add('is-paused');
-    if (pauseTimer) clearTimeout(pauseTimer);
-    pauseTimer = setTimeout(() => track.classList.remove('is-paused'), ms);
-  }
-
-  // Touch: pause for the duration of the touch + a short cooldown.
-  track.addEventListener('touchstart', () => {
-    track.classList.add('is-paused');
-    if (pauseTimer) { clearTimeout(pauseTimer); pauseTimer = null; }
-  }, { passive: true });
-  track.addEventListener('touchend', () => pauseBriefly(2000), { passive: true });
-  track.addEventListener('touchcancel', () => pauseBriefly(2000), { passive: true });
-
-  // Arrow controls — nudge the marquee by shifting the running animation
-  // forward/backward in time. This keeps the CSS animation in charge while
-  // letting the user jump a card-width at a time.
-  document.querySelectorAll('.latest-arrow').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const isPrev = btn.classList.contains('latest-prev');
-      // Compute target translateX delta: ~one card width (260px on desktop,
-      // 210px on mobile after gap).
-      const cardWidth = window.innerWidth < 720 ? 210 : 260;
-      const half = track.scrollWidth / 2 || 1;
-      const fraction = cardWidth / half; // of one full cycle
-
-      // Read current animation progress, then jump.
-      const cs = getComputedStyle(track);
-      const durationSec = parseFloat(cs.animationDuration) || 60;
-      const delaySec = parseFloat(cs.animationDelay) || 0;
-      // Advancing animation-delay in the negative direction moves it forward;
-      // positive delay moves it backward (pre-rolls before it starts).
-      const ltrSign = isRTL() ? -1 : 1;
-      const direction = isPrev ? 1 : -1;       // prev = rewind; next = forward
-      const deltaSec = direction * ltrSign * fraction * durationSec;
-      track.style.animationDelay = (delaySec + deltaSec) + 's';
-
-      // Visually nudge with a brief micro-pause so the jump reads as a beat.
-      pauseBriefly(900);
-    });
-  });
-
-  // Pause when offscreen — saves CPU/battery and prevents wasted work.
-  if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          track.style.animationPlayState = '';
-        } else {
-          track.style.animationPlayState = 'paused';
-        }
-      });
-    }, { rootMargin: '200px' });
-    io.observe(viewport || track);
-  }
-}
-
-// The latest-work cards are direct video links, just like the full gallery.
-document.addEventListener('click', (e) => {
-  const card = e.target.closest('.latest-card');
-  if (!card) return;
-  if (card.dataset.latestUrl) {
-    openLightbox(card.dataset.latestUrl, card.dataset.latestTitle, card.dataset.latestOrient);
-  }
-});
 
 // ====== Lightbox for video playback ======
 function getExternalVideoUrl(url) {
@@ -538,35 +416,30 @@ document.addEventListener('keydown', (e) => {
   openLightbox(card.dataset.videoUrl, card.dataset.videoTitle, card.dataset.videoOrient);
 });
 
-// ====== Filters (Works: podcast / reels) ======
+// ====== Works filters ======
 const filtersEl = document.getElementById('filters');
-const subfiltersEl = document.getElementById('subfilters');
-if (filtersEl) filtersEl.addEventListener('click', (e) => {
-  const btn = e.target.closest('.chip');
-  if (!btn) return;
-  filtersEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  const filter = btn.dataset.filter;
-  // show reels sub-filters only when reels is active
-  if (subfiltersEl) {
-    const showSub = filter === 'reels';
-    subfiltersEl.hidden = !showSub;
-    if (!showSub) {
-      // reset sub state visually + data
-      subfiltersEl.querySelectorAll('.chip').forEach(c => c.classList.toggle('active', c.dataset.subfilter === 'all'));
-      currentSubFilter = 'all';
-    }
-  }
-  renderGallery(filter, currentSubFilter);
+const reelSubfilterWrap = document.getElementById('reelSubfilterWrap');
+const reelSubfilter = document.getElementById('reelSubfilter');
+const galleryMore = document.getElementById('galleryMore');
+if (filtersEl) filtersEl.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-filter]');
+  if (!button) return;
+  filtersEl.querySelectorAll('[data-filter]').forEach(item => {
+    const active = item === button;
+    item.classList.toggle('active', active);
+    item.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+  const filter = button.dataset.filter;
+  if (reelSubfilterWrap) reelSubfilterWrap.hidden = filter !== 'reels';
+  if (filter !== 'reels' && reelSubfilter) reelSubfilter.value = 'all';
+  renderGallery(filter, filter === 'reels' && reelSubfilter ? reelSubfilter.value : 'all');
 });
-
-// Reels sub-filters: medical / educational / marketing / general
-if (subfiltersEl) subfiltersEl.addEventListener('click', (e) => {
-  const btn = e.target.closest('.chip');
-  if (!btn) return;
-  subfiltersEl.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  renderGallery('reels', btn.dataset.subfilter);
+if (reelSubfilter) reelSubfilter.addEventListener('change', () => {
+  renderGallery('reels', reelSubfilter.value);
+});
+if (galleryMore) galleryMore.addEventListener('click', () => {
+  galleryLimit += GALLERY_PAGE_SIZE;
+  renderGallery(currentFilter, currentSubFilter, true);
 });
 
 // ====== Mobile nav toggle ======
@@ -811,50 +684,6 @@ function forceInVisibleSections() {
   });
 }
 setTimeout(forceInVisibleSections, 400);
-
-// ====== Card 3D tilt on mousemove ======
-function attachCardTilt(root) {
-  if (prefersReducedMotion()) return;
-  const cards = (root || document).querySelectorAll('.card');
-  cards.forEach(card => {
-    if (card.dataset.tiltBound === '1') return;
-    card.dataset.tiltBound = '1';
-    let raf = null;
-    card.addEventListener('mousemove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width - 0.5;
-      const y = (e.clientY - rect.top) / rect.height - 0.5;
-      if (raf) cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        card.style.setProperty('--tx', (x * 100).toFixed(1) + '%');
-        card.style.setProperty('--ty', (y * 100).toFixed(1) + '%');
-        card.style.setProperty('--rx', (-y * 6).toFixed(2) + 'deg');
-        card.style.setProperty('--ry', (x * 8).toFixed(2) + 'deg');
-      });
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.setProperty('--rx', '0deg');
-      card.style.setProperty('--ry', '0deg');
-    });
-    // Ripple on click
-    card.addEventListener('click', (e) => {
-      const rect = card.getBoundingClientRect();
-      const r = document.createElement('span');
-      r.className = 'card-ripple';
-      r.style.left = (e.clientX - rect.left) + 'px';
-      r.style.top = (e.clientY - rect.top) + 'px';
-      card.appendChild(r);
-      setTimeout(() => r.remove(), 700);
-    });
-  });
-}
-// Run after gallery render — wrap renderGallery so tilt attaches to freshly rendered cards
-const _origRenderGallery = renderGallery;
-renderGallery = function(filter, subFilter) {
-  _origRenderGallery(filter, subFilter);
-  setTimeout(() => attachCardTilt(document.getElementById('gallery')), 50);
-};
-attachCardTilt(document);
 
 // ====== Pricing card flip ======
 document.querySelectorAll('.plan.card-flip').forEach(card => {
@@ -1323,7 +1152,7 @@ function renderSoftwareStrip() {
   window.addEventListener('resize', tune);
 
   // Manual nudge: jump animation-delay by one logo-card width so the user can
-  // scrub the marquee left/right. Mirrors the latest-arrow control pattern.
+  // scrub the marquee left/right with the same small animation-delay adjustment.
   let pauseTimer = null;
   function pauseBriefly(ms) {
     track.classList.add('is-paused');
