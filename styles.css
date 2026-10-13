@@ -2402,6 +2402,35 @@ html[dir="rtl"] .wa-bubble::after {
   background: #000;
 }
 .lb-frame { width: 100%; height: 100%; border: 0; display: block; }
+.lb-external {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 12px 16px 14px;
+  padding: 9px 13px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  background: rgba(255,255,255,0.04);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  transition: color .22s ease, background .22s ease, border-color .22s ease, transform .22s ease;
+}
+.lb-external:hover,
+.lb-external:focus-visible {
+  color: #052e1c;
+  background: var(--neon);
+  border-color: var(--neon);
+  transform: translateY(-1px);
+}
+.lb-external:focus-visible,
+.card-playable:focus-visible,
+.latest-card:focus-visible {
+  outline: 3px solid var(--neon);
+  outline-offset: 3px;
+}
+.lb-external[hidden] { display: none; }
 
 @keyframes lb-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes lb-scale { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
@@ -2630,8 +2659,9 @@ html[dir="rtl"] .wa-bubble::after {
 /* ===== Lightbox: vertical mode for reels ===== */
 .lb-frame-wrap.lb-vertical {
   aspect-ratio: 9 / 16;
-  max-width: min(420px, 92vw);
-  max-height: 86vh;
+  width: min(420px, 92vw, 38.25vh);
+  max-width: min(420px, 92vw, 38.25vh);
+  max-height: 68vh;
   margin: 0 auto;
 }
 .lb-video {

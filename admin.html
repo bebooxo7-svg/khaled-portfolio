@@ -2082,6 +2082,26 @@ function detectVideoPlatform(url) {
   if (/(?:youtube\.com\/(?:watch|shorts|embed|v)|youtu\.be\/)/i.test(url)) return 'youtube';
   return null;
 }
+function normalizeVimeoUrl(rawUrl) {
+  if (!rawUrl) return '';
+  try {
+    const value = rawUrl.trim();
+    const normalized = value.startsWith('//') ? `https:${value}` : /^https?:\/\//i.test(value) ? value : `https://${value}`;
+    const parsed = new URL(normalized);
+    const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+    if (host !== 'vimeo.com' && !host.endsWith('.vimeo.com')) return rawUrl;
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    const idIndex = parts.findIndex(part => /^\d+$/.test(part));
+    if (idIndex < 0 || !parts.slice(0, idIndex).includes('manage')) return parsed.href;
+    const id = parts[idIndex];
+    const shareHash = parsed.searchParams.get('h');
+    const publicUrl = new URL(`https://vimeo.com/${id}`);
+    if (shareHash) publicUrl.searchParams.set('h', shareHash);
+    return publicUrl.href;
+  } catch {
+    return rawUrl;
+  }
+}
 function extractYouTubeId(url) {
   const m = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|v\/)|youtu\.be\/)([\w-]{11})/);
   return m ? m[1] : '';
@@ -2113,7 +2133,8 @@ async function fetchVimeoThumbnail(url, orient) {
   // even if the user forgot to flip the orientation dropdown).
   let initialW = orient === 'vertical' ? 720 : 1280;
   try {
-    const oembed = `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(url)}&width=${initialW}`;
+    const publicUrl = normalizeVimeoUrl(url);
+    const oembed = `https://vimeo.com/api/oembed.json?url=${encodeURIComponent(publicUrl)}&width=${initialW}`;
     const res = await fetch(oembed);
     if (!res.ok) return { thumb: '', detectedOrient: orient };
     const data = await res.json();
@@ -2217,7 +2238,8 @@ document.getElementById('vSave').addEventListener('click', () => {
   const subCat = cat === 'reels' ? (document.getElementById('vSubCat').value || undefined) : undefined;
   const orient = document.getElementById('vOrient').value;
   const badge = document.getElementById('vBadge').value.trim();
-  const url = document.getElementById('vUrl').value.trim();
+  const enteredUrl = document.getElementById('vUrl').value.trim();
+  const url = detectVideoPlatform(enteredUrl) === 'vimeo' ? normalizeVimeoUrl(enteredUrl) : enteredUrl;
   const poster = document.getElementById('vPoster').value.trim();
   const titleAr = document.getElementById('vTitleAr').value.trim();
   const descAr = document.getElementById('vDescAr').value.trim();

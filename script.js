@@ -71,16 +71,73 @@ function applyLanguage(lang) {
   }
 }
 
-// ====== Helper: extract YouTube/Vimeo ID or detect local mp4 ======
+// ====== Helper: normalize YouTube/Vimeo URLs for the embedded player ======
+function parseMediaUrl(rawUrl) {
+  if (typeof rawUrl !== 'string' || !rawUrl.trim()) return null;
+  const value = rawUrl.trim();
+  try {
+    const withProtocol = value.startsWith('//')
+      ? `https:${value}`
+      : /^[a-z][a-z\d+.-]*:\/\//i.test(value) ? value : `https://${value}`;
+    const parsed = new URL(withProtocol);
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
+function getYouTubeId(parsed) {
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+  const isYouTube = host === 'youtube.com' || host.endsWith('.youtube.com') ||
+    host === 'youtube-nocookie.com' || host.endsWith('.youtube-nocookie.com');
+  let id = '';
+  if (host === 'youtu.be') {
+    id = parsed.pathname.split('/').filter(Boolean)[0] || '';
+  } else if (isYouTube) {
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    if (parsed.pathname === '/watch' || parsed.pathname === '/watch/') {
+      id = parsed.searchParams.get('v') || '';
+    } else if (['embed', 'shorts', 'live', 'v'].includes(parts[0])) {
+      id = parts[1] || '';
+    }
+  }
+  return /^[\w-]{11}$/.test(id) ? id : null;
+}
+
+function parseVideoStart(value) {
+  if (!value) return 0;
+  if (/^\d+$/.test(value)) return Number(value);
+  const match = value.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/i);
+  if (!match || !match[0]) return 0;
+  return (Number(match[1] || 0) * 3600) + (Number(match[2] || 0) * 60) + Number(match[3] || 0);
+}
+
 function getEmbedUrl(url) {
-  if (!url) return null;
-  // YouTube
-  const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
-  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
-  // Vimeo
-  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
-  if (vimeoMatch) return `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`;
-  return null;
+  const parsed = parseMediaUrl(url);
+  if (!parsed) return null;
+
+  const youtubeId = getYouTubeId(parsed);
+  if (youtubeId) {
+    const start = parseVideoStart(parsed.searchParams.get('start') || parsed.searchParams.get('t') || parsed.searchParams.get('time_continue'));
+    const params = new URLSearchParams({ autoplay: '1', rel: '0', playsinline: '1' });
+    if (start > 0) params.set('start', String(start));
+    return `https://www.youtube.com/embed/${youtubeId}?${params.toString()}`;
+  }
+
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+  if (host !== 'vimeo.com' && !host.endsWith('.vimeo.com')) return null;
+  const parts = parsed.pathname.split('/').filter(Boolean);
+  let idIndex = -1;
+  for (let i = parts.length - 1; i >= 0; i--) {
+    if (/^\d+$/.test(parts[i])) { idIndex = i; break; }
+  }
+  if (idIndex < 0) return null;
+  const id = parts[idIndex]; // Also accepts Vimeo dashboard links like /manage/videos/123456789.
+  const hash = parsed.searchParams.get('h') || parts[idIndex + 1] || '';
+  const params = new URLSearchParams({ autoplay: '1', dnt: '1' });
+  if (/^[a-z\d]{6,}$/i.test(hash)) params.set('h', hash);
+  return `https://player.vimeo.com/video/${id}?${params.toString()}`;
 }
 function isLocalVideo(url) {
   return !!(url && /\.(mp4|webm|mov)(\?|$)/i.test(url));
@@ -89,8 +146,16 @@ function isPlayable(url) {
   return !!(getEmbedUrl(url) || isLocalVideo(url));
 }
 function getYouTubeThumbnail(url) {
-  const ytMatch = url && url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
-  return ytMatch ? `https://i.ytimg.com/vi/${ytMatch[1]}/hqdefault.jpg` : null;
+  const parsed = parseMediaUrl(url);
+  const id = parsed && getYouTubeId(parsed);
+  return id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : null;
+}
+
+function isVimeoPageUrl(url) {
+  const parsed = parseMediaUrl(url);
+  if (!parsed) return false;
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+  return (host === 'vimeo.com' || host.endsWith('.vimeo.com')) && host !== 'i.vimeocdn.com';
 }
 
 // Vimeo's CDN serves the same source image at any requested dimensions, so we
@@ -121,22 +186,24 @@ function fixVimeoPosterAspect(poster, orient) {
 function projectCardHTML(p) {
   const ytThumb = getYouTubeThumbnail(p.url);
   let poster = p.poster || ytThumb;
+  if (isVimeoPageUrl(poster)) poster = '';
   poster = fixVimeoPosterAspect(poster, p.orient);
-  const thumbStyle = poster ? `style="background-image: url('${poster}'); background-size: cover; background-position: center;"` : '';
+  const thumbStyle = poster ? `style="background-image: url('${escapeHtml(poster)}'); background-size: cover; background-position: center;"` : '';
   const playable = isPlayable(p.url);
   const orientCls = p.orient === 'vertical' ? ' card-vertical' : '';
   const placeholderCls = p.placeholder ? ' card-placeholder' : '';
-  const catAttr = p.cat ? ` data-cat="${p.cat}"` : '';
-  const subAttr = p.subCat ? ` data-sub="${p.subCat}"` : '';
+  const catAttr = p.cat ? ` data-cat="${escapeHtml(p.cat)}"` : '';
+  const subAttr = p.subCat ? ` data-sub="${escapeHtml(p.subCat)}"` : '';
+  const thumbClass = p.thumb || (!poster ? 'bg-grad-3' : '');
   return `
-    <article class="card reveal${orientCls}${placeholderCls} ${playable ? 'card-playable' : ''}"${catAttr}${subAttr} ${playable ? `data-video-url="${p.url}" data-video-title="${p.title.replace(/"/g, '&quot;')}"` : ''}>
-      <div class="thumb ${p.thumb || ''}" ${thumbStyle}>
-        <span class="badge">${p.tag} · ${p.badge}</span>
+    <article class="card reveal${orientCls}${placeholderCls} ${playable ? 'card-playable' : ''}"${catAttr}${subAttr} ${playable ? `role="button" tabindex="0" aria-label="${escapeHtml((currentLang === 'ar' ? 'تشغيل الفيديو: ' : 'Play video: ') + (p.title || ''))}" data-video-url="${escapeHtml(p.url)}" data-video-title="${escapeHtml(p.title || '')}" data-video-orient="${escapeHtml(p.orient || '')}"` : ''}>
+      <div class="thumb ${escapeHtml(thumbClass)}" ${thumbStyle}>
+        <span class="badge">${escapeHtml(p.tag || '')} · ${escapeHtml(p.badge || '')}</span>
         ${playable ? '<span class="play-icon" aria-hidden="true">▶</span>' : '<span class="soon-icon" aria-hidden="true">⏳</span>'}
       </div>
       <div class="card-body">
-        <h3>${p.title}</h3>
-        <p>${p.desc}</p>
+        <h3>${escapeHtml(p.title || '')}</h3>
+        <p>${escapeHtml(p.desc || '')}</p>
       </div>
     </article>`;
 }
@@ -227,23 +294,25 @@ function getLatestProjects() {
 function latestCardHTML(p) {
   const ytThumb = getYouTubeThumbnail(p.url);
   let poster = p.poster || ytThumb || '';
+  if (isVimeoPageUrl(poster)) poster = '';
   poster = fixVimeoPosterAspect(poster, p.orient);
   const thumbStyle = poster
-    ? `style="background-image:url('${poster}');"`
+    ? `style="background-image:url('${escapeHtml(poster)}');"`
     : 'style="background:linear-gradient(135deg,#0f172a,#22c55e);"';
   const isV = p.orient === 'vertical';
   const playable = isPlayable(p.url);
-  const safeTitle = (p.title || '').replace(/"/g, '&quot;');
-  const safeBadge = `${p.tag || ''} · ${p.badge || ''}`.replace(/^· $/, '').replace(/^ · /, '').replace(/" /g, '&quot; ');
+  const safeTitle = escapeHtml(p.title || '');
+  const safeBadge = escapeHtml(`${p.tag || ''} · ${p.badge || ''}`.replace(/^· $/, '').replace(/^ · /, ''));
   return `<button class="latest-card${isV ? ' latest-card--v' : ''}" type="button"
-    data-latest-url="${(p.url || '').replace(/"/g, '&quot;')}"
+    data-latest-url="${escapeHtml(p.url || '')}"
     data-latest-title="${safeTitle}"
+    data-latest-orient="${escapeHtml(p.orient || '')}"
     aria-label="${safeTitle}">
     <div class="latest-thumb" ${thumbStyle}>
       ${playable ? '<span class="latest-play" aria-hidden="true">▶</span>' : ''}
       <span class="latest-badge">${safeBadge}</span>
     </div>
-    <h4 class="latest-title">${p.title || ''}</h4>
+    <h4 class="latest-title">${safeTitle}</h4>
   </button>`;
 }
 
@@ -355,38 +424,34 @@ function setupLatestAutoScroll() {
   }
 }
 
-// Click on a slider card → scroll the user to the matching item in the full
-// gallery (and play it via the existing card-click handler if available).
+// The latest-work cards are direct video links, just like the full gallery.
 document.addEventListener('click', (e) => {
   const card = e.target.closest('.latest-card');
   if (!card) return;
-  const url = card.dataset.latestUrl;
-  const works = document.getElementById('works');
-  if (!works) return;
-
-  // Reset filter to 'all' so the target is definitely rendered
-  const allChip = document.querySelector('.filters .chip[data-filter="all"]');
-  if (allChip && !allChip.classList.contains('active')) {
-    allChip.click();
+  if (card.dataset.latestUrl) {
+    openLightbox(card.dataset.latestUrl, card.dataset.latestTitle, card.dataset.latestOrient);
   }
-
-  // Smooth-scroll the works section into view
-  works.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  // After scroll settles, focus and pulse-highlight the matching card
-  setTimeout(() => {
-    if (!url) return;
-    const esc = (window.CSS && CSS.escape) ? CSS.escape(url) : url.replace(/"/g, '\\"');
-    const match = document.querySelector(`.gallery .card[data-video-url="${esc}"]`);
-    if (!match) return;
-    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    match.classList.add('card-highlight');
-    setTimeout(() => match.classList.remove('card-highlight'), 2400);
-  }, 650);
 });
 
 // ====== Lightbox for video playback ======
-function openLightbox(url, title) {
+function getExternalVideoUrl(url) {
+  const parsed = parseMediaUrl(url);
+  if (!parsed) return null;
+  const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+  if (host === 'vimeo.com' || host.endsWith('.vimeo.com')) {
+    const parts = parsed.pathname.split('/').filter(Boolean);
+    let idIndex = -1;
+    for (let i = parts.length - 1; i >= 0; i--) {
+      if (/^\d+$/.test(parts[i])) { idIndex = i; break; }
+    }
+    if (idIndex >= 0 && parts.slice(0, idIndex).includes('manage')) {
+      return `https://vimeo.com/${parts[idIndex]}`;
+    }
+  }
+  return parsed.href;
+}
+
+function openLightbox(url, title, orientation) {
   const embedUrl = getEmbedUrl(url);
   const local = !embedUrl && isLocalVideo(url);
   if (!embedUrl && !local) { window.open(url, '_blank'); return; }
@@ -397,13 +462,14 @@ function openLightbox(url, title) {
     lb.className = 'video-lightbox';
     lb.innerHTML = `
       <div class="lb-backdrop" data-lb-close></div>
-      <div class="lb-dialog" role="dialog" aria-modal="true">
+      <div class="lb-dialog" role="dialog" aria-modal="true" aria-labelledby="lbTitle">
         <button class="lb-close" data-lb-close aria-label="Close">×</button>
-        <div class="lb-title"></div>
+        <div class="lb-title" id="lbTitle"></div>
         <div class="lb-frame-wrap">
-          <iframe class="lb-frame" allow="autoplay; encrypted-media; fullscreen" allowfullscreen frameborder="0"></iframe>
+          <iframe class="lb-frame" title="Video player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" frameborder="0"></iframe>
           <video class="lb-video" controls playsinline preload="metadata"></video>
         </div>
+        <a class="lb-external" target="_blank" rel="noopener noreferrer" hidden>فتح الفيديو على المنصة ↗</a>
       </div>`;
     document.body.appendChild(lb);
     lb.addEventListener('click', (e) => {
@@ -416,12 +482,17 @@ function openLightbox(url, title) {
   const frame = lb.querySelector('.lb-frame');
   const video = lb.querySelector('.lb-video');
   const wrap = lb.querySelector('.lb-frame-wrap');
+  const external = lb.querySelector('.lb-external');
+  lb.__returnFocus = document.activeElement;
+  lb.__previousBodyOverflow = document.body.style.overflow;
+  frame.title = title ? `${title} — Video player` : 'Video player';
   if (local) {
     frame.style.display = 'none';
     frame.src = '';
     video.style.display = 'block';
     video.src = url;
-    wrap.classList.add('lb-vertical');
+    wrap.classList.toggle('lb-vertical', orientation === 'vertical');
+    external.hidden = true;
     setTimeout(() => { try { video.play(); } catch (e) {} }, 50);
   } else {
     video.style.display = 'none';
@@ -429,11 +500,15 @@ function openLightbox(url, title) {
     video.load();
     frame.style.display = 'block';
     frame.src = embedUrl;
-    wrap.classList.remove('lb-vertical');
+    wrap.classList.toggle('lb-vertical', orientation === 'vertical');
+    external.href = getExternalVideoUrl(url) || url;
+    external.textContent = currentLang === 'ar' ? 'فتح الفيديو على المنصة ↗' : 'Open video on its platform ↗';
+    external.hidden = false;
   }
   lb.querySelector('.lb-title').textContent = title || '';
   lb.classList.add('open');
   document.body.style.overflow = 'hidden';
+  lb.querySelector('.lb-close').focus({ preventScroll: true });
 }
 function closeLightbox() {
   const lb = document.getElementById('videoLightbox');
@@ -443,7 +518,10 @@ function closeLightbox() {
   if (frame) frame.src = '';
   if (video) { try { video.pause(); } catch(e){} video.removeAttribute('src'); video.load(); }
   lb.classList.remove('open');
-  document.body.style.overflow = '';
+  document.body.style.overflow = lb.__previousBodyOverflow || '';
+  if (lb.__returnFocus && typeof lb.__returnFocus.focus === 'function') {
+    lb.__returnFocus.focus({ preventScroll: true });
+  }
 }
 
 // Click handler for playable cards
@@ -451,7 +529,13 @@ document.addEventListener('click', (e) => {
   const card = e.target.closest('.card-playable');
   if (!card) return;
   e.preventDefault();
-  openLightbox(card.dataset.videoUrl, card.dataset.videoTitle);
+  openLightbox(card.dataset.videoUrl, card.dataset.videoTitle, card.dataset.videoOrient);
+});
+document.addEventListener('keydown', (e) => {
+  const card = e.target.closest && e.target.closest('.card-playable');
+  if (!card || !['Enter', ' '].includes(e.key)) return;
+  e.preventDefault();
+  openLightbox(card.dataset.videoUrl, card.dataset.videoTitle, card.dataset.videoOrient);
 });
 
 // ====== Filters (Works: podcast / reels) ======
