@@ -802,12 +802,9 @@ if (window.matchMedia('(hover: hover) and (pointer: fine)').matches && !prefersR
   }
 }
 
-// ====== Combined scroll handler (nav state + parallax + back-to-top + section reveal) ======
+// ====== Combined scroll handler (nav state + back-to-top + section reveal) ======
 const nav = document.querySelector('.nav');
-const bgGrad = document.querySelector('.bg-gradient');
-const heroText = document.querySelector('.hero-text');
 const scrollBar = document.querySelector('.scroll-progress > span');
-const reduceMotion = prefersReducedMotion();
 let scrollRaf = null;
 function onScroll() {
   if (scrollRaf) cancelAnimationFrame(scrollRaf);
@@ -822,11 +819,6 @@ function onScroll() {
       const docH = document.documentElement.scrollHeight - window.innerHeight;
       const pct = docH > 0 ? Math.min(100, Math.max(0, (y / docH) * 100)) : 0;
       scrollBar.style.width = pct + '%';
-    }
-    // parallax (skipped when motion-reduced)
-    if (!reduceMotion) {
-      if (bgGrad) bgGrad.style.transform = `translate3d(0, ${y * -0.08}px, 0)`;
-      if (heroText && y < 800) heroText.style.transform = `translate3d(0, ${y * 0.12}px, 0)`;
     }
     // force-reveal sections in viewport (fallback for IO timing)
     forceInVisibleSections();

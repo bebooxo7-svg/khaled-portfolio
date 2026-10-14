@@ -3878,3 +3878,269 @@ html[lang="ar"] .hero h1.hero-name { line-height: 1.34; }
 @media (prefers-reduced-motion: reduce) {
   .scroll-hint span { animation: none; }
 }
+
+/* ===== Phone-first QA: clear sections, readable cards, no moving overlaps ===== */
+/* The logo keeps its emerald/blue identity without competing with the page. */
+.logo-halo, .logo-aura, .logo-glow, .logo-shine::before,
+.logo-mark img, .eyebrow, .btn-primary, .hero-stats strong, .section-tag,
+.card-illustration, .designs-cta-band .btn-primary::before,
+.card-placeholder .soon-icon, .gallery .card .play-icon {
+  animation: none;
+}
+.logo-halo { opacity: .48; filter: blur(6px); }
+.logo-aura { opacity: .34; }
+.logo-glow { opacity: .42; transform: none; }
+.logo-mark img { transform: none; filter: drop-shadow(0 3px 10px rgba(34,197,94,.38)) drop-shadow(0 2px 5px rgba(59,130,246,.24)); }
+.logo-shine { opacity: 0; }
+.software-card__logo { animation: none; }
+.wa-float, .wa-pulse { animation: none; }
+
+@media (max-width: 720px) {
+  html, body { overflow-x: clip; }
+  .hero { padding: 30px 0 20px; }
+  .hero-inner { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+  .hero-text { order: 0; padding: 23px 18px; border-radius: 22px; }
+  .hero-visual { order: 1; }
+  .hero h1.hero-name { font-size: clamp(2.15rem, 9.2vw, 2.7rem); line-height: 1.35; margin-bottom: 8px; }
+  .hero-role { font-size: 1rem; margin-bottom: 10px; }
+  .hero-sub { max-width: 43ch; font-size: 15px; line-height: 1.72; margin-bottom: 16px; }
+  .hero-cta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 16px 0; }
+  .hero-cta .btn { width: 100%; min-width: 0; min-height: 46px; padding: 11px 10px; font-size: .92rem; }
+  .hero-stats { width: 100%; gap: 5px; margin: 16px auto 14px; padding: 11px 7px; }
+  .hero-stats li { min-width: 0; flex: 1 1 0; align-items: center; text-align: center; }
+  .hero-stats strong { font-size: clamp(1.35rem, 6.2vw, 1.65rem); }
+  .hero-stats span { font-size: 11px; line-height: 1.45; }
+  .hero-socials { justify-content: center; margin-top: 10px; }
+  .hero-visual .photo-card { width: 100%; max-width: 520px; margin-inline: auto; }
+  .scroll-hint { display: grid; width: 40px; height: 40px; margin-top: 16px; }
+
+  .section { padding-block: 42px; }
+  .section > .container {
+    width: 100%;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .section-head { margin-bottom: 24px; }
+  h2 { max-width: 25ch; font-size: clamp(1.45rem, 6vw, 1.85rem); line-height: 1.45; }
+  html[lang="en"] h2 { line-height: 1.28; }
+  .section-head h2 { margin-bottom: 9px; }
+  .section-head .lead, #about .lead { font-size: 15px; line-height: 1.72; }
+  .about-cards { gap: 12px; }
+  .mini-card, .service, .step, .skill { padding: 20px 16px; }
+  .service { min-height: 0; }
+  .process-grid { gap: 12px; }
+  .filters { justify-content: center; flex-wrap: wrap; gap: 7px; margin: 0 auto 16px; }
+  .filters .chip { min-height: 40px; padding: 8px 11px; font-size: .8rem; }
+  .reel-subfilter { margin-inline: auto; max-width: 100%; }
+  .gallery { gap: 14px; }
+  .gallery .card { min-width: 0; }
+  .gallery .card-body { padding: 15px 16px 17px; }
+  .gallery .card-body h3 { font-size: 1rem; line-height: 1.45; }
+  .gallery .card-body p { font-size: .88rem; line-height: 1.65; }
+  .works-cta { gap: 14px; margin-top: 26px; padding: 19px 16px; }
+  .works-cta h3 { font-size: 1.05rem; }
+  .works-cta p { font-size: .9rem; line-height: 1.65; }
+  .software-card { min-height: 128px; }
+  .designs-cta-band { padding: 18px; }
+  .contact-form { padding: 20px 16px; }
+  .contact-form input, .contact-form select, .contact-form textarea { min-height: 46px; font-size: 16px; }
+  .contact-form textarea { min-height: 110px; }
+  .plan.card-flip, .card-inner { min-height: 520px; }
+  .card-face { padding: 24px 18px 20px; }
+  .back-to-top { display: none !important; }
+  .wa-float { width: 44px; height: 44px; bottom: calc(13px + env(safe-area-inset-bottom, 0px)); box-shadow: 0 8px 22px rgba(37,211,102,.28); }
+  .wa-float svg { width: 21px; height: 21px; }
+
+  /* On touch screens, reveal content immediately. Only the opening card gets a
+     short fade-and-lift; no delayed stagger can leave a section half hidden. */
+  .reveal, .reveal:not(.show), .reveal.show,
+  .reveal-stagger > *, .reveal-stagger.show > *,
+  .section-enter .se-tag, .section-enter .se-title .word-inner,
+  .section-enter .se-lead, .section-enter .se-grid > *,
+  .designs-grid .design-card.reveal, .designs-grid .design-card.reveal.show {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+    will-change: auto;
+  }
+  .kha-rich-anim .reveal:not(.show), .kha-rich-anim .reveal.show,
+  .kha-rich-anim .reveal-stagger > *, .kha-rich-anim .reveal-stagger.show > * {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+  .hero-text.reveal { animation: phoneHeroIn .48s cubic-bezier(.2,.7,.2,1) both; }
+  .hero-visual.reveal { animation: phoneHeroIn .48s cubic-bezier(.2,.7,.2,1) .08s both; }
+  .kha-rich-anim .hero-text .eyebrow, .kha-rich-anim .hero-text .hero-role,
+  .kha-rich-anim .hero-text .hero-sub, .kha-rich-anim .hero-text .hero-cta,
+  .kha-rich-anim .hero-text .hero-stats, .kha-rich-anim .hero-text .hero-socials,
+  .kha-rich-anim .hero-name .gradient-text { animation: none; }
+  .kha-rich-anim .service:hover, .kha-rich-anim .gallery .card.card-playable:hover,
+  .kha-rich-anim .plan.card-flip:hover, .kha-rich-anim .design-card:hover,
+  .service:hover, .skill:hover, .mini-card:hover, .software-card:hover,
+  .gallery .card:hover, .design-card:hover, .step:hover, .process-step:hover {
+    transform: none;
+  }
+  .gallery .card:hover .thumb, .design-card:hover img,
+  .service:hover .service-icon, .step:hover .step-icon,
+  .process-step:hover .step-icon { transform: none; filter: none; }
+  .kha-rich-anim .logo-halo, .kha-rich-anim .logo-aura,
+  .kha-rich-anim .logo-glow, .kha-rich-anim .logo-mark img,
+  .kha-rich-anim .logo-shine::before, .kha-rich-anim .wa-float,
+  .kha-rich-anim .card-illustration, .kha-rich-anim .software-card__logo {
+    animation: none !important;
+  }
+  .kha-rich-anim .logo-halo { opacity: .38; }
+  .kha-rich-anim .logo-aura { opacity: .28; }
+  .kha-rich-anim .logo-shine { opacity: 0; }
+  .kha-rich-anim .video-lightbox .lb-dialog { transition-duration: .24s; }
+  .kha-rich-anim .video-lightbox .lb-dialog { transform: scale(.98) translateY(8px); }
+  .kha-rich-anim .video-lightbox.open .lb-dialog { transform: none; }
+}
+
+@keyframes phoneHeroIn {
+  from { opacity: .35; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding-top: 26px; }
+  .hero-text { padding: 21px 15px; }
+  .hero h1.hero-name { font-size: clamp(2.05rem, 9vw, 2.45rem); }
+  .hero-stats { padding-inline: 5px; }
+  .hero-stats span { font-size: 10px; }
+  .gallery { grid-template-columns: minmax(0, 1fr); width: 100%; max-width: 420px; margin-inline: auto; gap: 15px; }
+  .gallery .card .thumb { aspect-ratio: 16 / 9; }
+  .gallery .card-body { padding: 16px; }
+  .gallery .card-body h3 { font-size: 1rem; }
+  .gallery .card-body p { font-size: .9rem; }
+  .section > .container { padding-inline: 16px; }
+  .section-head { margin-bottom: 22px; }
+  .section-head .lead { font-size: .93rem; }
+  .pricing-grid { gap: 22px; }
+  .plan.card-flip, .card-inner { min-height: 500px; }
+}
+
+@media (max-width: 360px) {
+  .hero-cta { grid-template-columns: 1fr; }
+  .hero-stats strong { font-size: 1.3rem; }
+  .hero-stats span { font-size: 9px; }
+  .filters .chip { padding-inline: 9px; font-size: .76rem; }
+  .section > .container { padding-inline: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-text.reveal, .hero-visual.reveal { animation: none !important; }
+  .logo-halo, .logo-aura, .logo-glow, .logo-mark img,
+  .logo-shine::before, .wa-float { animation: none !important; }
+}
+
+/* ===== Final motion and touch pass ===== */
+/* Scroll reveals stay short and never move a section far enough to feel detached. */
+.kha-rich-anim .reveal:not(.show) {
+  transform: translateY(12px);
+  filter: none;
+  transition: opacity .42s ease, transform .42s cubic-bezier(.2,.7,.2,1);
+}
+.kha-rich-anim .reveal.show { transform: none; filter: none; }
+.reveal-stagger.show > * { transition-delay: 0s !important; }
+.section-enter .se-tag {
+  transform: translateY(8px);
+  filter: none;
+  transition: opacity .38s ease, transform .38s cubic-bezier(.2,.7,.2,1);
+}
+.section-enter.section-in .se-tag { transform: none; }
+.section-enter .se-title .word-inner {
+  transform: translateY(12px);
+  transition: opacity .4s ease, transform .4s cubic-bezier(.2,.7,.2,1);
+}
+.section-enter.section-in .se-title .word-inner { transform: none; }
+.section-enter.section-in .se-title .word-inner,
+.section-enter.section-in .se-grid > *,
+.reveal-stagger.show > * { transition-delay: 0s !important; }
+.section-enter .se-lead { transform: translateY(8px); transition-duration: .4s; transition-delay: 0s; }
+.section-enter .se-grid > * {
+  transform: translateY(12px);
+  transition: opacity .42s ease, transform .42s cubic-bezier(.2,.7,.2,1);
+}
+
+/* One composed entrance for the hero; its text stays still and readable. */
+.hero-text .eyebrow, .hero-text h1, .hero-text .hero-role,
+.hero-text .hero-sub, .hero-text .hero-cta, .hero-text .hero-stats,
+.hero-text .hero-socials { animation: none; }
+.kha-rich-anim .hero-text.reveal,
+.kha-rich-anim .hero-visual.reveal {
+  animation: heroSurfaceIn .52s cubic-bezier(.2,.7,.2,1) both;
+}
+.kha-rich-anim .hero-visual.reveal { animation-delay: .08s; }
+.kha-rich-anim .hero-name .gradient-text {
+  animation: heroNameIn .52s cubic-bezier(.2,.7,.2,1) .04s both;
+  background-size: 100% 100%;
+}
+@keyframes heroSurfaceIn {
+  from { opacity: .35; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Keep decorative motion quiet; interactions still respond immediately. */
+.bg-gradient, .discount-banner::before, .discount-spark,
+.bts-figure img, .bts-figure::after, .wa-pulse {
+  animation: none !important;
+}
+.bg-gradient { background-size: auto; }
+.bts-figure img { transform: none; }
+.bts-figure::after { opacity: 0; }
+.discount-banner::before { background-position: center; }
+.wa-pulse { display: none; }
+.gallery .card:hover .play-icon { animation: none; }
+
+@media (max-width: 720px) {
+  body { background-attachment: scroll; }
+  .section { scroll-margin-top: 84px; }
+  .section-enter .se-title .word { overflow: visible; }
+  .section-enter .se-title .word-inner { display: inline; }
+  .section-enter .se-title .word-inner,
+  .section-enter .se-lead,
+  .section-enter .se-tag,
+  .section-enter .se-grid > *,
+  .reveal-stagger.show > * { transition-delay: 0s !important; }
+  .hero-text.reveal, .kha-rich-anim .hero-text.reveal { animation: phoneHeroIn .4s cubic-bezier(.2,.7,.2,1) both; }
+  .hero-visual.reveal, .kha-rich-anim .hero-visual.reveal { animation: phoneHeroIn .44s cubic-bezier(.2,.7,.2,1) .06s both; }
+  .btn:hover, .lang-toggle:hover, .contact-item a:hover,
+  .card-placeholder:hover, .plan.card-flip:hover,
+  .plan.card-flip.plan-popular:hover { transform: none; }
+  .card-placeholder:hover { border-color: inherit; }
+  .plan.card-flip:hover .card-illustration { transform: none; }
+  .gallery .card:hover .play-icon {
+    transform: translate(-50%, -50%) scale(.9);
+    box-shadow: 0 10px 30px rgba(34, 197, 94, 0.45);
+  }
+  .hero-visual .photo-card img { transform: none; transition: none; }
+  .service, .skill, .mini-card, .software-card, .gallery .card,
+  .design-card, .step, .process-step, .contact-item a, .btn { transition-duration: .18s; }
+  .hero-stats, .hero-socials a, .service, .skill, .mini-card,
+  .software-card, .gallery .card, .design-card, .process-step,
+  .contact-form, .contact-item a, .pricing-tabs, .pricing-tab,
+  .pricing-note, .works-cta { backdrop-filter: blur(9px); -webkit-backdrop-filter: blur(9px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kha-rich-anim .reveal:not(.show), .kha-rich-anim .reveal.show,
+  .section-enter .se-tag, .section-enter .se-title .word-inner,
+  .section-enter .se-lead, .section-enter .se-grid > *,
+  .reveal-stagger > *, .reveal-stagger.show > *,
+  .hero-text.reveal, .hero-visual.reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
