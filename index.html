@@ -37,12 +37,15 @@
   <!-- Fonts: Cairo (AR — clean geometric, used by most sites) + Inter (EN) — Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://player.vimeo.com" crossorigin />
+  <link rel="preconnect" href="https://i.vimeocdn.com" crossorigin />
+  <link rel="preconnect" href="https://f.vimeocdn.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Preload hero image (LCP, WebP with JPG fallback) -->
   <link rel="preload" as="image" href="khaled-hero.webp" type="image/webp" fetchpriority="high" />
 
-  <link rel="stylesheet" href="styles.css?v=43" />
+  <link rel="stylesheet" href="styles.css?v=45" />
 
   <!-- Structured data: Person + ProfessionalService -->
   <script type="application/ld+json">
@@ -239,7 +242,7 @@
     </a>
   </section>
 
-  <!-- Latest work: autoplay is mounted only while this section is in view. -->
+  <!-- Latest work: preload the muted reel early so it is ready when this section appears. -->
   <section class="section latest-work-section" id="latest" aria-labelledby="latestWorkTitle">
     <div class="container latest-work-container">
       <div class="latest-work-head">
@@ -268,11 +271,16 @@
         </div>
         <div class="latest-work-media" id="latestWorkMedia">
           <div class="latest-work-player" id="latestWorkPlayer" data-video-url="">
-            <img id="latestWorkPoster" src="reel-vimeo-1235404587.jpg" alt="" loading="lazy" decoding="async" />
+            <img id="latestWorkPoster" src="reel-vimeo-1235404587.jpg" alt="" loading="eager" fetchpriority="high" decoding="async" />
           </div>
           <span class="latest-work-media-glint" aria-hidden="true"></span>
         </div>
       </article>
+      <div class="latest-work-more">
+        <a class="latest-work-more-button" href="#works">
+          <span id="latestWorkMoreLabel">شاهد أعمال أكثر</span><span aria-hidden="true">↓</span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -1103,7 +1111,7 @@
   <script src="theme.js?v=32"></script>
   <script src="designs.js?v=30"></script>
   <script src="testimonials-pool.js?v=1"></script>
-  <script src="script.js?v=49"></script>
+  <script src="script.js?v=52"></script>
   <!-- Inline edit overlay (only activates when ?edit=1 is in URL) -->
   <script src="github-api.js?v=30"></script>
   <script src="inline-edit.js?v=30"></script>

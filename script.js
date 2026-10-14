@@ -142,8 +142,12 @@ function getEmbedUrl(url) {
   if (idIndex < 0) return null;
   const id = parts[idIndex]; // Also accepts Vimeo dashboard links like /manage/videos/123456789.
   const hash = parsed.searchParams.get('h') || parts[idIndex + 1] || '';
-  const params = new URLSearchParams({ autoplay: '1', dnt: '1' });
+  const params = new URLSearchParams();
   if (/^[a-z\d]{6,}$/i.test(hash)) params.set('h', hash);
+  params.set('autoplay', '1');
+  params.set('dnt', '1');
+  params.set('preload', 'auto');
+  params.set('initial_quality', '540p');
   return `https://player.vimeo.com/video/${id}?${params.toString()}`;
 }
 function isLocalVideo(url) {
@@ -274,8 +278,9 @@ function unmountLatestWorkPlayer() {
 
 function mountLatestWorkPlayer() {
   const frame = document.getElementById('latestWorkPlayer');
+  const section = document.getElementById('latest');
   const item = latestWorkItem;
-  if (!frame || !item || !item.url || prefersReducedMotion() ||
+  if (!frame || !section || section.hidden || section.style.display === 'none' || section.getAttribute('data-kha-hidden') === '1' || !item || !item.url || prefersReducedMotion() ||
       (navigator.connection && navigator.connection.saveData)) return;
   if (frame.dataset.videoUrl === item.url && frame.querySelector('iframe, video')) return;
 
@@ -294,7 +299,7 @@ function mountLatestWorkPlayer() {
     video.autoplay = true;
     video.loop = true;
     video.playsInline = true;
-    video.preload = 'metadata';
+    video.preload = 'auto';
     video.controls = false;
     if (posterPath) video.poster = posterPath;
     video.setAttribute('muted', '');
@@ -316,6 +321,8 @@ function mountLatestWorkPlayer() {
     playerUrl.searchParams.set('autoplay', '1');
     playerUrl.searchParams.set('loop', '1');
     playerUrl.searchParams.set('playsinline', '1');
+    playerUrl.searchParams.set('preload', 'auto');
+    playerUrl.searchParams.set('autopause', '0');
   } else {
     const parsed = parseMediaUrl(item.url);
     const youtubeId = parsed && getYouTubeId(parsed);
@@ -365,6 +372,7 @@ function renderLatestWorkSection() {
   setText('latestWorkProjectTitle', title);
   setText('latestWorkCaption', latest.desc || (currentLang === 'ar' ? 'أحدث أعمال المونتاج والموشن.' : 'The latest editing and motion work.'));
   setText('latestWorkLinkLabel', currentLang === 'ar' ? 'شاهد العمل كاملًا' : 'Watch the full reel');
+  setText('latestWorkMoreLabel', currentLang === 'ar' ? 'شاهد أعمال أكثر' : 'Explore more work');
   const toolsLabel = document.querySelector('.latest-work-tools');
   if (toolsLabel) toolsLabel.setAttribute('aria-label', currentLang === 'ar' ? 'البرامج المستخدمة في المونتاج والموشن' : 'Editing and motion software');
 
@@ -395,7 +403,6 @@ function renderLatestWorkSection() {
           mountLatestWorkPlayer();
         } else {
           host.classList.remove('is-visible');
-          unmountLatestWorkPlayer();
         }
       });
     }, { threshold: 0.12, rootMargin: '0px' });
@@ -406,7 +413,14 @@ function renderLatestWorkSection() {
     latestWorkObserver.unobserve(host);
     latestWorkObserver.observe(host);
   }
+  // Start buffering as soon as the page loads so the reel is already moving
+  // by the time a visitor scrolls down to this section.
+  mountLatestWorkPlayer();
 }
+
+// Bootstrap from the bundled project list; server/admin overrides are applied
+// shortly afterward and will replace this player only if a newer reel exists.
+renderLatestWorkSection();
 
 // ====== Render a focused, paginated Works gallery ======
 const GALLERY_PAGE_SIZE = 9;
@@ -1019,7 +1033,10 @@ async function applyVisibility() {
   // 1) admin draft (live preview)
   try {
     const draft = localStorage.getItem('khaled_visibility_draft');
-    if (draft) flags = JSON.parse(draft);
+    if (draft) {
+      const parsed = JSON.parse(draft);
+      flags = parsed && parsed.sections ? parsed.sections : parsed;
+    }
   } catch (e) { /* ignore */ }
   // 2) committed visibility.json
   if (!flags) {
@@ -1048,6 +1065,9 @@ async function applyVisibility() {
       a.style.display = (flags[secId] === false) ? 'none' : '';
     });
   });
+  const latestSection = document.getElementById('latest');
+  if (latestSection && flags.latest === false) unmountLatestWorkPlayer();
+  else if (latestSection) mountLatestWorkPlayer();
 }
 
 async function loadProjectsOverrides() {
@@ -1075,6 +1095,10 @@ async function loadProjectsOverrides() {
     }
   } catch (e) { /* no projects.json — defaults stand */ }
 }
+
+// Mount the bundled latest reel before waiting for optional JSON overrides.
+// This lets Vimeo begin buffering while the page finishes loading its content.
+try { renderLatestWorkSection(); } catch (e) { console.warn('[latest-work]', e.message); }
 
 (async () => {
   await Promise.all([loadContentOverrides(), loadProjectsOverrides(), loadSoftwareOverrides(), applyVisibility()]);
