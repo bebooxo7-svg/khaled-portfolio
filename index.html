@@ -42,7 +42,7 @@
   <!-- Preload hero image (LCP, WebP with JPG fallback) -->
   <link rel="preload" as="image" href="khaled-hero.webp" type="image/webp" fetchpriority="high" />
 
-  <link rel="stylesheet" href="styles.css?v=40" />
+  <link rel="stylesheet" href="styles.css?v=43" />
 
   <!-- Structured data: Person + ProfessionalService -->
   <script type="application/ld+json">
@@ -234,9 +234,46 @@
         </figure>
       </div>
     </div>
-    <a class="scroll-hint" href="#works" aria-label="scroll">
+    <a class="scroll-hint" href="#latest" aria-label="scroll">
       <span></span>
     </a>
+  </section>
+
+  <!-- Latest work: autoplay is mounted only while this section is in view. -->
+  <section class="section latest-work-section" id="latest" aria-labelledby="latestWorkTitle">
+    <div class="container latest-work-container">
+      <div class="latest-work-head">
+        <div class="latest-work-tools" role="group" aria-label="برامج المونتاج والموشن">
+          <div class="latest-work-tool latest-work-tool--premiere">
+            <img src="software-logos/premiere.png" alt="" width="48" height="48" decoding="async" />
+            <span>Adobe Premiere Pro</span>
+          </div>
+          <div class="latest-work-tool latest-work-tool--after-effects">
+            <img src="software-logos/after-effects.png" alt="" width="48" height="48" decoding="async" />
+            <span>Adobe After Effects</span>
+          </div>
+        </div>
+        <p class="latest-work-eyebrow" id="latestWorkEyebrow">مختار من أحدث الريلز</p>
+        <h2 id="latestWorkTitle">أحدث الأعمال</h2>
+      </div>
+
+      <article class="latest-work-feature" id="latestWorkFeature">
+        <div class="latest-work-copy">
+          <span class="latest-work-live"><i aria-hidden="true"></i><span id="latestWorkLabel">أحدث الأعمال</span></span>
+          <h3 id="latestWorkProjectTitle">زراعة الأسنان مع د. أحمد جاد</h3>
+          <p id="latestWorkCaption">ريل طبي توعوي يقدّم موضوع زراعة الأسنان بأسلوب واضح ومهني.</p>
+          <a class="latest-work-link" id="latestWorkOpen" href="https://vimeo.com/1235404587?share=copy&amp;fl=sv&amp;fe=ci" target="_blank" rel="noopener noreferrer">
+            <span id="latestWorkLinkLabel">شاهد العمل كاملًا</span><span aria-hidden="true">↗</span>
+          </a>
+        </div>
+        <div class="latest-work-media" id="latestWorkMedia">
+          <div class="latest-work-player" id="latestWorkPlayer" data-video-url="">
+            <img id="latestWorkPoster" src="reel-vimeo-1235404587.jpg" alt="" loading="lazy" decoding="async" />
+          </div>
+          <span class="latest-work-media-glint" aria-hidden="true"></span>
+        </div>
+      </article>
+    </div>
   </section>
 
   <!-- Works -->
@@ -1062,11 +1099,11 @@
   </a>
 
   <script src="content-defaults.js?v=30"></script>
-  <script src="projects-defaults.js?v=28"></script>
-  <script src="theme.js?v=31"></script>
+  <script src="projects-defaults.js?v=29"></script>
+  <script src="theme.js?v=32"></script>
   <script src="designs.js?v=30"></script>
   <script src="testimonials-pool.js?v=1"></script>
-  <script src="script.js?v=46"></script>
+  <script src="script.js?v=49"></script>
   <!-- Inline edit overlay (only activates when ?edit=1 is in URL) -->
   <script src="github-api.js?v=30"></script>
   <script src="inline-edit.js?v=30"></script>

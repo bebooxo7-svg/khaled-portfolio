@@ -70,6 +70,7 @@ function applyLanguage(lang) {
   }
 
   renderGallery(currentFilter, currentSubFilter);
+  if (typeof renderLatestWorkSection === 'function') renderLatestWorkSection();
 
   // Re-render Designs grid when language changes (keys may differ per lang)
   if (typeof window.__renderDesigns === 'function') {
@@ -229,8 +230,10 @@ function emptyStateHTML() {
 function staggerReveal(container) {
   requestAnimationFrame(() => {
     const els = container.querySelectorAll('.reveal');
-    // Cap total reveal duration to ~600ms regardless of item count so nothing feels stuck
-    const stride = Math.max(12, Math.min(60, Math.floor(600 / Math.max(1, els.length))));
+    // Keep the mobile cascade compact while retaining a gentle desktop rhythm.
+    const stride = matchMedia('(max-width: 720px)').matches
+      ? 22
+      : Math.max(12, Math.min(60, Math.floor(600 / Math.max(1, els.length))));
     els.forEach((el, i) => {
       setTimeout(() => el.classList.add('show'), i * stride);
     });
@@ -256,6 +259,153 @@ function sortByDateDesc(list) {
       return b.i - a.i;
     })
     .map(o => o.p);
+}
+
+// Keep the standalone latest-work section in sync with the dashboard data.
+let latestWorkItem = null;
+let latestWorkObserver = null;
+
+function unmountLatestWorkPlayer() {
+  const frame = document.getElementById('latestWorkPlayer');
+  if (!frame) return;
+  frame.querySelectorAll('iframe, video').forEach(player => player.remove());
+  frame.dataset.videoUrl = '';
+}
+
+function mountLatestWorkPlayer() {
+  const frame = document.getElementById('latestWorkPlayer');
+  const item = latestWorkItem;
+  if (!frame || !item || !item.url || prefersReducedMotion() ||
+      (navigator.connection && navigator.connection.saveData)) return;
+  if (frame.dataset.videoUrl === item.url && frame.querySelector('iframe, video')) return;
+
+  unmountLatestWorkPlayer();
+  const title = item.title || (currentLang === 'ar' ? 'أحدث الأعمال' : 'Latest work');
+  let posterPath = item.poster || getYouTubeThumbnail(item.url) || '';
+  if (isVimeoPageUrl(posterPath)) posterPath = '';
+  posterPath = fixVimeoPosterAspect(posterPath, item.orient) || '';
+
+  if (isLocalVideo(item.url)) {
+    const video = document.createElement('video');
+    video.className = 'latest-work-video';
+    video.src = item.url;
+    video.muted = true;
+    video.defaultMuted = true;
+    video.autoplay = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = 'metadata';
+    video.controls = false;
+    if (posterPath) video.poster = posterPath;
+    video.setAttribute('muted', '');
+    video.setAttribute('autoplay', '');
+    video.setAttribute('loop', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('aria-label', title);
+    frame.appendChild(video);
+    frame.dataset.videoUrl = item.url;
+    return;
+  }
+
+  const embed = getEmbedUrl(item.url);
+  if (!embed) return;
+  const playerUrl = new URL(embed);
+  if (playerUrl.hostname.toLowerCase() === 'player.vimeo.com') {
+    playerUrl.searchParams.set('background', '1');
+    playerUrl.searchParams.set('muted', '1');
+    playerUrl.searchParams.set('autoplay', '1');
+    playerUrl.searchParams.set('loop', '1');
+    playerUrl.searchParams.set('playsinline', '1');
+  } else {
+    const parsed = parseMediaUrl(item.url);
+    const youtubeId = parsed && getYouTubeId(parsed);
+    playerUrl.searchParams.set('mute', '1');
+    playerUrl.searchParams.set('loop', '1');
+    playerUrl.searchParams.set('controls', '0');
+    if (youtubeId) playerUrl.searchParams.set('playlist', youtubeId);
+  }
+
+  const iframe = document.createElement('iframe');
+  iframe.className = 'latest-work-iframe';
+  iframe.src = playerUrl.toString();
+  iframe.title = title;
+  iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+  iframe.setAttribute('allowfullscreen', '');
+  iframe.setAttribute('loading', 'eager');
+  iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+  iframe.setAttribute('tabindex', '-1');
+  frame.appendChild(iframe);
+  frame.dataset.videoUrl = item.url;
+}
+
+function renderLatestWorkSection() {
+  const host = document.getElementById('latest');
+  const frame = document.getElementById('latestWorkPlayer');
+  if (!host || !frame) return;
+
+  const latest = sortByDateDesc((projects[currentLang] || []).filter(project =>
+    project && project.cat === 'reels' && project.url && isPlayable(project.url)
+  ))[0];
+  if (!latest) {
+    host.hidden = true;
+    unmountLatestWorkPlayer();
+    return;
+  }
+  host.hidden = false;
+  latestWorkItem = latest;
+
+  const title = latest.title || (currentLang === 'ar' ? 'أحدث الأعمال' : 'Latest work');
+  const setText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el && value) el.textContent = value;
+  };
+  setText('latestWorkTitle', currentLang === 'ar' ? 'أحدث الأعمال' : 'Latest Work');
+  setText('latestWorkEyebrow', currentLang === 'ar' ? 'مختار من أحدث الريلز' : 'FEATURED FROM THE LATEST REELS');
+  setText('latestWorkLabel', currentLang === 'ar' ? 'أحدث الأعمال' : 'LATEST WORK');
+  setText('latestWorkProjectTitle', title);
+  setText('latestWorkCaption', latest.desc || (currentLang === 'ar' ? 'أحدث أعمال المونتاج والموشن.' : 'The latest editing and motion work.'));
+  setText('latestWorkLinkLabel', currentLang === 'ar' ? 'شاهد العمل كاملًا' : 'Watch the full reel');
+  const toolsLabel = document.querySelector('.latest-work-tools');
+  if (toolsLabel) toolsLabel.setAttribute('aria-label', currentLang === 'ar' ? 'البرامج المستخدمة في المونتاج والموشن' : 'Editing and motion software');
+
+  const openLink = document.getElementById('latestWorkOpen');
+  if (openLink) {
+    openLink.href = latest.url;
+    openLink.setAttribute('aria-label', (currentLang === 'ar' ? 'شاهد العمل كاملًا: ' : 'Watch the full reel: ') + title);
+  }
+  const poster = document.getElementById('latestWorkPoster');
+  let posterPath = latest.poster || getYouTubeThumbnail(latest.url) || '';
+  if (isVimeoPageUrl(posterPath)) posterPath = '';
+  posterPath = fixVimeoPosterAspect(posterPath, latest.orient) || '';
+  if (poster) {
+    poster.alt = '';
+    if (posterPath) poster.setAttribute('src', posterPath);
+    else poster.removeAttribute('src');
+    poster.hidden = !posterPath;
+  }
+  host.setAttribute('aria-label', (currentLang === 'ar' ? 'أحدث الأعمال: ' : 'Latest work: ') + title);
+
+  if (frame.dataset.videoUrl && frame.dataset.videoUrl !== latest.url) unmountLatestWorkPlayer();
+  if (!latestWorkObserver && 'IntersectionObserver' in window) {
+    host.classList.add('motion-ready');
+    latestWorkObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          host.classList.add('is-visible');
+          mountLatestWorkPlayer();
+        } else {
+          host.classList.remove('is-visible');
+          unmountLatestWorkPlayer();
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px' });
+    latestWorkObserver.observe(host);
+  } else if (latestWorkObserver) {
+    // Re-observing also updates the player when the dashboard changes the
+    // featured reel while this section is already visible in the preview.
+    latestWorkObserver.unobserve(host);
+    latestWorkObserver.observe(host);
+  }
 }
 
 // ====== Render a focused, paginated Works gallery ======
@@ -577,7 +727,7 @@ const io = new IntersectionObserver((entries) => {
       io.unobserve(e.target);
     }
   });
-}, { threshold: 0.12 });
+}, { threshold: 0.06 });
 
 document.querySelectorAll('.hero-text, .hero-visual, .mini-card, .contact-item').forEach(el => {
   el.classList.add('reveal');
@@ -719,11 +869,19 @@ document.querySelectorAll('.plan.card-flip').forEach(card => {
 function animateCounter(el, delay = 0) {
   const target = parseInt(el.dataset.counter, 10);
   const suffix = el.dataset.suffix || '';
-  const offset = parseInt(el.dataset.offset || (target > 10 ? '10' : String(target)), 10);
+  const offset = parseInt(el.dataset.offset || String(target), 10);
   const startVal = Math.max(0, target - offset);
-  const duration = 2200;
+  const duration = 1700;
+  if (prefersReducedMotion()) {
+    el.textContent = target + suffix;
+    return;
+  }
   const startAt = performance.now() + delay;
   el.textContent = startVal + suffix;
+  el.classList.remove('is-counting');
+  void el.offsetWidth;
+  el.classList.add('is-counting');
+  window.setTimeout(() => el.classList.remove('is-counting'), 500 + delay);
   function tick(now) {
     if (now < startAt) { requestAnimationFrame(tick); return; }
     const t = Math.min((now - startAt) / duration, 1);
@@ -745,7 +903,7 @@ const counterObserver = new IntersectionObserver((entries) => {
       idx++;
     }
   });
-}, { threshold: 0.5 });
+}, { threshold: 0.2 });
 document.querySelectorAll('[data-counter]').forEach(el => counterObserver.observe(el));
 
 // (Custom cursor & spotlight removed for performance + native UX)

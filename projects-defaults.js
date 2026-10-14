@@ -842,7 +842,8 @@ window.__projects_defaults = {
       "thumb": "bg-grad-3",
       "poster": "reel-vimeo-1235404587.jpg",
       "url": "https://vimeo.com/1235404587?share=copy&fl=sv&fe=ci",
-      "orient": "vertical"
+      "orient": "vertical",
+      "addedAt": 1791966158000
     }
   ],
   "en": [
@@ -1687,7 +1688,8 @@ window.__projects_defaults = {
       "thumb": "bg-grad-3",
       "poster": "reel-vimeo-1235404587.jpg",
       "url": "https://vimeo.com/1235404587?share=copy&fl=sv&fe=ci",
-      "orient": "vertical"
+      "orient": "vertical",
+      "addedAt": 1791966158000
     }
   ]
 };
