@@ -32,6 +32,10 @@ window.__i18n_defaults = {
     'stats.years': 'سنين خبرة',
     'stats.projects': 'مشروع منجز',
     'stats.clients': 'عميل راضي',
+    'hero.fact.years': 'سنين خبرة',
+    'hero.fact.projects': 'مشروع',
+    'hero.fact.clients': 'عميل',
+    'hero.fact.rating': 'تقييم العملاء',
 
     'about.tag': 'عني',
     'about.title': 'من الفكرة للنشر.',
@@ -332,6 +336,10 @@ window.__i18n_defaults = {
     'stats.years': "Years of Experience",
     'stats.projects': "Projects Completed",
     'stats.clients': "Clients Served",
+    'hero.fact.years': "Years Experience",
+    'hero.fact.projects': "Projects",
+    'hero.fact.clients': "Clients",
+    'hero.fact.rating': "Client Rating",
 
     'about.tag': 'About Me',
     'about.title': "From the first cut to the final story.",

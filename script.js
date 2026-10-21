@@ -148,6 +148,7 @@ function getEmbedUrl(url) {
   params.set('dnt', '1');
   params.set('preload', 'auto');
   params.set('initial_quality', '540p');
+  params.set('autopause', '0');
   return `https://player.vimeo.com/video/${id}?${params.toString()}`;
 }
 function isLocalVideo(url) {
@@ -316,11 +317,11 @@ function mountLatestWorkPlayer() {
   if (!embed) return;
   const playerUrl = new URL(embed);
   if (playerUrl.hostname.toLowerCase() === 'player.vimeo.com') {
-    playerUrl.searchParams.set('background', '1');
     playerUrl.searchParams.set('muted', '1');
     playerUrl.searchParams.set('autoplay', '1');
     playerUrl.searchParams.set('loop', '1');
     playerUrl.searchParams.set('playsinline', '1');
+    playerUrl.searchParams.set('controls', '0');
     playerUrl.searchParams.set('preload', 'auto');
     playerUrl.searchParams.set('autopause', '0');
   } else {

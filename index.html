@@ -43,9 +43,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Preload hero image (LCP, WebP with JPG fallback) -->
-  <link rel="preload" as="image" href="khaled-hero.webp" type="image/webp" fetchpriority="high" />
+  <link rel="preload" as="image" href="khaled-hero-cutout.webp" type="image/webp" fetchpriority="high" />
 
-  <link rel="stylesheet" href="styles.css?v=45" />
+  <link rel="stylesheet" href="styles.css?v=52" />
 
   <!-- Structured data: Person + ProfessionalService -->
   <script type="application/ld+json">
@@ -199,11 +199,11 @@
             <span data-i18n="stats.years">سنين خبرة</span>
           </li>
           <li>
-            <strong data-counter="500" data-suffix="+">490+</strong>
+            <strong data-counter="500" data-suffix="+">500+</strong>
             <span data-i18n="stats.projects">مشروع منجز</span>
           </li>
           <li>
-            <strong data-counter="100" data-suffix="+">90+</strong>
+            <strong data-counter="100" data-suffix="+">100+</strong>
             <span data-i18n="stats.clients">عميل سعيد</span>
           </li>
         </ul>
@@ -225,16 +225,45 @@
         </div>
       </div>
       <div class="hero-visual">
+        <div class="hero-orbit hero-orbit--outer" aria-hidden="true">
+          <svg viewBox="0 0 620 700" preserveAspectRatio="none">
+            <path class="orbit-line orbit-line--one" d="M91 248C111 224 137 213 169 211" />
+            <path class="orbit-line orbit-line--two" d="M481 136C502 120 519 116 538 120" />
+            <path class="orbit-dash" d="M42 405C55 388 69 378 85 374" />
+            <path class="orbit-dash orbit-dash--lower" d="M502 383C516 370 532 362 552 360" />
+            <circle class="orbit-node orbit-node--green" cx="169" cy="211" r="4" />
+            <circle class="orbit-node orbit-node--blue" cx="538" cy="120" r="4" />
+            <circle class="orbit-spark" cx="82" cy="297" r="2.5" />
+            <circle class="orbit-spark orbit-spark--blue" cx="455" cy="157" r="2" />
+            <circle class="orbit-spark orbit-spark--blue" cx="548" cy="338" r="2" />
+          </svg>
+        </div>
         <figure class="photo-card">
           <picture>
-            <source srcset="khaled-hero.webp" type="image/webp" />
-            <img src="khaled-hero.jpg" alt="Khaled Ali in studio" loading="eager" decoding="async" fetchpriority="high" width="1536" height="1024" />
+            <source srcset="khaled-hero-cutout.webp" type="image/webp" />
+            <img src="khaled-hero-cutout.png" alt="Khaled Ali with his camera" loading="eager" decoding="async" fetchpriority="high" width="890" height="949" />
           </picture>
-          <figcaption class="photo-meta">
-            <span class="meta-dot"></span>
-            <span data-i18n="hero.photo.meta">الاستوديو · جلسة مونتاج</span>
-          </figcaption>
         </figure>
+        <div class="hero-fact hero-fact--years" aria-hidden="true">
+          <strong>4+</strong><span data-i18n="hero.fact.years">سنين خبرة</span>
+        </div>
+        <div class="hero-fact hero-fact--projects" aria-hidden="true">
+          <strong>500+</strong><span data-i18n="hero.fact.projects">مشروع</span>
+        </div>
+        <div class="hero-fact hero-fact--clients" aria-hidden="true">
+          <strong>100+</strong><span data-i18n="hero.fact.clients">عميل</span>
+        </div>
+        <div class="hero-fact hero-fact--rating" aria-hidden="true">
+          <strong>8.6<span class="hero-fact-denom">/10</span></strong><span data-i18n="hero.fact.rating">تقييم العملاء</span>
+        </div>
+        <div class="hero-float hero-float--premiere" role="img" aria-label="Adobe Premiere Pro">
+          <img src="software-logos/premiere.png" alt="" width="40" height="40" />
+          <span>Premiere Pro</span>
+        </div>
+        <div class="hero-float hero-float--after-effects" role="img" aria-label="Adobe After Effects">
+          <img src="software-logos/after-effects.png" alt="" width="40" height="40" />
+          <span>After Effects</span>
+        </div>
       </div>
     </div>
     <a class="scroll-hint" href="#latest" aria-label="scroll">
@@ -263,15 +292,15 @@
       <article class="latest-work-feature" id="latestWorkFeature">
         <div class="latest-work-copy">
           <span class="latest-work-live"><i aria-hidden="true"></i><span id="latestWorkLabel">أحدث الأعمال</span></span>
-          <h3 id="latestWorkProjectTitle">زراعة الأسنان مع د. أحمد جاد</h3>
-          <p id="latestWorkCaption">ريل طبي توعوي يقدّم موضوع زراعة الأسنان بأسلوب واضح ومهني.</p>
-          <a class="latest-work-link" id="latestWorkOpen" href="https://vimeo.com/1235404587?share=copy&amp;fl=sv&amp;fe=ci" target="_blank" rel="noopener noreferrer">
+          <h3 id="latestWorkProjectTitle">عرق النسا والغضروف: لماذا يمتد الألم؟</h3>
+          <p id="latestWorkCaption">ريل طبي يقدّم شرحًا مبسطًا لعرق النسا والغضروف، بإيقاع بصري واضح ومناسب للمشاهدة السريعة.</p>
+          <a class="latest-work-link" id="latestWorkOpen" href="https://vimeo.com/1237988191?share=copy&amp;fl=sv&amp;fe=ci" target="_blank" rel="noopener noreferrer">
             <span id="latestWorkLinkLabel">شاهد العمل كاملًا</span><span aria-hidden="true">↗</span>
           </a>
         </div>
         <div class="latest-work-media" id="latestWorkMedia">
           <div class="latest-work-player" id="latestWorkPlayer" data-video-url="">
-            <img id="latestWorkPoster" src="reel-vimeo-1235404587.jpg" alt="" loading="eager" fetchpriority="high" decoding="async" />
+            <img id="latestWorkPoster" src="reel-vimeo-1237988191.jpg" alt="" loading="eager" fetchpriority="high" decoding="async" />
           </div>
           <span class="latest-work-media-glint" aria-hidden="true"></span>
         </div>
@@ -1107,11 +1136,11 @@
   </a>
 
   <script src="content-defaults.js?v=30"></script>
-  <script src="projects-defaults.js?v=29"></script>
+  <script src="projects-defaults.js?v=30"></script>
   <script src="theme.js?v=32"></script>
   <script src="designs.js?v=30"></script>
   <script src="testimonials-pool.js?v=1"></script>
-  <script src="script.js?v=52"></script>
+  <script src="script.js?v=53"></script>
   <!-- Inline edit overlay (only activates when ?edit=1 is in URL) -->
   <script src="github-api.js?v=30"></script>
   <script src="inline-edit.js?v=30"></script>

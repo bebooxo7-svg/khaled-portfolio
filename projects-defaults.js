@@ -844,6 +844,19 @@ window.__projects_defaults = {
       "url": "https://vimeo.com/1235404587?share=copy&fl=sv&fe=ci",
       "orient": "vertical",
       "addedAt": 1791966158000
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "عرق النسا والغضروف: لماذا يمتد الألم؟",
+      "desc": "ريل طبي يقدّم شرحًا مبسطًا لعرق النسا والغضروف، بإيقاع بصري واضح ومناسب للمشاهدة السريعة.",
+      "tag": "ريلز",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1237988191.jpg",
+      "url": "https://vimeo.com/1237988191?share=copy&fl=sv&fe=ci",
+      "orient": "vertical",
+      "addedAt": 1792586201515
     }
   ],
   "en": [
@@ -1690,6 +1703,19 @@ window.__projects_defaults = {
       "url": "https://vimeo.com/1235404587?share=copy&fl=sv&fe=ci",
       "orient": "vertical",
       "addedAt": 1791966158000
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "Sciatica and Disc Pain: Why Does It Radiate?",
+      "desc": "A clear, fast-paced medical reel about sciatica and its connection to disc problems.",
+      "tag": "Reels",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1237988191.jpg",
+      "url": "https://vimeo.com/1237988191?share=copy&fl=sv&fe=ci",
+      "orient": "vertical",
+      "addedAt": 1792586201515
     }
   ]
 };
