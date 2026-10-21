@@ -767,8 +767,95 @@
       "badge": "Vimeo",
       "thumb": "bg-grad-3",
       "url": "https://vimeo.com/1193342129",
-      "orient": "horizontal",
-      "addedAt": 1779127534842
+      "orient": "vertical",
+      "addedAt": 1779127534842,
+      "poster": "khaled-vet-reel-thumbnail.jpg"
+    },
+    {
+      "cat": "reels",
+      "subCat": "marketing",
+      "title": "تفاصيل تحكي حكاية الأثاث",
+      "desc": "إعلان ترويجي لأعمال الأثاث، يقدّم قطعًا مختارة من المعرض ضمن معالجة بصرية أنيقة وواضحة.",
+      "tag": "ريلز",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235387518.jpg",
+      "url": "https://vimeo.com/1235387518",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "marketing",
+      "title": "مرتبة بوكيت من ORCA",
+      "desc": "في هذا الريل، يتحدث عز عن مرتبة بوكيت من ORCA ويعرض مميزاتها بأسلوب ترويجي موجز.",
+      "tag": "ريلز",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235391075.jpg",
+      "url": "https://vimeo.com/1235391075?share=copy&fl=sv&fe=ci",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "رعاية الأسنان في عيادة Teeth House",
+      "desc": "إعلان لعيادة Teeth House لطب الأسنان، يقدّم العيادة وخدماتها بأسلوب مهني وقريب من الجمهور.",
+      "tag": "ريلز",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235391827.jpg",
+      "url": "https://vimeo.com/1235391827?share=copy&fl=sv&fe=ci",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "marketing",
+      "title": "خدمات الطباعة من مطبعة غزي",
+      "desc": "إعلان ترويجي لمطبعة غازي، يعرّف بخدمات الطباعة ويقدّم العلامة التجارية بصورة مباشرة وواضحة.",
+      "tag": "ريلز",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235392653.jpg",
+      "url": "https://vimeo.com/1235392653?share=copy&fl=sv&fe=ci",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "رعاية النساء والولادة مع د. علي",
+      "desc": "إعلان ترويجي للدكتور علي في مجال النساء والتوليد، يقدّم الطبيب والخدمات الطبية بأسلوب مهني.",
+      "tag": "ريلز",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235393333.jpg",
+      "url": "https://vimeo.com/1235393333?share=copy&fl=sv&fe=ci",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "زراعة الأسنان مع د. أحمد جاد",
+      "desc": "ريل طبي توعوي يقدّم د. أحمد جاد موضوع زراعة الأسنان بأسلوب واضح ومهني.",
+      "tag": "ريلز",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235404587.jpg",
+      "url": "https://vimeo.com/1235404587?share=copy&fl=sv&fe=ci",
+      "orient": "vertical",
+      "addedAt": 1791966158000
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "عرق النسا والغضروف: لماذا يمتد الألم؟",
+      "desc": "ريل طبي يقدّم شرحًا مبسطًا لعرق النسا والغضروف، بإيقاع بصري واضح ومناسب للمشاهدة السريعة.",
+      "tag": "ريلز",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1237988191.jpg",
+      "url": "https://vimeo.com/1237988191?share=copy&fl=sv&fe=ci",
+      "orient": "vertical",
+      "addedAt": 1792586201515
     }
   ],
   "en": [
@@ -1539,8 +1626,95 @@
       "badge": "Vimeo",
       "thumb": "bg-grad-3",
       "url": "https://vimeo.com/1193342129",
-      "orient": "horizontal",
-      "addedAt": 1779127534842
+      "orient": "vertical",
+      "addedAt": 1779127534842,
+      "poster": "khaled-vet-reel-thumbnail.jpg"
+    },
+    {
+      "cat": "reels",
+      "subCat": "marketing",
+      "title": "Furniture, Told Through the Details",
+      "desc": "A promotional reel for a furniture business, presenting selected showroom pieces through a clean, polished visual story.",
+      "tag": "Reels",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235387518.jpg",
+      "url": "https://vimeo.com/1235387518",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "marketing",
+      "title": "The Pocket Mattress by ORCA",
+      "desc": "Ezz introduces ORCA’s Pocket mattress, highlighting its features in a concise promotional reel.",
+      "tag": "Reels",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235391075.jpg",
+      "url": "https://vimeo.com/1235391075?share=copy&fl=sv&fe=ci",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "Dental Care at Teeth House",
+      "desc": "A promotional reel for Teeth House Dental Clinic, introducing the clinic and its dental services in a professional, approachable style.",
+      "tag": "Reels",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235391827.jpg",
+      "url": "https://vimeo.com/1235391827?share=copy&fl=sv&fe=ci",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "marketing",
+      "title": "Printing Services by Ghazi",
+      "desc": "A promotional reel for Ghazi Printing Press, introducing its printing services in a direct, polished visual format.",
+      "tag": "Reels",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235392653.jpg",
+      "url": "https://vimeo.com/1235392653?share=copy&fl=sv&fe=ci",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "Women’s Health and Obstetrics with Dr. Ali",
+      "desc": "A promotional reel for Dr. Ali’s obstetrics and gynecology practice, introducing the doctor and his services in a professional style.",
+      "tag": "Reels",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235393333.jpg",
+      "url": "https://vimeo.com/1235393333?share=copy&fl=sv&fe=ci",
+      "orient": "vertical"
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "Dental Implants with Dr. Ahmed Gad",
+      "desc": "An educational dental reel featuring Dr. Ahmed Gad and an introduction to dental implants in a clear, approachable format.",
+      "tag": "Reels",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1235404587.jpg",
+      "url": "https://vimeo.com/1235404587?share=copy&fl=sv&fe=ci",
+      "orient": "vertical",
+      "addedAt": 1791966158000
+    },
+    {
+      "cat": "reels",
+      "subCat": "medical",
+      "title": "Sciatica and Disc Pain: Why Does It Radiate?",
+      "desc": "A clear, fast-paced medical reel about sciatica and its connection to disc problems.",
+      "tag": "Reels",
+      "badge": "Vimeo",
+      "thumb": "bg-grad-3",
+      "poster": "reel-vimeo-1237988191.jpg",
+      "url": "https://vimeo.com/1237988191?share=copy&fl=sv&fe=ci",
+      "orient": "vertical",
+      "addedAt": 1792586201515
     }
   ]
 }
