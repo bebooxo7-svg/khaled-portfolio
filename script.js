@@ -36,7 +36,12 @@ function applyLanguage(lang) {
     const key = el.getAttribute('data-i18n');
     if (i18n[lang][key] !== undefined) {
       if (el.tagName === 'META') el.setAttribute('content', i18n[lang][key]);
-      else el.innerHTML = i18n[lang][key];
+      else if (key === 'hero.name' && el.classList.contains('hero-name-translation')) {
+        const [firstName = '', ...lastName] = String(i18n[lang][key]).trim().split(/\s+/);
+        const words = el.querySelectorAll('.hero-name-word');
+        if (words[0]) words[0].textContent = firstName;
+        if (words[1]) words[1].textContent = lastName.join(' ');
+      } else el.innerHTML = i18n[lang][key];
     }
   });
 
@@ -147,7 +152,7 @@ function getEmbedUrl(url) {
   params.set('autoplay', '1');
   params.set('dnt', '1');
   params.set('preload', 'auto');
-  params.set('initial_quality', '540p');
+  params.set('quality', 'auto');
   params.set('autopause', '0');
   return `https://player.vimeo.com/video/${id}?${params.toString()}`;
 }
@@ -281,8 +286,7 @@ function mountLatestWorkPlayer() {
   const frame = document.getElementById('latestWorkPlayer');
   const section = document.getElementById('latest');
   const item = latestWorkItem;
-  if (!frame || !section || section.hidden || section.style.display === 'none' || section.getAttribute('data-kha-hidden') === '1' || !item || !item.url || prefersReducedMotion() ||
-      (navigator.connection && navigator.connection.saveData)) return;
+  if (!frame || !section || section.hidden || section.style.display === 'none' || section.getAttribute('data-kha-hidden') === '1' || !item || !item.url) return;
   if (frame.dataset.videoUrl === item.url && frame.querySelector('iframe, video')) return;
 
   unmountLatestWorkPlayer();
@@ -317,6 +321,7 @@ function mountLatestWorkPlayer() {
   if (!embed) return;
   const playerUrl = new URL(embed);
   if (playerUrl.hostname.toLowerCase() === 'player.vimeo.com') {
+    playerUrl.searchParams.set('background', '1');
     playerUrl.searchParams.set('muted', '1');
     playerUrl.searchParams.set('autoplay', '1');
     playerUrl.searchParams.set('loop', '1');
@@ -324,6 +329,7 @@ function mountLatestWorkPlayer() {
     playerUrl.searchParams.set('controls', '0');
     playerUrl.searchParams.set('preload', 'auto');
     playerUrl.searchParams.set('autopause', '0');
+    playerUrl.searchParams.set('quality', 'auto');
   } else {
     const parsed = parseMediaUrl(item.url);
     const youtubeId = parsed && getYouTubeId(parsed);
