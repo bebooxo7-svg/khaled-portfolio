@@ -5118,3 +5118,71 @@ html[lang="ar"] .hero-fact > span { font-family: var(--font-ar); }
   .hero-stats strong { font-size: clamp(1.22rem, 5.6vw, 1.55rem); }
   .hero-stats span { font-size: clamp(.6rem, 2.8vw, .72rem); line-height: 1.45; }
 }
+
+/* Final phone hero repair: give stat labels breathing room and keep the scroll cue in flow. */
+@media (max-width: 720px) {
+  .hero-stats {
+    height: auto;
+    min-height: 98px;
+    overflow: visible;
+    align-items: stretch;
+    padding: 13px 10px 16px;
+    gap: 6px;
+  }
+  .hero-stats li {
+    min-height: 66px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding-inline: 2px;
+  }
+  .hero-stats strong { line-height: 1.15; }
+  .hero-stats span {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: keep-all;
+    line-height: 1.5;
+    text-align: center;
+  }
+  .hero .scroll-hint {
+    position: relative;
+    inset: auto;
+    display: grid;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    margin: 22px auto 0;
+    transform: none;
+  }
+  .hero .scroll-hint span { margin-top: -4px; }
+}
+
+@media (max-width: 380px) {
+  .hero-stats { min-height: 94px; padding: 12px 7px 15px; }
+  .hero-stats li { min-height: 64px; padding-inline: 0; }
+  .hero-stats span { font-size: .64rem; }
+}
+
+/* A composed entrance and gentle detail motion make the mobile hero feel intentional. */
+@media (max-width: 720px) and (prefers-reduced-motion: no-preference) {
+  html:not(.kha-anim-off) .hero .hero-text > .eyebrow { animation: phoneHeroItem .62s cubic-bezier(.2,.7,.2,1) .04s both; }
+  html:not(.kha-anim-off) .hero .hero-text > .hero-name { animation: phoneHeroItem .68s cubic-bezier(.2,.7,.2,1) .10s both; }
+  html:not(.kha-anim-off) .hero .hero-text > .hero-role { animation: phoneHeroItem .62s cubic-bezier(.2,.7,.2,1) .16s both; }
+  html:not(.kha-anim-off) .hero .hero-text > .hero-sub { animation: phoneHeroItem .66s cubic-bezier(.2,.7,.2,1) .22s both; }
+  html:not(.kha-anim-off) .hero .hero-text > .hero-stats { animation: phoneHeroItem .68s cubic-bezier(.2,.7,.2,1) .30s both; }
+  html:not(.kha-anim-off) .hero .hero-text > .hero-cta { animation: phoneHeroItem .68s cubic-bezier(.2,.7,.2,1) .36s both; }
+  html:not(.kha-anim-off) .hero .hero-text > .hero-socials { animation: phoneHeroItem .68s cubic-bezier(.2,.7,.2,1) .42s both; }
+  html:not(.kha-anim-off) .hero .scroll-hint { animation: phoneCueIn .7s cubic-bezier(.2,.7,.2,1) .5s both; }
+  html:not(.kha-anim-off) .hero-float { animation-duration: 4.4s; }
+  html:not(.kha-anim-off) .hero-fact { animation-duration: 5s; }
+  html:not(.kha-anim-off) .hero-fact::before { animation-duration: 18s; }
+}
+@keyframes phoneHeroItem {
+  from { opacity: .15; transform: translateY(13px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes phoneCueIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
